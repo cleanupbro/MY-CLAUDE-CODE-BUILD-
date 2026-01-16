@@ -12,7 +12,7 @@ Project: Clean Up Bros Quote Portal
 Business: Cleaning services company
 Location: Liverpool, NSW (Western Sydney hub)
 Live URL: https://cleanupbros.com.au
-GitHub: https://github.com/cleanupbro/MY-CLAUDE-CODE-BUILD-.git
+GitHub: https://github.com/cleanupbro/CLEANUPBROS-REPO.git
 Backend: https://nioctibinu.online (N8N)
 ABN: 26 443 426 374
 ```
