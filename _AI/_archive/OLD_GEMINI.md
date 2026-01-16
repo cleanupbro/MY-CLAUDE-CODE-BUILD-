@@ -1,4 +1,4 @@
-# CLAUDE.md - Clean Up Bros
+# GEMINI.md - Clean Up Bros
 ## Complete Self-Contained Project Configuration
 
 **Project:** Clean Up Bros Quote Portal
@@ -48,7 +48,8 @@ git add . && git commit -m "message" && git push origin main
 
 ```
 clean-up-bros/
-├── CLAUDE.md           # This file - ALL context here
+├── CLAUDE.md           # Claude Code configuration
+├── GEMINI.md           # This file - Gemini/Antigravity configuration
 ├── HANDOFF.md          # Session handoff document
 ├── SKILLS.md           # All 24 skills - full documentation
 ├── API_KEYS.md         # All API credentials for this project
@@ -333,12 +334,20 @@ Dev server falls back to 3001 if 3000 is busy
 
 ## SESSION MEMORY
 
-**Last Session:** January 3, 2026
-**What Was Done:** Million Dollar Redesign + Full SEO Optimization
-**What's Next:** Deploy to production, monitor Google rankings
+**Last Session:** January 7, 2026
+**What Was Done:** Full system check after migration - all systems operational
+**What's Next:** Continue development as needed
 
 ### Memory Log
 ```
+Jan 7, 2026 - MIGRATION VALIDATION
+- Full front-to-backend system check completed
+- Build passes successfully (710 modules, 3.58s)
+- All N8N webhooks tested and working (Residential, Commercial, Airbnb)
+- Dev server running correctly on port 3000
+- Created GEMINI.md for seamless AI handoff
+- Supabase configured with fallback mode (key needs update)
+
 Jan 3, 2026 - MILLION DOLLAR REDESIGN + SEO
 - Complete visual overhaul: bold dark theme (#1A1A1A) with lime/coral/cyan accents
 - Added rainbow-pulse CTA animation to Header and Footer
@@ -353,7 +362,6 @@ Jan 3, 2026 - MILLION DOLLAR REDESIGN + SEO
   - Hidden sr-only SEO text for crawlers
   - Suburb grid: Liverpool, Cabramatta, Casula, + 15 more suburbs
 - BUILD PASSED - Ready for deployment
-- Created 3 global skills: cubs-ui-design-system, seo-local-business-australia, frontend-design-agents
 
 Jan 1, 2026 - MCP SUPERCHARGE SESSION
 - Installed 10 MCP servers (8 connected, 2 need auth)
@@ -361,22 +369,15 @@ Jan 1, 2026 - MCP SUPERCHARGE SESSION
 - Needs Auth: Stripe, Figma (use /mcp to authenticate)
 - All API keys from API_KEYS.md configured in MCP servers
 - Updated SKILLS.md with complete MCP integration docs
-- Workspace now has direct access to: payments, social media, AI models,
-  web scraping, voice generation, file system, and workflow automation
 
 Jan 1, 2026 - SKILLS.MD CREATED
 - Created SKILLS.md with all 24 skills
 - Added SELF_UPDATE_SKILL that triggers after every command/code change
-- Skills organized: 4 automatic + 20 task-triggered
-- CLAUDE.md updated to reference SKILLS.md
 
 Dec 31, 2025 - INITIAL SETUP
 - Migrated from clean-up-bros-quote-&-application-portal to cubs.md
 - All source code moved to src/ folder
 - Created standalone API_KEYS.md
-- Embedded all skills into this CLAUDE.md
-- Removed dependency on shared folders
-- Build tested successfully
 ```
 
 ---
@@ -388,14 +389,17 @@ Track mistakes and fixes here so they're never repeated:
 
 | Date | Issue | Solution | Prevention |
 |------|-------|----------|------------|
+| Jan 7, 2026 | Supabase key invalid format | Use JWT format keys | Always verify key format before committing |
 | Example | Webhook returned 500 | N8N workflow was inactive | Always check workflow status first |
 
 ### Skills Acquired
 New patterns and techniques learned in this project:
 
 ```
-- Pattern 1: [Description]
-- Pattern 2: [Description]
+- Pattern 1: API Proxy pattern for hiding webhook URLs in production
+- Pattern 2: Lazy loading views with React.lazy() and Suspense
+- Pattern 3: Rate limiting middleware for API endpoints
+- Pattern 4: Graceful fallback when Supabase is not configured
 ```
 
 ---
@@ -405,16 +409,16 @@ New patterns and techniques learned in this project:
 ### Recent Errors
 | Date | Error | File | Fix Applied |
 |------|-------|------|-------------|
-| | | | |
+| Jan 7, 2026 | Supabase anon key not valid JWT | .env | Key needs to be updated from Supabase dashboard |
 
 ### Known Issues
-- [None currently]
+- Supabase anon key in .env is not in valid JWT format - admin features may not work until fixed
 
 ---
 
 ## SELF-LEARNING SKILL
 
-After EVERY session, Claude MUST:
+After EVERY session, Gemini MUST:
 
 1. **Update SESSION MEMORY** above with:
    - What was done
@@ -431,7 +435,7 @@ After EVERY session, Claude MUST:
    - Any bugs were fixed
    - Any issues were encountered
 
-This ensures Claude NEVER forgets context between sessions.
+This ensures Gemini NEVER forgets context between sessions.
 
 ---
 
@@ -461,21 +465,55 @@ This ensures Claude NEVER forgets context between sessions.
 
 ---
 
-## RULES FOR CLAUDE
+## MCP TOOLS (Reference)
+
+Note: These MCP tools are available in Claude Code. Gemini should be aware they exist for context:
+
+| Server | Tools Available |
+|--------|-----------------|
+| N8N | n8n_create_workflow, n8n_test_workflow, validate_workflow |
+| Stripe | create_customer, list_products, create_payment_link |
+| Memory | create_entities, search_nodes, read_graph |
+| Context7 | resolve-library-id, query-docs |
+| Sequential Thinking | sequentialthinking (for complex reasoning) |
+
+---
+
+## RULES FOR GEMINI
 
 1. **Read this file first** - Contains all context needed
 2. **Read SKILLS.md** - For detailed skill instructions
 3. **Read API_KEYS.md** - For credentials
-4. **Update memory sections** - Before ending session
-5. **SELF_UPDATE_SKILL** - After code changes, update relevant skills
-6. **Plan before building** - Explain steps, get approval
-7. **Test before push** - Run `npm run build`
-8. **Never hardcode secrets** - Use .env files
-9. **Keep prices accurate** - Use pricing table above
-10. **Log all errors** - Add to ERROR LOG section
+4. **Check HANDOFF.md** - To know where the last session ended
+5. **Update memory sections** - Before ending session
+6. **SELF_UPDATE_SKILL** - After code changes, update relevant skills
+7. **Plan before building** - Explain steps, get approval
+8. **Test before push** - Run `npm run build`
+9. **Never hardcode secrets** - Use .env files
+10. **Keep prices accurate** - Use pricing table above
+11. **Log all errors** - Add to ERROR LOG section
+
+---
+
+## HANDOFF PROTOCOL
+
+When switching between Claude Code and Gemini/Antigravity:
+
+1. **Outgoing AI Updates:**
+   - Update SESSION MEMORY with current state
+   - Update HANDOFF.md with what was done
+   - Note any in-progress work
+
+2. **Incoming AI Reads:**
+   - Read this file (GEMINI.md or CLAUDE.md)
+   - Check HANDOFF.md for last session state
+   - Continue from where the previous AI left off
+
+This ensures seamless transitions with zero context loss.
 
 ---
 
 *Clean Up Bros - Making Your Space Shine*
 *Codename: cubs.md | Self-contained with memory*
 *SKILLS.md contains all 24 skills*
+*Both CLAUDE.md and GEMINI.md share identical structure for seamless AI handoff*

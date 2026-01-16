@@ -23,6 +23,11 @@ MASTER_API.md
 *.secrets
 *.secret
 
+# Secrets folder (Boris Standard)
+.secrets/
+.ai/secrets/
+_AI/secrets/
+
 # Google secrets and credentials
 **/google.secrects/
 **/*.json
