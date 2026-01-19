@@ -3,10 +3,11 @@ import { ViewType, ServiceType } from '../types';
 
 interface LandingViewProps {
   navigateTo: (view: ViewType) => void;
-  setServiceType: (type: ServiceType) => void;
+  setServiceType?: (type: ServiceType) => void;
+  onSubmissionFail?: () => void;
 }
 
-// Animated counter component
+// Animated counter component with intersection observer
 const Counter: React.FC<{ end: number; suffix?: string; duration?: number }> = ({
   end, suffix = '', duration = 2000
 }) => {
@@ -44,17 +45,30 @@ const Counter: React.FC<{ end: number; suffix?: string; duration?: number }> = (
   return <span ref={ref}>{count}{suffix}</span>;
 };
 
-export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServiceType }) => {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+// Scroll reveal hook
+const useScrollReveal = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
   }, []);
+
+  return { ref, isVisible };
+};
+
+export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServiceType }) => {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -65,7 +79,7 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
   }, []);
 
   const handleServiceClick = (type: ServiceType, view: ViewType) => {
-    setServiceType(type);
+    if (setServiceType) setServiceType(type);
     navigateTo(view);
   };
 
@@ -75,61 +89,36 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
     { name: 'Emma L.', location: 'Cabramatta', text: 'Same-day Airbnb turnover. 5-star reviews from guests ever since.', rating: 5 },
   ];
 
-  const blogPosts = [
-    {
-      image: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=600',
-      title: '5 Kitchen Cleaning Hacks Pros Use',
-      excerpt: 'Professional tips to make your kitchen sparkle in half the time...',
-      readTime: '3 min',
-      category: 'Kitchen'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600',
-      title: 'Bond Back Guarantee: What You Need',
-      excerpt: 'Everything landlords look for during end-of-lease inspections...',
-      readTime: '5 min',
-      category: 'End of Lease'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600',
-      title: 'Before vs After: Deep Clean Magic',
-      excerpt: 'See the incredible transformations our team achieves...',
-      readTime: '2 min',
-      category: 'Deep Clean'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=600',
-      title: 'Airbnb 5-Star Ready Checklist',
-      excerpt: 'The exact checklist we use for Airbnb turnovers...',
-      readTime: '4 min',
-      category: 'Airbnb'
-    }
-  ];
-
   const services = [
     {
-      title: 'HOME',
-      subtitle: 'Residential Cleaning',
+      title: 'Residential',
+      subtitle: 'Home Cleaning',
+      description: 'Regular, deep clean, or end-of-lease. We make homes sparkle.',
       type: ServiceType.Residential,
-      view: 'ResidentialQuote' as ViewType,
-      icon: '🏠',
-      color: '#C8FF00'
+      view: ServiceType.Residential,
+      icon: HomeIcon,
+      price: 'From $120',
+      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
     },
     {
-      title: 'OFFICE',
-      subtitle: 'Commercial Cleaning',
+      title: 'Commercial',
+      subtitle: 'Office & Business',
+      description: 'Daily, weekly, or contract-based cleaning for any workspace.',
       type: ServiceType.Commercial,
-      view: 'CommercialQuote' as ViewType,
-      icon: '🏢',
-      color: '#FF6B4A'
+      view: ServiceType.Commercial,
+      icon: BuildingIcon,
+      price: 'From $150',
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
     },
     {
-      title: 'AIRBNB',
-      subtitle: 'Turnover Cleaning',
+      title: 'Airbnb',
+      subtitle: 'Turnover Service',
+      description: 'Same-day turnovers. 5-star guest ready, every time.',
       type: ServiceType.Airbnb,
-      view: 'AirbnbQuote' as ViewType,
-      icon: '✈️',
-      color: '#00D4FF'
+      view: ServiceType.Airbnb,
+      icon: PlaneIcon,
+      price: 'From $80',
+      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
     },
   ];
 
@@ -139,1142 +128,295 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
     'Campbelltown', 'Parramatta', 'Bankstown', 'Fairfield', 'Blacktown', 'Penrith'
   ];
 
+  const whyChooseUs = [
+    { icon: ShieldIcon, title: 'Fully Insured', description: 'Complete peace of mind with comprehensive coverage' },
+    { icon: CheckBadgeIcon, title: 'Police Checked', description: 'Every team member is verified and trustworthy' },
+    { icon: ClockIcon, title: 'Same Day Service', description: 'Need us today? We\'re there.' },
+    { icon: SparklesIcon, title: 'Bond Back Guarantee', description: '100% of your bond back or we re-clean free' },
+    { icon: HeartIcon, title: 'Family Owned', description: 'Local Liverpool business, community focused' },
+    { icon: StarIcon, title: '4.9 Star Rating', description: '500+ happy customers can\'t be wrong' },
+  ];
+
+  // Scroll reveal refs
+  const heroReveal = useScrollReveal();
+  const servicesReveal = useScrollReveal();
+  const statsReveal = useScrollReveal();
+  const testimonialsReveal = useScrollReveal();
+  const whyUsReveal = useScrollReveal();
+  const areasReveal = useScrollReveal();
+  const ctaReveal = useScrollReveal();
+
   return (
-    <div className="landing-fresh">
-      {/* Custom Styles */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
-        @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600,700&display=swap');
-
-        .landing-fresh {
-          --lime: #C8FF00;
-          --lime-dark: #9ACC00;
-          --coral: #FF6B4A;
-          --cyan: #00D4FF;
-          --charcoal: #1A1A1A;
-          --charcoal-light: #2D2D2D;
-          --cream: #F8F6F0;
-          --white: #FFFFFF;
-
-          font-family: 'General Sans', 'DM Sans', sans-serif;
-          background: var(--charcoal);
-          color: var(--white);
-          overflow-x: hidden;
-          min-height: 100vh;
-        }
-
-        .landing-fresh * {
-          box-sizing: border-box;
-        }
-
-        .font-clash {
-          font-family: 'Clash Display', 'Space Grotesk', sans-serif;
-        }
-
-        /* Diagonal sweep pattern */
-        .sweep-line {
-          position: absolute;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, var(--lime), transparent);
-          transform: rotate(-15deg);
-          opacity: 0.3;
-        }
-
-        /* Hero Section */
-        .hero-section {
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 120px 5vw 80px;
-          overflow: hidden;
-        }
-
-        .hero-bg-pattern {
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(circle at 20% 80%, rgba(200, 255, 0, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 107, 74, 0.06) 0%, transparent 50%),
-            linear-gradient(180deg, var(--charcoal) 0%, #0D0D0D 100%);
-          pointer-events: none;
-        }
-
-        /* Animated diagonal lines */
-        .diagonal-lines {
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-        }
-
-        .diagonal-lines::before,
-        .diagonal-lines::after {
-          content: '';
-          position: absolute;
-          width: 200%;
-          height: 1px;
-          background: linear-gradient(90deg, transparent 0%, var(--lime) 50%, transparent 100%);
-          opacity: 0.15;
-        }
-
-        .diagonal-lines::before {
-          top: 30%;
-          left: -50%;
-          transform: rotate(-12deg);
-          animation: sweep 8s ease-in-out infinite;
-        }
-
-        .diagonal-lines::after {
-          top: 70%;
-          left: -50%;
-          transform: rotate(-12deg);
-          animation: sweep 8s ease-in-out infinite 4s;
-        }
-
-        @keyframes sweep {
-          0%, 100% { transform: rotate(-12deg) translateX(-10%); opacity: 0.1; }
-          50% { transform: rotate(-12deg) translateX(10%); opacity: 0.25; }
-        }
-
-        /* Hero Content */
-        .hero-content {
-          position: relative;
-          z-index: 10;
-          max-width: 1400px;
-          margin: 0 auto;
-          width: 100%;
-        }
-
-        .hero-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 16px;
-          background: rgba(200, 255, 0, 0.1);
-          border: 1px solid rgba(200, 255, 0, 0.3);
-          border-radius: 100px;
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--lime);
-          margin-bottom: 32px;
-          animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero-badge::before {
-          content: '';
-          width: 8px;
-          height: 8px;
-          background: var(--lime);
-          border-radius: 50%;
-          animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.2); }
-        }
-
-        .hero-title {
-          font-size: clamp(3.5rem, 12vw, 9rem);
-          font-weight: 700;
-          line-height: 0.95;
-          letter-spacing: -0.03em;
-          margin-bottom: 24px;
-          animation: fadeInUp 0.8s ease-out 0.1s backwards;
-        }
-
-        .hero-title .line {
-          display: block;
-          overflow: hidden;
-        }
-
-        .hero-title .highlight {
-          color: var(--lime);
-          position: relative;
-          display: inline-block;
-        }
-
-        .hero-title .highlight::after {
-          content: '';
-          position: absolute;
-          bottom: 5%;
-          left: 0;
-          width: 100%;
-          height: 8px;
-          background: var(--lime);
-          opacity: 0.3;
-          transform: skewX(-12deg);
-        }
-
-        .hero-subtitle {
-          font-size: clamp(1.1rem, 2vw, 1.5rem);
-          color: rgba(255, 255, 255, 0.7);
-          max-width: 500px;
-          line-height: 1.6;
-          margin-bottom: 48px;
-          animation: fadeInUp 0.8s ease-out 0.2s backwards;
-        }
-
-        .hero-cta-group {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 16px;
-          animation: fadeInUp 0.8s ease-out 0.3s backwards;
-        }
-
-        .cta-primary {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 18px 36px;
-          background: var(--lime);
-          color: var(--charcoal);
-          font-family: 'Clash Display', sans-serif;
-          font-size: 16px;
-          font-weight: 600;
-          text-decoration: none;
-          border: none;
-          border-radius: 0;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .cta-primary::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-          transition: left 0.5s ease;
-        }
-
-        .cta-primary:hover {
-          transform: translateY(-3px) skewX(-2deg);
-          box-shadow: 8px 8px 0 rgba(200, 255, 0, 0.3);
-        }
-
-        .cta-primary:hover::before {
-          left: 100%;
-        }
-
-        .cta-secondary {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 18px 36px;
-          background: transparent;
-          color: var(--white);
-          font-family: 'Clash Display', sans-serif;
-          font-size: 16px;
-          font-weight: 600;
-          text-decoration: none;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .cta-secondary:hover {
-          border-color: var(--lime);
-          color: var(--lime);
-          transform: translateY(-2px);
-        }
-
-        /* Stats Row */
-        .stats-row {
-          display: flex;
-          gap: 48px;
-          margin-top: 80px;
-          padding-top: 40px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          animation: fadeInUp 0.8s ease-out 0.4s backwards;
-        }
-
-        .stat-item {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .stat-number {
-          font-family: 'Clash Display', sans-serif;
-          font-size: clamp(2rem, 4vw, 3.5rem);
-          font-weight: 700;
-          color: var(--lime);
-          line-height: 1;
-        }
-
-        .stat-label {
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.5);
-          margin-top: 8px;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-        }
-
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        /* Services Section */
-        .services-section {
-          padding: 120px 5vw;
-          background: var(--cream);
-          color: var(--charcoal);
-          position: relative;
-          clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%);
-          margin-top: -5vh;
-        }
-
-        .section-header {
-          max-width: 1400px;
-          margin: 0 auto 80px;
-        }
-
-        .section-label {
-          font-size: 13px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.2em;
-          color: var(--coral);
-          margin-bottom: 16px;
-        }
-
-        .section-title {
-          font-family: 'Clash Display', sans-serif;
-          font-size: clamp(2.5rem, 6vw, 4.5rem);
-          font-weight: 700;
-          line-height: 1.1;
-          letter-spacing: -0.02em;
-        }
-
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-          gap: 24px;
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-
-        .service-card {
-          position: relative;
-          padding: 48px 36px;
-          background: var(--white);
-          border: 2px solid transparent;
-          cursor: pointer;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow: hidden;
-        }
-
-        .service-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 4px;
-          background: var(--card-color);
-          transform: scaleX(0);
-          transform-origin: left;
-          transition: transform 0.4s ease;
-        }
-
-        .service-card:hover {
-          transform: translateY(-8px);
-          border-color: var(--charcoal);
-          box-shadow: 12px 12px 0 var(--card-color);
-        }
-
-        .service-card:hover::before {
-          transform: scaleX(1);
-        }
-
-        .service-icon {
-          font-size: 48px;
-          margin-bottom: 24px;
-          display: block;
-        }
-
-        .service-title {
-          font-family: 'Clash Display', sans-serif;
-          font-size: 2rem;
-          font-weight: 700;
-          margin-bottom: 8px;
-          letter-spacing: -0.02em;
-        }
-
-        .service-subtitle {
-          font-size: 15px;
-          color: rgba(26, 26, 26, 0.6);
-          margin-bottom: 24px;
-        }
-
-        .service-features {
-          list-style: none;
-          padding: 0;
-          margin: 0 0 32px;
-        }
-
-        .service-features li {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 8px 0;
-          font-size: 14px;
-          color: rgba(26, 26, 26, 0.8);
-        }
-
-        .service-features li::before {
-          content: '→';
-          color: var(--card-color);
-          font-weight: bold;
-        }
-
-        .service-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 14px 28px;
-          background: var(--charcoal);
-          color: var(--white);
-          font-weight: 600;
-          font-size: 14px;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .service-cta:hover {
-          background: var(--card-color);
-          color: var(--charcoal);
-        }
-
-        /* Trust Section */
-        .trust-section {
-          padding: 120px 5vw;
-          background: var(--charcoal);
-          position: relative;
-        }
-
-        .trust-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 80px;
-          max-width: 1400px;
-          margin: 0 auto;
-          align-items: center;
-        }
-
-        @media (max-width: 900px) {
-          .trust-grid {
-            grid-template-columns: 1fr;
-            gap: 48px;
-          }
-        }
-
-        .trust-content h2 {
-          font-family: 'Clash Display', sans-serif;
-          font-size: clamp(2rem, 5vw, 3.5rem);
-          font-weight: 700;
-          line-height: 1.1;
-          margin-bottom: 24px;
-        }
-
-        .trust-content p {
-          font-size: 18px;
-          color: rgba(255, 255, 255, 0.7);
-          line-height: 1.7;
-          margin-bottom: 32px;
-        }
-
-        .trust-badges {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 16px;
-        }
-
-        .trust-badge {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 20px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .trust-badge svg {
-          width: 20px;
-          height: 20px;
-          color: var(--lime);
-        }
-
-        /* Testimonial Card */
-        .testimonial-card {
-          position: relative;
-          padding: 48px;
-          background: linear-gradient(135deg, var(--charcoal-light) 0%, var(--charcoal) 100%);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .testimonial-quote {
-          font-size: 24px;
-          font-weight: 500;
-          line-height: 1.5;
-          margin-bottom: 32px;
-          position: relative;
-        }
-
-        .testimonial-quote::before {
-          content: '"';
-          font-family: 'Clash Display', sans-serif;
-          font-size: 120px;
-          position: absolute;
-          top: -40px;
-          left: -20px;
-          color: var(--lime);
-          opacity: 0.2;
-          line-height: 1;
-        }
-
-        .testimonial-author {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .testimonial-avatar {
-          width: 56px;
-          height: 56px;
-          background: var(--lime);
-          color: var(--charcoal);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-family: 'Clash Display', sans-serif;
-          font-size: 20px;
-          font-weight: 700;
-        }
-
-        .testimonial-info h4 {
-          font-weight: 600;
-          margin-bottom: 4px;
-        }
-
-        .testimonial-info span {
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.5);
-        }
-
-        .testimonial-stars {
-          margin-left: auto;
-          display: flex;
-          gap: 4px;
-        }
-
-        .testimonial-stars svg {
-          width: 20px;
-          height: 20px;
-          color: var(--lime);
-          fill: var(--lime);
-        }
-
-        .testimonial-nav {
-          display: flex;
-          gap: 8px;
-          margin-top: 24px;
-        }
-
-        .testimonial-dot {
-          width: 12px;
-          height: 12px;
-          background: rgba(255, 255, 255, 0.2);
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .testimonial-dot.active {
-          background: var(--lime);
-          width: 32px;
-        }
-
-        /* Blog Section */
-        .blog-section {
-          padding: 120px 5vw;
-          background: var(--cream);
-          color: var(--charcoal);
-        }
-
-        .blog-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-
-        @media (max-width: 1200px) {
-          .blog-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (max-width: 600px) {
-          .blog-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .blog-card {
-          background: var(--white);
-          border: 2px solid transparent;
-          overflow: hidden;
-          cursor: pointer;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .blog-card:hover {
-          transform: translateY(-8px);
-          border-color: var(--charcoal);
-          box-shadow: 8px 8px 0 var(--lime);
-        }
-
-        .blog-image-container {
-          position: relative;
-          width: 100%;
-          height: 200px;
-          overflow: hidden;
-        }
-
-        .blog-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .blog-card:hover .blog-image {
-          transform: scale(1.1);
-        }
-
-        .blog-category {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          padding: 6px 12px;
-          background: var(--lime);
-          color: var(--charcoal);
-          font-size: 11px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-
-        .blog-content {
-          padding: 24px;
-        }
-
-        .blog-title {
-          font-family: 'Clash Display', sans-serif;
-          font-size: 1.25rem;
-          font-weight: 600;
-          line-height: 1.3;
-          margin-bottom: 12px;
-          color: var(--charcoal);
-        }
-
-        .blog-excerpt {
-          font-size: 14px;
-          color: rgba(26, 26, 26, 0.7);
-          line-height: 1.6;
-          margin-bottom: 16px;
-        }
-
-        .blog-meta {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 13px;
-          color: rgba(26, 26, 26, 0.5);
-        }
-
-        .blog-meta svg {
-          width: 14px;
-          height: 14px;
-        }
-
-        .blog-header {
-          max-width: 1400px;
-          margin: 0 auto 60px;
-          text-align: center;
-        }
-
-        .blog-header .section-title {
-          display: inline;
-        }
-
-        .blog-header .highlight {
-          color: var(--charcoal);
-          position: relative;
-          display: inline;
-        }
-
-        .blog-header .highlight::after {
-          content: '';
-          position: absolute;
-          bottom: 5%;
-          left: 0;
-          width: 100%;
-          height: 8px;
-          background: var(--lime);
-          opacity: 0.5;
-          transform: skewX(-12deg);
-          z-index: -1;
-        }
-
-        /* Service Areas Section */
-        .service-areas {
-          padding: 120px 5vw;
-          background: var(--charcoal);
-        }
-
-        .service-areas .suburb-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 16px;
-        }
-
-        @media (min-width: 768px) {
-          .service-areas .suburb-grid {
-            grid-template-columns: repeat(4, 1fr);
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .service-areas .suburb-grid {
-            grid-template-columns: repeat(6, 1fr);
-          }
-        }
-
-        .service-areas .suburb-item {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 16px;
-          text-align: center;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-
-        .service-areas .suburb-item:hover {
-          background: rgba(200, 255, 0, 0.1);
-          border-color: rgba(200, 255, 0, 0.5);
-          transform: translateY(-2px);
-        }
-
-        .service-areas .suburb-item span {
-          color: var(--white);
-          font-weight: 500;
-          font-size: 14px;
-        }
-
-        .service-areas .seo-text {
-          margin-top: 48px;
-          text-align: center;
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 14px;
-          max-width: 900px;
-          margin-left: auto;
-          margin-right: auto;
-          line-height: 1.8;
-        }
-
-        /* CTA Section */
-        .cta-section {
-          padding: 160px 5vw;
-          background: var(--lime);
-          color: var(--charcoal);
-          text-align: center;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .cta-section::before {
-          content: 'CLEAN';
-          position: absolute;
-          font-family: 'Clash Display', sans-serif;
-          font-size: 25vw;
-          font-weight: 700;
-          color: rgba(0, 0, 0, 0.05);
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          white-space: nowrap;
-          pointer-events: none;
-        }
-
-        .cta-content {
-          position: relative;
-          z-index: 10;
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .cta-section h2 {
-          font-family: 'Clash Display', sans-serif;
-          font-size: clamp(3rem, 8vw, 6rem);
-          font-weight: 700;
-          line-height: 1;
-          letter-spacing: -0.03em;
-          margin-bottom: 24px;
-        }
-
-        .cta-section p {
-          font-size: 20px;
-          margin-bottom: 48px;
-          opacity: 0.8;
-        }
-
-        .cta-button-dark {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 24px 48px;
-          background: var(--charcoal);
-          color: var(--white);
-          font-family: 'Clash Display', sans-serif;
-          font-size: 18px;
-          font-weight: 600;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .cta-button-dark:hover {
-          transform: translateY(-4px) rotate(-1deg);
-          box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        /* Footer */
-        .footer {
-          padding: 80px 5vw 40px;
-          background: var(--charcoal);
-          color: var(--white);
-        }
-
-        .footer-content {
-          max-width: 1400px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: 2fr 1fr 1fr 1fr;
-          gap: 48px;
-        }
-
-        @media (max-width: 900px) {
-          .footer-content {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-
-        @media (max-width: 600px) {
-          .footer-content {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .footer-brand h3 {
-          font-family: 'Clash Display', sans-serif;
-          font-size: 24px;
-          font-weight: 700;
-          margin-bottom: 16px;
-        }
-
-        .footer-brand p {
-          color: rgba(255, 255, 255, 0.6);
-          font-size: 15px;
-          line-height: 1.7;
-          max-width: 300px;
-        }
-
-        .footer-column h4 {
-          font-size: 14px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          margin-bottom: 20px;
-          color: var(--lime);
-        }
-
-        .footer-column ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .footer-column li {
-          margin-bottom: 12px;
-        }
-
-        .footer-column a,
-        .footer-column button {
-          color: rgba(255, 255, 255, 0.7);
-          text-decoration: none;
-          font-size: 15px;
-          background: none;
-          border: none;
-          padding: 0;
-          cursor: pointer;
-          transition: color 0.2s ease;
-        }
-
-        .footer-column a:hover,
-        .footer-column button:hover {
-          color: var(--lime);
-        }
-
-        .footer-bottom {
-          max-width: 1400px;
-          margin: 60px auto 0;
-          padding-top: 24px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 16px;
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-          .hero-section {
-            padding: 100px 24px 60px;
-          }
-
-          .stats-row {
-            flex-wrap: wrap;
-            gap: 32px;
-          }
-
-          .services-section {
-            clip-path: none;
-            margin-top: 0;
-          }
-
-          .services-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .hero-cta-group {
-            flex-direction: column;
-          }
-
-          .cta-primary,
-          .cta-secondary {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-
-        /* Scroll animations */
-        .reveal {
-          opacity: 0;
-          transform: translateY(40px);
-          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      `}</style>
-
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-bg-pattern" />
-        <div className="diagonal-lines" />
-
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span>Liverpool's #1 Rated Cleaning Service</span>
+    <div className="bg-black min-h-screen">
+
+      {/* ==================== HERO SECTION ==================== */}
+      <section
+        ref={heroReveal.ref}
+        className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-35"
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80)' }}
+        />
+        {/* Background gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-[#0D0D0D]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(41,151,255,0.05),transparent_50%)]" />
+
+        <div className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#30D158]/10 border border-[#30D158]/30 rounded-full mb-8">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#30D158] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#30D158]"></span>
+            </span>
+            <span className="text-[#30D158] text-sm font-medium">Liverpool's #1 Rated Cleaning Service</span>
           </div>
 
-          <h1 className="hero-title font-clash">
-            <span className="line">WE MAKE</span>
-            <span className="line">SPACES <span className="highlight">SHINE</span></span>
+          {/* Main Headline - Apple Style */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold text-white tracking-tight leading-[0.95] mb-4">
+            Clean Up Bros
           </h1>
+          <p className="text-2xl md:text-4xl lg:text-5xl font-semibold text-[#86868B] mb-6">
+            Clean. Beyond.
+          </p>
 
-          <p className="hero-subtitle">
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
             Premium cleaning for homes, offices, and Airbnbs across Western Sydney.
             Same-day quotes. Bond-back guarantee. No excuses.
           </p>
 
-          <div className="hero-cta-group">
+          {/* CTA Buttons - Apple Pattern */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <button
-              className="cta-primary"
-              onClick={() => handleServiceClick(ServiceType.Residential, 'ResidentialQuote')}
+              onClick={() => navigateTo('Services')}
+              className="
+                px-8 py-4
+                bg-[#0066CC] text-white
+                text-lg font-semibold
+                rounded-full
+                hover:bg-[#0077ED]
+                transition-all duration-300
+                hover:scale-[1.02]
+                active:scale-[0.98]
+                shadow-[0_0_30px_rgba(0,102,204,0.4)]
+                hover:shadow-[0_0_40px_rgba(0,102,204,0.6)]
+              "
             >
               Get Instant Quote
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
             </button>
-            <a href="tel:+61406764585" className="cta-secondary">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-              </svg>
+            <a
+              href="tel:+61406764585"
+              className="
+                px-8 py-4
+                text-[#2997FF] text-lg font-medium
+                hover:underline
+                transition-colors
+              "
+            >
               Call Now
             </a>
           </div>
 
-          <div className="stats-row">
-            <div className="stat-item">
-              <span className="stat-number font-clash"><Counter end={500} suffix="+" /></span>
-              <span className="stat-label">Happy Clients</span>
+          {/* Stats Row */}
+          <div className="flex flex-wrap justify-center gap-12 pt-8 border-t border-white/10">
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-semibold text-white">
+                <Counter end={500} suffix="+" />
+              </div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Happy Clients</div>
             </div>
-            <div className="stat-item">
-              <span className="stat-number font-clash"><Counter end={100} suffix="%" /></span>
-              <span className="stat-label">Bond Back Rate</span>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-semibold text-white">
+                <Counter end={100} suffix="%" />
+              </div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Bond Back Rate</div>
             </div>
-            <div className="stat-item">
-              <span className="stat-number font-clash"><Counter end={4} />.9★</span>
-              <span className="stat-label">Google Rating</span>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-semibold text-white">
+                4.9<span className="text-[#2997FF]">★</span>
+              </div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Google Rating</div>
             </div>
-            <div className="stat-item">
-              <span className="stat-number font-clash"><Counter end={24} />h</span>
-              <span className="stat-label">Response Time</span>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-semibold text-white">
+                <Counter end={24} />h
+              </div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Response Time</div>
             </div>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <svg className="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </div>
       </section>
 
-      {/* Services Section */}
-      <section className="services-section">
-        <div className="section-header">
-          <p className="section-label">Our Services</p>
-          <h2 className="section-title font-clash">Pick Your Clean</h2>
-        </div>
+      {/* ==================== SERVICES SECTION ==================== */}
+      <section
+        ref={servicesReveal.ref}
+        className="py-16 px-6 bg-black"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Our Services</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              Pick Your Clean.
+            </h2>
+          </div>
 
-        <div className="services-grid">
-          {services.map((service, index) => (
-            <div
-              key={service.title}
-              className="service-card"
-              style={{ '--card-color': service.color } as React.CSSProperties}
-              onClick={() => handleServiceClick(service.type, service.view)}
-            >
-              <span className="service-icon">{service.icon}</span>
-              <h3 className="service-title font-clash">{service.title}</h3>
-              <p className="service-subtitle">{service.subtitle}</p>
-              <ul className="service-features">
-                {service.title === 'HOME' && (
-                  <>
-                    <li>Regular & Deep Cleans</li>
-                    <li>End of Lease / Bond Back</li>
-                    <li>Move-in Ready</li>
-                  </>
-                )}
-                {service.title === 'OFFICE' && (
-                  <>
-                    <li>Daily / Weekly Contracts</li>
-                    <li>Medical & Gym Specialists</li>
-                    <li>After-Hours Service</li>
-                  </>
-                )}
-                {service.title === 'AIRBNB' && (
-                  <>
-                    <li>Same-Day Turnovers</li>
-                    <li>Linen & Restock Service</li>
-                    <li>5-Star Guest Ready</li>
-                  </>
-                )}
-              </ul>
-              <button className="service-cta">
-                Get Quote
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <button
+                key={service.title}
+                onClick={() => handleServiceClick(service.type, service.view)}
+                className="
+                  group
+                  bg-[#1C1C1E] rounded-[20px] overflow-hidden
+                  text-left
+                  border border-transparent
+                  hover:border-[#2997FF]/30
+                  transition-all duration-300
+                  hover:scale-[1.02]
+                  hover:shadow-[0_16px_48px_rgba(0,0,0,0.3)]
+                "
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                {/* Image */}
+                <div className="relative h-40 overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={`${service.title} cleaning service`}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1C1C1E] to-transparent" />
+                  {/* Icon overlay */}
+                  <div className="absolute bottom-4 left-4 w-12 h-12 bg-[#0066CC]/90 rounded-xl flex items-center justify-center">
+                    <service.icon className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-semibold text-white mb-1">{service.title}</h3>
+                  <p className="text-[#86868B] text-sm mb-3">{service.subtitle}</p>
+                  <p className="text-white/60 text-[15px] leading-relaxed mb-5">{service.description}</p>
+
+                  {/* Price & CTA */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#2997FF] font-semibold">{service.price}</span>
+                    <span className="flex items-center gap-2 text-white/60 group-hover:text-[#2997FF] transition-colors">
+                      Get Quote
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
               </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="trust-section">
-        <div className="trust-grid">
-          <div className="trust-content">
-            <p className="section-label" style={{ color: 'var(--lime)' }}>Why Choose Us</p>
-            <h2 className="font-clash">We're Not Your Average Cleaners</h2>
-            <p>
-              Family-run, fully insured, and obsessed with detail. We don't just clean spaces—we transform them.
-              Every team member is police-checked and trained to our exacting standards.
-            </p>
-            <div className="trust-badges">
-              <div className="trust-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-                Fully Insured
-              </div>
-              <div className="trust-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Police Checked
-              </div>
-              <div className="trust-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Same Day Service
-              </div>
-              <div className="trust-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 13l4 4L19 7"/>
-                </svg>
-                Bond Back Guarantee
-              </div>
-            </div>
+      {/* ==================== WHY CHOOSE US - DARK GLASS SECTION ==================== */}
+      <section
+        ref={whyUsReveal.ref}
+        className="py-16 px-6 bg-black"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${whyUsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Why Choose Us</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              We're Not Your Average Cleaners.
+            </h2>
           </div>
 
-          <div className="testimonial-card">
-            <p className="testimonial-quote">{testimonials[activeTestimonial].text}</p>
-            <div className="testimonial-author">
-              <div className="testimonial-avatar">
+          {/* Features Grid - Dark Glass Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            {whyChooseUs.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="
+                  bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-5 md:p-6
+                  border border-white/10
+                  hover:border-[#2997FF]/30
+                  hover:bg-[#1C1C1E]
+                  transition-all duration-300
+                "
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#0066CC]/20 rounded-xl flex items-center justify-center mb-3 md:mb-4">
+                  <feature.icon className="w-5 h-5 md:w-6 md:h-6 text-[#2997FF]" />
+                </div>
+                <h3 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2">{feature.title}</h3>
+                <p className="text-white/60 text-xs md:text-sm leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== TESTIMONIALS SECTION ==================== */}
+      <section
+        ref={testimonialsReveal.ref}
+        className="py-16 px-6 bg-black"
+      >
+        <div className={`max-w-4xl mx-auto transition-all duration-1000 delay-100 ${testimonialsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Testimonials</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              What Our Clients Say.
+            </h2>
+          </div>
+
+          {/* Testimonial Card */}
+          <div className="bg-gradient-to-br from-[#1C1C1E] to-[#0D0D0D] rounded-[24px] p-8 md:p-12 border border-white/10">
+            {/* Quote */}
+            <div className="relative mb-8">
+              <span className="absolute -top-4 -left-2 text-8xl text-[#2997FF] opacity-20 font-serif">"</span>
+              <p className="text-2xl md:text-3xl text-white font-medium leading-relaxed pl-8">
+                {testimonials[activeTestimonial].text}
+              </p>
+            </div>
+
+            {/* Author */}
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-[#2997FF] rounded-full flex items-center justify-center text-xl font-bold text-black">
                 {testimonials[activeTestimonial].name.charAt(0)}
               </div>
-              <div className="testimonial-info">
-                <h4>{testimonials[activeTestimonial].name}</h4>
-                <span>{testimonials[activeTestimonial].location}</span>
+              <div>
+                <h4 className="text-white font-semibold">{testimonials[activeTestimonial].name}</h4>
+                <p className="text-[#86868B]">{testimonials[activeTestimonial].location}</p>
               </div>
-              <div className="testimonial-stars">
+              <div className="ml-auto flex gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  <svg key={i} className="w-5 h-5 text-[#2997FF] fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 ))}
               </div>
             </div>
-            <div className="testimonial-nav">
+
+            {/* Navigation Dots */}
+            <div className="flex gap-2 mt-8">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
-                  className={`testimonial-dot ${index === activeTestimonial ? 'active' : ''}`}
                   onClick={() => setActiveTestimonial(index)}
+                  className={`
+                    h-2 rounded-full transition-all duration-300
+                    ${index === activeTestimonial ? 'w-8 bg-[#2997FF]' : 'w-2 bg-white/20 hover:bg-white/40'}
+                  `}
                 />
               ))}
             </div>
@@ -1282,86 +424,84 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
         </div>
       </section>
 
-      {/* Blog Section */}
-      <section className="blog-section">
-        <div className="blog-header">
-          <p className="section-label" style={{ color: 'var(--coral)' }}>Tips & Tricks</p>
-          <h2 className="section-title font-clash">
-            Cleaning Secrets From <span className="highlight">The Pros</span>
-          </h2>
-        </div>
-
-        <div className="blog-grid">
-          {blogPosts.map((post, index) => (
-            <article key={index} className="blog-card">
-              <div className="blog-image-container">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="blog-image"
-                  loading="lazy"
-                />
-                <span className="blog-category">{post.category}</span>
-              </div>
-              <div className="blog-content">
-                <h3 className="blog-title">{post.title}</h3>
-                <p className="blog-excerpt">{post.excerpt}</p>
-                <div className="blog-meta">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
-                  </svg>
-                  <span>{post.readTime} read</span>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* SERVICE AREAS - SEO Section */}
-      <section className="service-areas">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* ==================== SERVICE AREAS ==================== */}
+      <section
+        ref={areasReveal.ref}
+        className="py-16 px-6 bg-[#0D0D0D]"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${areasReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
           <div className="text-center mb-12">
-            <span className="text-[#C8FF00] text-sm font-bold uppercase tracking-widest">Service Areas</span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mt-4 font-clash">
-              Cleaning Services Across <span className="text-[#C8FF00]">Liverpool & Western Sydney</span>
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Service Areas</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Cleaning Services Across <span className="text-[#2997FF]">Liverpool & Western Sydney</span>
             </h2>
-            <p className="text-white/60 text-lg mt-4 max-w-3xl mx-auto">
-              Professional end of lease cleaning, bond cleaning, commercial cleaning and Airbnb turnover services across all Western Sydney suburbs.
+            <p className="text-white/60 max-w-2xl mx-auto">
+              Professional end of lease, bond, commercial, and Airbnb cleaning across all Western Sydney suburbs.
             </p>
           </div>
 
           {/* Suburb Grid */}
-          <div className="suburb-grid">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {suburbs.map((suburb, i) => (
-              <div key={i} className="suburb-item">
-                <span>{suburb}</span>
+              <div
+                key={suburb}
+                className="
+                  bg-white/5 border border-white/10
+                  rounded-xl px-4 py-3
+                  text-center text-white/80 text-sm font-medium
+                  hover:bg-[#0066CC]/10 hover:border-[#0066CC]/30
+                  transition-all duration-200
+                  cursor-default
+                "
+              >
+                {suburb}
               </div>
             ))}
           </div>
 
           {/* SEO Text */}
-          <div className="seo-text">
-            <p>
-              Clean Up Bros provides professional cleaning services including end of lease cleaning, bond cleaning, vacate cleaning, commercial cleaning, office cleaning, and Airbnb turnover cleaning. We proudly serve Liverpool, Cabramatta, Casula, Moorebank, Prestons, Edmondson Park, Ingleburn, Glenfield, Leppington, Carnes Hill, Hoxton Park, Green Valley, Campbelltown, Parramatta, Bankstown, Fairfield, and all Western Sydney suburbs. 100% bond back guarantee on all end of lease cleans.
-            </p>
-          </div>
+          <p className="text-center text-white/40 text-sm mt-12 max-w-4xl mx-auto leading-relaxed">
+            Clean Up Bros provides professional cleaning services including end of lease cleaning, bond cleaning, vacate cleaning, commercial cleaning, office cleaning, and Airbnb turnover cleaning. We proudly serve Liverpool, Cabramatta, Casula, Moorebank, Prestons, Edmondson Park, Ingleburn, Glenfield, Leppington, Carnes Hill, Hoxton Park, Green Valley, Campbelltown, Parramatta, Bankstown, Fairfield, and all Western Sydney suburbs. 100% bond back guarantee on all end of lease cleans.
+          </p>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-content">
-          <h2 className="font-clash">Ready for a Fresh Start?</h2>
-          <p>Get your instant quote in 60 seconds. No obligations, no hidden fees.</p>
+      {/* ==================== FINAL CTA ==================== */}
+      <section
+        ref={ctaReveal.ref}
+        className="py-20 px-6 bg-[#0066CC] relative overflow-hidden"
+      >
+        {/* Background text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="text-[20vw] font-bold text-black/5 whitespace-nowrap">CLEAN</span>
+        </div>
+
+        <div className={`relative z-10 text-center max-w-3xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <h2 className="text-4xl md:text-6xl font-semibold text-white mb-6">
+            Ready for a Fresh Start?
+          </h2>
+          <p className="text-xl text-white/80 mb-10">
+            Get your instant quote in 60 seconds. No obligations, no hidden fees.
+          </p>
           <button
-            className="cta-button-dark"
-            onClick={() => handleServiceClick(ServiceType.Residential, 'ResidentialQuote')}
+            onClick={() => navigateTo('Services')}
+            className="
+              inline-flex items-center gap-3
+              px-10 py-5
+              bg-black text-white
+              text-xl font-semibold
+              rounded-full
+              hover:bg-[#1C1C1E]
+              transition-all duration-300
+              hover:scale-[1.02]
+              active:scale-[0.98]
+              shadow-[0_16px_48px_rgba(0,0,0,0.3)]
+            "
           >
             Get Your Free Quote
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </button>
         </div>
@@ -1369,5 +509,61 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
     </div>
   );
 };
+
+// ==================== ICONS ====================
+
+const HomeIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  </svg>
+);
+
+const BuildingIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+  </svg>
+);
+
+const PlaneIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+  </svg>
+);
+
+const ShieldIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+  </svg>
+);
+
+const CheckBadgeIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+  </svg>
+);
+
+const ClockIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
+const SparklesIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+  </svg>
+);
+
+const HeartIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
+
+const StarIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+  </svg>
+);
 
 export default LandingViewNew;

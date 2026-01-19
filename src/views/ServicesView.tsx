@@ -1,51 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavigationProps, ServiceType } from '../types';
 
+// Scroll reveal hook - same pattern as landing page
+const useScrollReveal = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isVisible };
+};
+
 const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
+  const heroReveal = useScrollReveal();
+  const coreServicesReveal = useScrollReveal();
+  const addOnReveal = useScrollReveal();
+  const howItWorksReveal = useScrollReveal();
+  const whyUsReveal = useScrollReveal();
+  const ctaReveal = useScrollReveal();
+
   const services = [
     {
-      title: "Residential Cleaning",
-      icon: "🏠",
-      description: "Professional home cleaning for houses, apartments, and townhouses across Sydney",
+      title: "Residential",
+      subtitle: "Home Cleaning",
+      description: "Regular, deep clean, or end-of-lease. We make homes sparkle with professional care.",
       features: [
         "General cleaning & maintenance",
         "Deep cleaning services",
         "End of lease / bond cleaning",
-        "Post-construction cleanup",
-        "Spring cleaning",
-        "One-time or recurring schedules"
+        "Post-construction cleanup"
       ],
-      startingPrice: "$150",
+      price: "From $150",
+      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
       action: () => navigateTo(ServiceType.Residential)
     },
     {
-      title: "Commercial Cleaning",
-      icon: "🏢",
-      description: "Keep your workspace spotless with our professional office and commercial cleaning",
+      title: "Commercial",
+      subtitle: "Office & Business",
+      description: "Daily, weekly, or contract-based cleaning for any workspace. Keep your business spotless.",
       features: [
-        "Office buildings & co-working spaces",
+        "Office buildings & co-working",
         "Retail stores & showrooms",
         "Medical centres & clinics",
-        "Gyms & fitness centres",
-        "Warehouses & industrial spaces",
-        "Customized cleaning schedules"
+        "Warehouses & industrial"
       ],
-      startingPrice: "$200",
+      price: "From $200",
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
       action: () => navigateTo(ServiceType.Commercial)
     },
     {
-      title: "Airbnb Turnover",
-      icon: "🏨",
-      description: "Fast, reliable turnover cleaning for short-term rental hosts",
+      title: "Airbnb",
+      subtitle: "Turnover Service",
+      description: "Same-day turnovers. 5-star guest ready, every time. Fast and reliable.",
       features: [
-        "Same-day turnovers available",
+        "Same-day turnovers",
         "Linen change & restocking",
         "Quality inspection reports",
-        "Guest-ready standard",
-        "Damage & maintenance reporting",
-        "Flexible scheduling 7 days a week"
+        "7 days a week service"
       ],
-      startingPrice: "$120",
+      price: "From $120",
+      image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
       action: () => navigateTo(ServiceType.Airbnb)
     }
   ];
@@ -53,267 +79,421 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
   const addOnServices = [
     {
       title: "Carpet Steam Cleaning",
-      icon: "🧼",
       description: "Professional steam cleaning to remove stains, odors, and allergens",
-      price: "From $80"
+      price: "From $80",
+      icon: SparklesIcon
     },
     {
       title: "Window Cleaning",
-      icon: "🪟",
       description: "Streak-free crystal clear windows inside and out",
-      price: "From $60"
+      price: "From $60",
+      icon: WindowIcon
     },
     {
       title: "Oven & Kitchen Deep Clean",
-      icon: "🔥",
       description: "Heavy-duty cleaning for ovens, range hoods, and appliances",
-      price: "From $90"
+      price: "From $90",
+      icon: FireIcon
     },
     {
       title: "Pressure Washing",
-      icon: "💦",
       description: "Driveways, patios, decks, and exterior surfaces",
-      price: "From $150"
+      price: "From $150",
+      icon: WaterIcon
     },
     {
       title: "Fridge & Freezer Clean",
-      icon: "❄️",
       description: "Complete sanitization and organization",
-      price: "From $50"
+      price: "From $50",
+      icon: SnowflakeIcon
     },
     {
       title: "Wall Washing",
-      icon: "🧽",
       description: "Remove marks, scuffs, and grime from walls",
-      price: "From $100"
+      price: "From $100",
+      icon: BrushIcon
     }
   ];
 
+  const howItWorks = [
+    { step: 1, title: "Get a Quote", description: "Fill out our quick form or call us for an instant estimate" },
+    { step: 2, title: "Schedule", description: "Choose a date and time that works for you" },
+    { step: 3, title: "We Clean", description: "Our professional team arrives and gets to work" },
+    { step: 4, title: "Enjoy", description: "Relax in your spotless space!" }
+  ];
+
+  const whyChooseUs = [
+    { icon: ShieldIcon, title: "Fully Insured", description: "Complete peace of mind with coverage" },
+    { icon: CheckBadgeIcon, title: "Quality Guaranteed", description: "100% satisfaction or we re-clean" },
+    { icon: ClockIcon, title: "Always Punctual", description: "On time, every single time" },
+    { icon: LeafIcon, title: "Eco-Friendly", description: "Safe products for your family" }
+  ];
+
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      <div className="hero-unit min-h-[650px] md:min-h-[750px] bg-black text-white mb-0 relative group overflow-hidden">
-        <div className="hero-unit-text flex flex-col items-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 leading-tight text-center drop-shadow-2xl text-white">
+    <div className="bg-black min-h-screen">
+      {/* ==================== HERO SECTION ==================== */}
+      <section
+        ref={heroReveal.ref}
+        className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-35"
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?w=1920&q=80)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+
+        <div className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0066CC]/10 border border-[#0066CC]/30 rounded-full mb-8">
+            <span className="w-2 h-2 bg-[#2997FF] rounded-full animate-pulse" />
+            <span className="text-[#2997FF] text-sm font-medium">Professional Cleaning Services</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold text-white tracking-tight leading-[0.95] mb-4">
             Our Services
           </h1>
-          <p className="text-2xl md:text-3xl font-medium text-center drop-shadow-lg max-w-4xl">
-            Professional cleaning solutions for every need
+          <p className="text-2xl md:text-4xl font-semibold text-[#86868B] mb-6">
+            Every Space. Perfected.
           </p>
-          <p className="text-lg md:text-xl text-white/90 text-center drop-shadow-md max-w-3xl mt-2">
-            From homes to offices, we've got you covered
-          </p>
-        </div>
-        <div
-          className="absolute inset-0 bg-cover bg-center animate-slow-zoom"
-          style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?w=1920&q=80)`
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
-      </div>
 
-      {/* Core Services */}
-      <div className="bg-white py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] text-center mb-16">
-            Core Services
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+            From homes to offices, Airbnbs to post-construction—we've mastered the art of making spaces shine.
+          </p>
+
+          {/* CTA Button */}
+          <button
+            onClick={() => navigateTo('Landing')}
+            className="px-8 py-4 bg-[#0066CC] text-white text-lg font-semibold rounded-full hover:bg-[#0077ED] transition-all duration-300 hover:scale-[1.02] shadow-[0_0_30px_rgba(0,102,204,0.4)]"
+          >
+            Get Instant Quote
+          </button>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <svg className="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </div>
+      </section>
+
+      {/* ==================== CORE SERVICES ==================== */}
+      <section
+        ref={coreServicesReveal.ref}
+        className="py-20 px-6 bg-black"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${coreServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Core Services</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              Pick Your Clean.
+            </h2>
+          </div>
+
+          {/* Services Grid with Images */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {services.map((service, index) => (
-              <div key={index} className="apple-card p-8 flex flex-col transform hover:scale-[1.02] transition-all duration-300">
-                <div className="text-center mb-6">
-                  <div className="text-7xl mb-4">{service.icon}</div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-[#1D1D1F] mb-3">{service.title}</h3>
-                  <p className="text-[#86868b] leading-relaxed">{service.description}</p>
-                </div>
-
-                <div className="space-y-3 mb-6 flex-grow">
-                  {service.features.map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <span className="text-brand-gold text-xl">✓</span>
-                      <span className="text-[#1D1D1F]">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="border-t-2 border-gray-100 pt-6 mt-auto">
-                  <div className="text-center mb-4">
-                    <span className="text-sm text-[#86868b] block mb-1">Starting from</span>
-                    <div className="text-4xl font-bold text-[#1D1D1F]">{service.startingPrice}</div>
+              <button
+                key={service.title}
+                onClick={service.action}
+                className="group bg-[#1C1C1E] rounded-[20px] overflow-hidden text-left border border-transparent hover:border-[#2997FF]/30 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={`${service.title} cleaning service`}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1C1C1E] to-transparent" />
+                  {/* Icon overlay */}
+                  <div className="absolute bottom-4 left-4 w-12 h-12 bg-[#0066CC]/90 rounded-xl flex items-center justify-center">
+                    {index === 0 && <HomeIcon className="w-6 h-6 text-white" />}
+                    {index === 1 && <BuildingIcon className="w-6 h-6 text-white" />}
+                    {index === 2 && <PlaneIcon className="w-6 h-6 text-white" />}
                   </div>
-                  <button
-                    onClick={service.action}
-                    className="btn-primary w-full py-4 text-lg shadow-lg hover:shadow-xl"
-                  >
-                    Get Quote
-                  </button>
                 </div>
-              </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-semibold text-white mb-1">{service.title}</h3>
+                  <p className="text-[#86868B] text-sm mb-3">{service.subtitle}</p>
+                  <p className="text-white/60 text-[15px] leading-relaxed mb-4">{service.description}</p>
+
+                  {/* Features */}
+                  <div className="space-y-2 mb-5">
+                    {service.features.slice(0, 3).map((feature, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-white/50">
+                        <span className="text-[#2997FF]">✓</span>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Price & CTA */}
+                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    <span className="text-[#2997FF] font-semibold text-lg">{service.price}</span>
+                    <span className="flex items-center gap-2 text-white/60 group-hover:text-[#2997FF] transition-colors">
+                      Get Quote
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Add-On Services */}
-      <div className="bg-gradient-to-br from-[#F5F5F7] to-white py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] text-center mb-4">
-            Add-On Services
-          </h2>
-          <p className="text-center text-[#86868b] text-lg mb-16">
-            Enhance your cleaning with these specialized services
-          </p>
+      {/* ==================== ADD-ON SERVICES ==================== */}
+      <section
+        ref={addOnReveal.ref}
+        className="py-20 px-6 bg-[#0D0D0D]"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${addOnReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Add-On Services</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white mb-4">
+              Enhance Your Clean.
+            </h2>
+            <p className="text-white/60 max-w-2xl mx-auto">
+              Specialized services to take your cleaning to the next level
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Add-On Grid - Glass Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {addOnServices.map((addon, index) => (
-              <div key={index} className="apple-card p-6 transform hover:scale-105 transition-all duration-300">
-                <div className="flex items-start gap-4">
-                  <div className="text-5xl">{addon.icon}</div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg text-[#1D1D1F] mb-2">{addon.title}</h3>
-                    <p className="text-sm text-[#86868b] mb-3 leading-relaxed">{addon.description}</p>
-                    <p className="text-brand-gold font-bold text-lg">{addon.price}</p>
-                  </div>
+              <div
+                key={addon.title}
+                className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-[#2997FF]/30 hover:bg-[#1C1C1E] transition-all duration-300"
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                <div className="w-12 h-12 bg-[#0066CC]/20 rounded-xl flex items-center justify-center mb-4">
+                  <addon.icon className="w-6 h-6 text-[#2997FF]" />
                 </div>
+                <h3 className="text-lg font-semibold text-white mb-2">{addon.title}</h3>
+                <p className="text-white/60 text-sm leading-relaxed mb-4">{addon.description}</p>
+                <p className="text-[#2997FF] font-semibold">{addon.price}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* How It Works */}
-      <div className="bg-white py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] text-center mb-16">
-            How It Works
-          </h2>
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center transform hover:scale-105 transition-all duration-300">
-              <div className="w-20 h-20 bg-brand-gold text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-                1
-              </div>
-              <h3 className="font-bold text-xl text-[#1D1D1F] mb-2">Get a Quote</h3>
-              <p className="text-[#86868b] leading-relaxed">Fill out our quick form or call us for an instant estimate</p>
-            </div>
+      {/* ==================== HOW IT WORKS ==================== */}
+      <section
+        ref={howItWorksReveal.ref}
+        className="py-20 px-6 bg-black"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${howItWorksReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">How It Works</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              Simple. Fast. Easy.
+            </h2>
+          </div>
 
-            <div className="text-center transform hover:scale-105 transition-all duration-300">
-              <div className="w-20 h-20 bg-brand-gold text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-                2
+          {/* Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {howItWorks.map((item, index) => (
+              <div
+                key={item.step}
+                className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 text-center hover:border-[#2997FF]/30 transition-all duration-300"
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <div className="w-16 h-16 bg-[#0066CC] rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
+                  {item.step}
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                <p className="text-white/60 text-sm leading-relaxed">{item.description}</p>
               </div>
-              <h3 className="font-bold text-xl text-[#1D1D1F] mb-2">Schedule Service</h3>
-              <p className="text-[#86868b] leading-relaxed">Choose a date and time that works for you</p>
-            </div>
-
-            <div className="text-center transform hover:scale-105 transition-all duration-300">
-              <div className="w-20 h-20 bg-brand-gold text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-                3
-              </div>
-              <h3 className="font-bold text-xl text-[#1D1D1F] mb-2">We Clean</h3>
-              <p className="text-[#86868b] leading-relaxed">Our professional team arrives and gets to work</p>
-            </div>
-
-            <div className="text-center transform hover:scale-105 transition-all duration-300">
-              <div className="w-20 h-20 bg-brand-gold text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-                4
-              </div>
-              <h3 className="font-bold text-xl text-[#1D1D1F] mb-2">Enjoy</h3>
-              <p className="text-[#86868b] leading-relaxed">Relax in your spotless space!</p>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Why Choose Us */}
-      <div className="bg-gradient-to-br from-[#1D1D1F] to-gray-900 text-white py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            Why Choose Clean Up Bros?
-          </h2>
+      {/* ==================== WHY CHOOSE US ==================== */}
+      <section
+        ref={whyUsReveal.ref}
+        className="py-20 px-6 bg-[#0D0D0D]"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${whyUsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Why Choose Us</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              We're Not Your Average Cleaners.
+            </h2>
+          </div>
 
-          {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-4">
-              <img
-                src="/ndis-logo.jpg"
-                alt="We Love NDIS"
-                className="h-12 w-auto object-contain rounded-lg"
-              />
-              <span className="text-white font-semibold">NDIS Registered</span>
+          {/* Trust Badges Row */}
+          <div className="flex flex-wrap justify-center items-center gap-4 mb-12">
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-5 py-3">
+              <img src="/ndis-logo.jpg" alt="NDIS" className="h-10 w-auto object-contain rounded-lg" />
+              <span className="text-white font-medium">NDIS Registered</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-4">
-              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span className="text-white font-semibold">Fully Insured</span>
+            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-5 py-3">
+              <ShieldIcon className="w-6 h-6 text-[#30D158]" />
+              <span className="text-white font-medium">Fully Insured</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-4">
+            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-5 py-3">
               <div className="flex">
                 {[1,2,3,4,5].map(i => (
-                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  <svg key={i} className="w-4 h-4 text-[#2997FF] fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 ))}
               </div>
-              <span className="text-white font-semibold">4.9 Rating</span>
+              <span className="text-white font-medium">4.9 Rating</span>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center transform hover:scale-110 transition-all duration-300">
-              <div className="text-6xl mb-4">✨</div>
-              <h3 className="font-bold text-2xl mb-3">Quality Guaranteed</h3>
-              <p className="text-white/80 leading-relaxed">100% satisfaction or we re-clean free</p>
-            </div>
-
-            <div className="text-center transform hover:scale-110 transition-all duration-300">
-              <div className="text-6xl mb-4">💯</div>
-              <h3 className="font-bold text-2xl mb-3">Fully Insured</h3>
-              <p className="text-white/80 leading-relaxed">Your property is protected</p>
-            </div>
-
-            <div className="text-center transform hover:scale-110 transition-all duration-300">
-              <div className="text-6xl mb-4">⏰</div>
-              <h3 className="font-bold text-2xl mb-3">Punctual</h3>
-              <p className="text-white/80 leading-relaxed">Always on time, every time</p>
-            </div>
-
-            <div className="text-center transform hover:scale-110 transition-all duration-300">
-              <div className="text-6xl mb-4">🌱</div>
-              <h3 className="font-bold text-2xl mb-3">Eco-Friendly</h3>
-              <p className="text-white/80 leading-relaxed">Safe products for your family</p>
-            </div>
+          {/* Features Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {whyChooseUs.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-5 border border-white/10 hover:border-[#2997FF]/30 transition-all duration-300"
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                <div className="w-12 h-12 bg-[#0066CC]/20 rounded-xl flex items-center justify-center mb-4">
+                  <feature.icon className="w-6 h-6 text-[#2997FF]" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-1">{feature.title}</h3>
+                <p className="text-white/60 text-sm leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* CTA Section */}
-      <div className="bg-gradient-to-br from-[#F5F5F7] to-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] mb-6">
+      {/* ==================== FINAL CTA ==================== */}
+      <section
+        ref={ctaReveal.ref}
+        className="py-20 px-6 bg-[#0066CC] relative overflow-hidden"
+      >
+        {/* Background text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="text-[20vw] font-bold text-black/5 whitespace-nowrap">CLEAN</span>
+        </div>
+
+        <div className={`relative z-10 text-center max-w-3xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <h2 className="text-4xl md:text-6xl font-semibold text-white mb-6">
             Ready to Get Started?
           </h2>
-          <p className="text-xl md:text-2xl text-[#86868b] mb-10">
-            Get your free quote in less than 60 seconds
+          <p className="text-xl text-white/80 mb-10">
+            Get your instant quote in 60 seconds. No obligations, no hidden fees.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => navigateTo('Landing')}
-              className="btn-primary text-xl px-12 py-4 shadow-xl hover:shadow-2xl"
+              className="inline-flex items-center gap-3 px-10 py-5 bg-black text-white text-xl font-semibold rounded-full hover:bg-[#1C1C1E] transition-all duration-300 hover:scale-[1.02] shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
             >
-              Get Free Quote
+              Get Your Free Quote
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </button>
             <button
               onClick={() => navigateTo('Contact')}
-              className="btn-secondary text-xl px-12 py-4 shadow-lg hover:shadow-xl"
+              className="px-8 py-4 text-white text-lg font-medium hover:underline transition-colors"
             >
               Contact Us
             </button>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
+
+// ==================== ICONS ====================
+
+const HomeIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  </svg>
+);
+
+const BuildingIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+  </svg>
+);
+
+const PlaneIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+  </svg>
+);
+
+const ShieldIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+  </svg>
+);
+
+const CheckBadgeIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+  </svg>
+);
+
+const ClockIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
+const LeafIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+  </svg>
+);
+
+const SparklesIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+  </svg>
+);
+
+const WindowIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 12h16M12 4v16" />
+  </svg>
+);
+
+const FireIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+  </svg>
+);
+
+const WaterIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
+  </svg>
+);
+
+const SnowflakeIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v18m0-18l-3 3m3-3l3 3m-3 15l-3-3m3 3l3-3M3 12h18M3 12l3 3m-3-3l3-3m15 3l-3 3m3-3l-3-3" />
+  </svg>
+);
+
+const BrushIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
 
 export default ServicesView;

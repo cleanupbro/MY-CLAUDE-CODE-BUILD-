@@ -43,13 +43,13 @@ const INITIAL_DATA: ResidentialQuoteData = {
 };
 
 const PriceEstimateDisplay: React.FC<{ estimate: { price: number } | null, isLoading: boolean, frequency: string, condition: string, error: string | null }> = ({ estimate, isLoading, frequency, condition, error }) => {
-    
+
     if (condition === 'Extreme') {
         return (
-            <div className="p-4 bg-yellow-50 border-2 border-brand-gold rounded-lg text-center shadow-md mt-6 animate-fade-in-up">
-                <p className="text-sm font-semibold text-brand-navy">CUSTOM QUOTE REQUIRED</p>
-                <p className="text-gray-600 my-2 text-sm">Due to the condition of the property (Hoarding/Biohazard), we need to discuss details to provide an accurate price.</p>
-                <p className="text-xs text-gray-500">Please submit the form and our team will call you shortly.</p>
+            <div className="p-5 bg-[#FF6B4A]/10 border border-[#FF6B4A]/30 rounded-2xl text-center mt-6">
+                <p className="text-sm font-semibold text-[#FF6B4A] uppercase tracking-wider">Custom Quote Required</p>
+                <p className="text-white/70 my-2 text-sm">Due to the condition of the property (Hoarding/Biohazard), we need to discuss details to provide an accurate price.</p>
+                <p className="text-xs text-white/40">Please submit the form and our team will call you shortly.</p>
             </div>
         );
     }
@@ -60,38 +60,38 @@ const PriceEstimateDisplay: React.FC<{ estimate: { price: number } | null, isLoa
     }
 
     return (
-        <div className="p-4 bg-blue-50 border-2 border-brand-gold rounded-lg text-center shadow-md mt-6">
-            <div className="flex items-center justify-center gap-1 mb-2">
-                <p className="text-sm font-semibold text-brand-navy">INSTANT ESTIMATE</p>
+        <div className="p-5 bg-[#0066CC]/10 border border-[#0066CC]/30 rounded-2xl text-center mt-6">
+            <div className="flex items-center justify-center gap-2 mb-3">
+                <p className="text-sm font-semibold text-[#2997FF] uppercase tracking-wider">Instant Estimate</p>
                 <div className="relative group inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/40 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity w-56 pointer-events-none z-10 shadow-lg">
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#1C1C1E] text-white text-xs rounded-xl opacity-0 group-hover:opacity-100 transition-opacity w-56 pointer-events-none z-10 shadow-xl border border-white/10">
                         This price is AI-generated based on standard rates. Final quote will be confirmed upon booking or inspection.
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-[#1C1C1E]"></div>
                     </div>
                 </div>
             </div>
             {isLoading ? (
                 <div className="flex justify-center items-center my-4">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-brand-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#2997FF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <p className="text-gray-600">Calculating...</p>
+                    <p className="text-white/60">Calculating...</p>
                 </div>
             ) : error ? (
-                <div className="my-2 p-2 bg-red-50 border-red-300 text-red-800 rounded-lg">
-                    <p className="font-bold text-sm">Estimation Failed</p>
-                    <p className="text-xs mt-1">{error}</p>
+                <div className="my-2 p-3 bg-[#FF453A]/10 border border-[#FF453A]/30 rounded-xl">
+                    <p className="font-semibold text-sm text-[#FF453A]">Estimation Failed</p>
+                    <p className="text-xs mt-1 text-white/60">{error}</p>
                 </div>
             ) : estimate ? (
-                <p className="text-4xl font-bold text-brand-navy my-2">${estimate.price.toFixed(2)} <span className="text-xl font-semibold">{getFrequencyText()}</span></p>
+                <p className="text-4xl font-bold text-white my-2">${estimate.price.toFixed(2)} <span className="text-xl font-semibold text-[#2997FF]">{getFrequencyText()}</span></p>
             ) : (
-                 <p className="text-gray-600 my-4">Complete the form to see an estimate.</p>
+                 <p className="text-white/50 my-4">Complete the form to see an estimate.</p>
             )}
-             <p className="text-xs text-gray-500 mt-2">Final price will be confirmed upon booking. This is an AI-generated estimate.</p>
+             <p className="text-xs text-white/40 mt-2">Final price will be confirmed upon booking. This is an AI-generated estimate.</p>
         </div>
     );
 };

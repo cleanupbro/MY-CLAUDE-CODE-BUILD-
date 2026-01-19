@@ -1,259 +1,330 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavigationProps } from '../types';
 
+// Scroll reveal hook
+const useScrollReveal = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isVisible };
+};
+
 const ReviewsView: React.FC<NavigationProps> = ({ navigateTo }) => {
+  const heroReveal = useScrollReveal();
+  const featuredReveal = useScrollReveal();
+  const gridReveal = useScrollReveal();
+  const lovesReveal = useScrollReveal();
+  const ctaReveal = useScrollReveal();
+
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const featuredTestimonials = [
+    { name: 'Sarah M.', location: 'Liverpool', text: 'Got my entire bond back. These guys are absolute legends! The property manager was impressed by how spotless they left everything.', rating: 5, service: 'End of Lease' },
+    { name: 'James K.', location: 'Parramatta', text: 'Our office has never looked this good. Staff love coming to work now. Professional, punctual, and incredibly thorough.', rating: 5, service: 'Commercial' },
+    { name: 'Emma L.', location: 'Cabramatta', text: 'Same-day Airbnb turnover. 5-star reviews from guests ever since. They understand exactly what short-term rental hosts need.', rating: 5, service: 'Airbnb' },
+  ];
+
+  // Auto-rotate testimonials
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % featuredTestimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const reviews = [
-    {
-      name: "Sarah M.",
-      location: "Liverpool",
-      rating: 5,
-      service: "End of Lease Clean",
-      date: "2 weeks ago",
-      text: "Absolutely phenomenal service! The team did our end of lease clean and we got our full bond back. They were thorough, professional, and the place looked brand new. Highly recommend!",
-      verified: true
-    },
-    {
-      name: "Michael T.",
-      location: "Campbelltown",
-      rating: 5,
-      service: "Commercial Office",
-      date: "1 month ago",
-      text: "We've been using Clean Up Bros for our office cleaning for 6 months now. Always on time, never miss a spot, and super professional. Our workplace has never looked better!",
-      verified: true
-    },
-    {
-      name: "Emma L.",
-      location: "Parramatta",
-      rating: 5,
-      service: "Airbnb Turnover",
-      date: "3 days ago",
-      text: "As an Airbnb host, timing is everything. Clean Up Bros never lets me down. They're fast, efficient, and my guests always comment on how spotless the place is. Worth every penny!",
-      verified: true
-    },
-    {
-      name: "David K.",
-      location: "Bankstown",
-      rating: 5,
-      service: "Deep Clean",
-      date: "2 months ago",
-      text: "Had them do a deep clean before my parents visited. They transformed my apartment! Even cleaned areas I forgot existed. The attention to detail was incredible.",
-      verified: true
-    },
-    {
-      name: "Jessica R.",
-      location: "Camden",
-      rating: 5,
-      service: "Post-Construction",
-      date: "1 week ago",
-      text: "After our renovation, the house was a disaster. Clean Up Bros came in and made it look showroom ready. They removed all the dust, cleaned every surface, and even polished the windows. Amazing work!",
-      verified: true
-    },
-    {
-      name: "Tom W.",
-      location: "Moorebank",
-      rating: 5,
-      service: "Regular Cleaning",
-      date: "3 weeks ago",
-      text: "Been using their bi-weekly service for a year now. It's like having a consistently clean home without any effort. The team is friendly, trustworthy, and does a fantastic job every time.",
-      verified: true
-    },
-    {
-      name: "Priya S.",
-      location: "Fairfield",
-      rating: 5,
-      service: "Residential Clean",
-      date: "1 month ago",
-      text: "Very impressed! They worked around my schedule, arrived exactly on time, and cleaned every room to perfection. Even my teenage son noticed how clean his room was!",
-      verified: true
-    },
-    {
-      name: "James H.",
-      location: "Prestons",
-      rating: 5,
-      service: "Office Clean",
-      date: "2 weeks ago",
-      text: "Clean Up Bros has been cleaning our medical centre for 3 months. They understand the importance of hygiene in healthcare and always go above and beyond. Couldn't ask for better service.",
-      verified: true
-    },
-    {
-      name: "Rachel B.",
-      location: "Casula",
-      rating: 5,
-      service: "Spring Clean",
-      date: "1 week ago",
-      text: "Did a spring clean of our entire house including windows, carpets, and oven. The place sparkles! They even organized my pantry without me asking. So happy with the results!",
-      verified: true
-    }
+    { name: "Michael T.", location: "Campbelltown", rating: 5, service: "Commercial Office", date: "1 month ago", text: "We've been using Clean Up Bros for our office cleaning for 6 months now. Always on time, never miss a spot, and super professional.", verified: true },
+    { name: "David K.", location: "Bankstown", rating: 5, service: "Deep Clean", date: "2 months ago", text: "Had them do a deep clean before my parents visited. They transformed my apartment! Even cleaned areas I forgot existed.", verified: true },
+    { name: "Jessica R.", location: "Camden", rating: 5, service: "Post-Construction", date: "1 week ago", text: "After our renovation, the house was a disaster. Clean Up Bros made it look showroom ready. Incredible attention to detail.", verified: true },
+    { name: "Tom W.", location: "Moorebank", rating: 5, service: "Regular Cleaning", date: "3 weeks ago", text: "Been using their bi-weekly service for a year now. The team is friendly, trustworthy, and does a fantastic job every time.", verified: true },
+    { name: "Priya S.", location: "Fairfield", rating: 5, service: "Residential Clean", date: "1 month ago", text: "Very impressed! They worked around my schedule and cleaned every room to perfection. Even my teenage son noticed!", verified: true },
+    { name: "Rachel B.", location: "Casula", rating: 5, service: "Spring Clean", date: "1 week ago", text: "Did a spring clean of our entire house including windows, carpets, and oven. The place sparkles! So happy with the results.", verified: true }
+  ];
+
+  const highlights = [
+    { icon: BoltIcon, title: "Speed & Efficiency", quote: "They get the job done fast without compromising quality" },
+    { icon: UsersIcon, title: "Professional Team", quote: "Friendly, respectful, and always professional" },
+    { icon: SparkleIcon, title: "Attention to Detail", quote: "They clean areas I didn't even think of" }
   ];
 
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      <div className="hero-unit min-h-[650px] md:min-h-[750px] bg-black text-white mb-0 relative group overflow-hidden">
-        <div className="hero-unit-text flex flex-col items-center">
-          <div className="flex gap-1 mb-4 animate-fade-in-up">
+    <div className="bg-black min-h-screen">
+      {/* ==================== HERO SECTION ==================== */}
+      <section
+        ref={heroReveal.ref}
+        className="min-h-[80vh] flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&q=80)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+
+        <div className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Star Rating Display */}
+          <div className="flex justify-center gap-1 mb-6">
             {[1,2,3,4,5].map(i => (
-              <svg key={i} className="w-12 h-12 md:w-16 md:h-16 text-brand-gold fill-current drop-shadow-lg" viewBox="0 0 20 20">
-                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+              <svg key={i} className="w-10 h-10 md:w-12 md:h-12 text-[#2997FF] fill-current" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 leading-tight text-center drop-shadow-2xl text-white">
+
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0066CC]/10 border border-[#0066CC]/30 rounded-full mb-8">
+            <span className="w-2 h-2 bg-[#2997FF] rounded-full animate-pulse" />
+            <span className="text-[#2997FF] text-sm font-medium">4.9 Star Rating • 127+ Reviews</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold text-white tracking-tight leading-[0.95] mb-4">
             Customer Reviews
           </h1>
-          <p className="text-2xl md:text-3xl font-semibold mb-2 text-center drop-shadow-lg">
-            4.9 out of 5
+          <p className="text-2xl md:text-4xl font-semibold text-[#86868B] mb-6">
+            Real Stories. Real Results.
           </p>
-          <p className="text-lg md:text-xl font-medium mb-8 text-center text-white/90 drop-shadow-md">
-            Based on 127+ verified Google reviews
-          </p>
+
+          {/* Stats Row */}
+          <div className="flex flex-wrap justify-center gap-8 mt-10">
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-semibold text-white">500+</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Happy Clients</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-semibold text-white">100%</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Bond Back Rate</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-semibold text-white">4.9<span className="text-[#2997FF]">★</span></div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Average Rating</div>
+            </div>
+          </div>
+
+          {/* CTA */}
           <button
             onClick={() => navigateTo('ClientFeedback')}
-            className="px-8 py-4 rounded-full bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-lg hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 font-semibold text-lg"
+            className="mt-10 px-8 py-4 bg-[#0066CC] text-white text-lg font-semibold rounded-full hover:bg-[#0077ED] transition-all duration-300 hover:scale-[1.02] shadow-[0_0_30px_rgba(0,102,204,0.4)]"
           >
             Leave a Review
           </button>
         </div>
-        <div
-          className="absolute inset-0 bg-cover bg-center animate-slow-zoom"
-          style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&q=80)`
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
-      </div>
+      </section>
 
-      {/* Inspirational Quote Section */}
-      <div className="bg-gradient-to-br from-[#F5F5F7] to-white py-20 px-4">
-        <div className="max-w-5xl mx-auto text-center">
-          <svg className="w-16 h-16 md:w-20 md:h-20 text-brand-gold mx-auto mb-6 opacity-60" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-          </svg>
-          <p className="text-2xl md:text-4xl font-light text-[#1D1D1F] italic leading-relaxed mb-6">
-            "A clean space is not just about appearance—it's about creating an environment where life, business, and dreams can flourish."
-          </p>
-          <p className="text-xl text-brand-gold font-semibold">— Clean Up Bros Philosophy</p>
-        </div>
-      </div>
+      {/* ==================== FEATURED TESTIMONIAL CAROUSEL ==================== */}
+      <section
+        ref={featuredReveal.ref}
+        className="py-20 px-6 bg-[#0D0D0D]"
+      >
+        <div className={`max-w-4xl mx-auto transition-all duration-1000 delay-100 ${featuredReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Featured Reviews</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              What Our Clients Say.
+            </h2>
+          </div>
 
-      {/* Trust Badges */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <div className="apple-card p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">✅</div>
-            <div className="font-bold text-lg text-[#1D1D1F]">Verified Reviews</div>
-            <div className="text-sm text-[#86868b] mt-1">Real customers only</div>
-          </div>
-          <div className="apple-card p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">🏆</div>
-            <div className="font-bold text-lg text-[#1D1D1F]">5-Star Service</div>
-            <div className="text-sm text-[#86868b] mt-1">Consistently rated</div>
-          </div>
-          <div className="apple-card p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">💯</div>
-            <div className="font-bold text-lg text-[#1D1D1F]">100% Satisfaction</div>
-            <div className="text-sm text-[#86868b] mt-1">Guaranteed results</div>
-          </div>
-          <div className="apple-card p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">👥</div>
-            <div className="font-bold text-lg text-[#1D1D1F]">500+ Clients</div>
-            <div className="text-sm text-[#86868b] mt-1">Happy customers</div>
-          </div>
-        </div>
-      </div>
+          {/* Testimonial Card */}
+          <div className="bg-gradient-to-br from-[#1C1C1E] to-[#0D0D0D] rounded-[24px] p-8 md:p-12 border border-white/10">
+            {/* Quote */}
+            <div className="relative mb-8">
+              <span className="absolute -top-4 -left-2 text-8xl text-[#2997FF] opacity-20 font-serif">"</span>
+              <p className="text-2xl md:text-3xl text-white font-medium leading-relaxed pl-8">
+                {featuredTestimonials[activeTestimonial].text}
+              </p>
+            </div>
 
-      {/* Reviews Grid */}
-      <div className="max-w-7xl mx-auto px-4 pb-16">
-        <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] text-center mb-12">
-          What Our Customers Say
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review, index) => (
-            <div
-              key={index}
-              className="apple-card p-6 flex flex-col h-full transform hover:scale-[1.02] transition-all duration-300"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="font-bold text-lg text-[#1D1D1F]">{review.name}</div>
-                  <div className="text-sm text-[#86868b]">{review.location}</div>
-                </div>
-                {review.verified && (
-                  <span className="text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full font-semibold border border-green-200">
-                    ✓ Verified
-                  </span>
-                )}
+            {/* Author */}
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-[#2997FF] rounded-full flex items-center justify-center text-xl font-bold text-black">
+                {featuredTestimonials[activeTestimonial].name.charAt(0)}
               </div>
-
-              <div className="flex gap-1 mb-3">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} className="w-5 h-5 text-brand-gold fill-current" viewBox="0 0 20 20">
-                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+              <div>
+                <h4 className="text-white font-semibold">{featuredTestimonials[activeTestimonial].name}</h4>
+                <p className="text-[#86868B]">{featuredTestimonials[activeTestimonial].location} • {featuredTestimonials[activeTestimonial].service}</p>
+              </div>
+              <div className="ml-auto flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-[#2997FF] fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 ))}
               </div>
-
-              <div className="text-sm font-semibold text-[#0071e3] mb-3">{review.service}</div>
-
-              <p className="text-[#1D1D1F] mb-4 flex-grow leading-relaxed">{review.text}</p>
-
-              <div className="text-xs text-[#86868b]">{review.date}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* What Customers Love */}
-      <div className="bg-gradient-to-br from-[#F5F5F7] to-white py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] text-center mb-16">
-            What Our Customers Love
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="apple-card p-8 text-center transform hover:scale-105 transition-all duration-300">
-              <div className="text-6xl mb-6">⚡</div>
-              <h3 className="text-2xl font-bold text-[#1D1D1F] mb-4">Speed & Efficiency</h3>
-              <p className="text-[#86868b] text-lg leading-relaxed">
-                "They get the job done fast without compromising quality"
-              </p>
             </div>
 
-            <div className="apple-card p-8 text-center transform hover:scale-105 transition-all duration-300">
-              <div className="text-6xl mb-6">🤝</div>
-              <h3 className="text-2xl font-bold text-[#1D1D1F] mb-4">Professional Team</h3>
-              <p className="text-[#86868b] text-lg leading-relaxed">
-                "Friendly, respectful, and always professional"
-              </p>
-            </div>
-
-            <div className="apple-card p-8 text-center transform hover:scale-105 transition-all duration-300">
-              <div className="text-6xl mb-6">💎</div>
-              <h3 className="text-2xl font-bold text-[#1D1D1F] mb-4">Attention to Detail</h3>
-              <p className="text-[#86868b] text-lg leading-relaxed">
-                "They clean areas I didn't even think of"
-              </p>
+            {/* Navigation Dots */}
+            <div className="flex gap-2 mt-8">
+              {featuredTestimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTestimonial(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${index === activeTestimonial ? 'w-8 bg-[#2997FF]' : 'w-2 bg-white/20 hover:bg-white/40'}`}
+                />
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Get Quote CTA */}
-      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-[#1D1D1F] mb-6">
-          Join Our Happy Customers
-        </h2>
-        <p className="text-xl md:text-2xl text-[#86868b] mb-10">
-          Experience 5-star cleaning service today
-        </p>
-        <button
-          onClick={() => navigateTo('Landing')}
-          className="btn-primary text-xl px-12 py-4 shadow-lg hover:shadow-xl"
-        >
-          Get Your Free Quote
-        </button>
-      </div>
+      {/* ==================== REVIEWS GRID ==================== */}
+      <section
+        ref={gridReveal.ref}
+        className="py-20 px-6 bg-black"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${gridReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">All Reviews</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              More Happy Customers.
+            </h2>
+          </div>
+
+          {/* Reviews Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {reviews.map((review, index) => (
+              <div
+                key={index}
+                className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-[#2997FF]/30 transition-all duration-300 flex flex-col"
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#2997FF]/20 rounded-full flex items-center justify-center text-sm font-semibold text-[#2997FF]">
+                      {review.name.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white">{review.name}</div>
+                      <div className="text-xs text-white/50">{review.location}</div>
+                    </div>
+                  </div>
+                  {review.verified && (
+                    <span className="text-xs bg-[#30D158]/20 text-[#30D158] px-2 py-1 rounded-full font-medium">
+                      ✓ Verified
+                    </span>
+                  )}
+                </div>
+
+                {/* Stars */}
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-4 h-4 text-[#2997FF] fill-current" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  ))}
+                </div>
+
+                {/* Service Tag */}
+                <div className="text-xs text-[#2997FF] font-medium mb-3">{review.service}</div>
+
+                {/* Review Text */}
+                <p className="text-white/70 text-sm leading-relaxed flex-grow">{review.text}</p>
+
+                {/* Date */}
+                <div className="text-xs text-white/40 mt-4">{review.date}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== WHAT CUSTOMERS LOVE ==================== */}
+      <section
+        ref={lovesReveal.ref}
+        className="py-20 px-6 bg-[#0D0D0D]"
+      >
+        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${lovesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">What They Love</p>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
+              Why Customers Choose Us.
+            </h2>
+          </div>
+
+          {/* Highlights Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {highlights.map((item, index) => (
+              <div
+                key={item.title}
+                className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center hover:border-[#2997FF]/30 transition-all duration-300"
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <div className="w-16 h-16 bg-[#0066CC]/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <item.icon className="w-8 h-8 text-[#2997FF]" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-4">{item.title}</h3>
+                <p className="text-white/60 italic">"{item.quote}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== FINAL CTA ==================== */}
+      <section
+        ref={ctaReveal.ref}
+        className="py-20 px-6 bg-[#0066CC] relative overflow-hidden"
+      >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="text-[20vw] font-bold text-black/5 whitespace-nowrap">STARS</span>
+        </div>
+
+        <div className={`relative z-10 text-center max-w-3xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <h2 className="text-4xl md:text-6xl font-semibold text-white mb-6">
+            Join Our Happy Customers
+          </h2>
+          <p className="text-xl text-white/80 mb-10">
+            Experience 5-star cleaning service today. See why hundreds trust us.
+          </p>
+          <button
+            onClick={() => navigateTo('Landing')}
+            className="inline-flex items-center gap-3 px-10 py-5 bg-black text-white text-xl font-semibold rounded-full hover:bg-[#1C1C1E] transition-all duration-300 hover:scale-[1.02] shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+          >
+            Get Your Free Quote
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+        </div>
+      </section>
     </div>
   );
 };
+
+// ==================== ICONS ====================
+
+const BoltIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+  </svg>
+);
+
+const UsersIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+  </svg>
+);
+
+const SparkleIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+  </svg>
+);
 
 export default ReviewsView;
