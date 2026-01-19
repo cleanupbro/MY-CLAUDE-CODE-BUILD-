@@ -1,7 +1,7 @@
 # TASKS.md - Work Queue
 ## Clean Up Bros
 
-**Last Updated:** January 16, 2026
+**Last Updated:** January 19, 2026
 
 ---
 
@@ -9,8 +9,22 @@
 
 | Priority | Task | Status | Notes |
 |----------|------|--------|-------|
-| HIGH | Test admin login (Supabase configured) | PENDING | Supabase key fixed Jan 7 |
-| MEDIUM | Test remaining webhooks (Jobs, Feedback) | PENDING | Only Residential/Commercial/Airbnb tested |
+| HIGH | Commit Phase 1 changes | PENDING | Visual overhaul complete |
+| HIGH | Deploy to Vercel | PENDING | After commit |
+| MEDIUM | Test all 5 main pages | PENDING | Landing, Services, About, Contact, Reviews |
+| LOW | Test remaining webhooks (Jobs, Feedback) | PENDING | Only Residential/Commercial/Airbnb tested |
+
+---
+
+## COMPLETED TODAY (Jan 19, 2026)
+
+| Task | Result |
+|------|--------|
+| Phase 1 Visual Overhaul | All 5 pages updated with Ken Burns, wider containers |
+| Handoff System Unified | memory/ folder, token-efficient CLAUDE.md/GEMINI.md |
+| Archived duplicate _AI/ files | Moved to _AI/_archive/2026-01-19/ |
+| Created handoff skill | _AI/skills/handoff.md |
+| Created session-log.md | memory/session-log.md template |
 
 ---
 
@@ -18,12 +32,10 @@
 
 | Date | Task | Result |
 |------|------|--------|
+| Jan 18, 2026 | Migrated to OPBROS.AI workspace | New folder structure |
 | Jan 16, 2026 | Boris Standard restructure | AI.md + skills/ created |
 | Jan 7, 2026 | Full system validation | BUILD PASSING |
-| Jan 7, 2026 | Supabase anon key fix | JWT key updated |
-| Jan 7, 2026 | Create GEMINI.md | Seamless AI handoff enabled |
 | Jan 3, 2026 | Million dollar redesign | Dark theme + animations |
-| Jan 3, 2026 | SEO optimization | Liverpool NSW keywords |
 
 ---
 
@@ -31,31 +43,19 @@
 
 | Task | Priority | Notes |
 |------|----------|-------|
+| Phase 2 - Supabase quote storage | MEDIUM | Database integration |
+| Phase 3 - N8N workflow automation | MEDIUM | Email/SMS notifications |
 | Add Google Reviews integration | LOW | Display reviews on site |
 | Implement chat widget | LOW | AI-powered customer chat |
-| Add payment tracking dashboard | LOW | Stripe/Square integration |
 
 ---
 
-## HOW TO USE THIS FILE
+## PROJECT PHASES
 
-### Add a Task
-```
-| PRIORITY | Task description | PENDING | Any notes |
-```
-
-### Update Status
-- PENDING → In queue
-- IN_PROGRESS → Currently working
-- BLOCKED → Waiting on something
-- COMPLETED → Done (move to Completed section)
-
-### Priority Levels
-- CRITICAL → Do immediately
-- HIGH → Do today
-- MEDIUM → Do this week
-- LOW → Do when time permits
+- [x] **Phase 1:** Visual Overhaul (Jan 19, 2026) - COMPLETE
+- [ ] **Phase 2:** Database (Supabase quote storage)
+- [ ] **Phase 3:** Backend (N8N workflow automation)
 
 ---
 
-*Updated by sync.md on every change*
+*Updated: January 19, 2026*

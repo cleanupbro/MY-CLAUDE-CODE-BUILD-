@@ -18,7 +18,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
   onSubmit,
   submitButtonText = 'Submit Quote',
   submissionError,
-  accentColor = '#C8FF00'
+  accentColor = '#0066CC'
 }) => {
   const { currentStepIndex, step, isFirstStep, isLastStep, back, next, steps: allSteps } = useMultiStepForm(steps);
 
@@ -39,11 +39,11 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
 
         .form-bold-wrapper {
           --lime: ${accentColor};
-          --coral: #FF6B4A;
-          --cyan: #00D4FF;
+          --accent-light: #2997FF;
+          --success: #30D158;
+          --coral: #FF453A;
           --charcoal: #1A1A1A;
           --charcoal-light: #2D2D2D;
-          --cream: #F8F6F0;
           --white: #FFFFFF;
 
           font-family: 'General Sans', sans-serif;
@@ -85,18 +85,19 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           align-items: center;
           gap: 8px;
           padding: 8px 16px;
-          background: rgba(200, 255, 0, 0.1);
-          border: 1px solid rgba(200, 255, 0, 0.3);
+          background: rgba(0, 102, 204, 0.1);
+          border: 1px solid rgba(0, 102, 204, 0.3);
+          border-radius: 9999px;
           font-size: 13px;
           font-weight: 600;
-          color: var(--lime);
+          color: var(--accent-light);
         }
 
         .form-step-indicator::before {
           content: '';
           width: 8px;
           height: 8px;
-          background: var(--lime);
+          background: var(--accent-light);
           animation: pulse 2s ease-in-out infinite;
         }
 
@@ -120,7 +121,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
 
         .progress-fill {
           height: 100%;
-          background: var(--lime);
+          background: var(--accent-light);
           transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -150,14 +151,14 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
         }
 
         .step-dot-circle.completed {
-          background: var(--lime);
-          color: var(--charcoal);
+          background: var(--success);
+          color: var(--white);
         }
 
         .step-dot-circle.current {
           background: transparent;
-          border: 2px solid var(--lime);
-          color: var(--lime);
+          border: 2px solid var(--accent-light);
+          color: var(--accent-light);
         }
 
         .step-dot-circle.upcoming {
@@ -175,7 +176,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
         }
 
         .step-label.active {
-          color: var(--lime);
+          color: var(--accent-light);
         }
 
         /* Form Card */
@@ -236,8 +237,8 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
         .form-bold-wrapper select:focus,
         .form-bold-wrapper textarea:focus {
           outline: none;
-          border-color: var(--lime);
-          box-shadow: 0 0 0 4px rgba(200, 255, 0, 0.1);
+          border-color: var(--accent-light);
+          box-shadow: 0 0 0 4px rgba(41, 151, 255, 0.15);
         }
 
         .form-bold-wrapper input::placeholder,
@@ -284,13 +285,14 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           font-size: 15px;
           font-weight: 600;
           border: 2px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px;
           cursor: pointer;
           transition: all 0.3s ease;
         }
 
         .btn-back:hover {
-          border-color: var(--lime);
-          color: var(--lime);
+          border-color: var(--accent-light);
+          color: var(--accent-light);
         }
 
         .btn-next {
@@ -299,18 +301,19 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           gap: 12px;
           padding: 18px 32px;
           background: var(--lime);
-          color: var(--charcoal);
+          color: var(--white);
           font-family: 'Clash Display', sans-serif;
           font-size: 16px;
           font-weight: 600;
           border: none;
+          border-radius: 12px;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-next:hover {
-          transform: translateY(-3px) skewX(-2deg);
-          box-shadow: 8px 8px 0 rgba(200, 255, 0, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0, 102, 204, 0.4);
         }
 
         .btn-next:disabled {
@@ -324,8 +327,9 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
         .form-error {
           margin-top: 24px;
           padding: 16px 20px;
-          background: rgba(255, 107, 74, 0.1);
+          background: rgba(255, 69, 58, 0.1);
           border: 2px solid var(--coral);
+          border-radius: 12px;
         }
 
         .form-error-title {

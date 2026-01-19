@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { MultiStepForm } from '../components/MultiStepForm';
 import { CommercialQuoteData, NavigationProps, ServiceType } from '../types';
 import { sendToWebhook } from '../services/webhookService';
@@ -10,6 +10,8 @@ import { PricingCalculator } from '../lib/priceCalculator';
 import { Checkbox } from '../components/Checkbox';
 import { DateInput } from '../components/DateInput';
 import { useToast } from '../contexts/ToastContext';
+import { LivePriceEstimate } from '../components/LivePriceEstimate';
+import { SubmitConfetti, AutoSaveToast, useAutoSave } from '../components/FormEffects';
 
 const formatPhoneNumber = (value: string) => {
   const digitsOnly = value.replace(/\D/g, '');
@@ -37,44 +39,6 @@ const INITIAL_DATA: CommercialQuoteData = {
   contractTerm: '',
 };
 
-const PriceEstimateDisplay: React.FC<{ estimate: { price: number; per: string } | null, isLoading: boolean, error: string | null }> = ({ estimate, isLoading, error }) => {
-    return (
-        <div className="p-5 bg-[#0066CC]/10 border border-[#0066CC]/30 rounded-2xl text-center mt-6">
-            <div className="flex items-center justify-center gap-2 mb-3">
-                <p className="text-sm font-semibold text-[#2997FF] uppercase tracking-wider">Instant Estimate</p>
-                <div className="relative group inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/40 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#1C1C1E] text-white text-xs rounded-xl opacity-0 group-hover:opacity-100 transition-opacity w-56 pointer-events-none z-10 shadow-xl border border-white/10">
-                        This estimate is AI-generated based on typical commercial rates. A final quote will be provided after consultation.
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-[#1C1C1E]"></div>
-                    </div>
-                </div>
-            </div>
-            {isLoading ? (
-                <div className="flex justify-center items-center my-4">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#2997FF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p className="text-white/60">Calculating...</p>
-                </div>
-            ) : error ? (
-                 <div className="my-2 p-3 bg-[#FF453A]/10 border border-[#FF453A]/30 rounded-xl">
-                    <p className="font-semibold text-sm text-[#FF453A]">Estimation Failed</p>
-                    <p className="text-xs mt-1 text-white/60">{error}</p>
-                </div>
-            ) : estimate ? (
-                <p className="text-4xl font-bold text-white my-2">${estimate.price.toLocaleString()} <span className="text-xl font-semibold text-[#2997FF]">/{estimate.per}</span></p>
-            ) : (
-                 <p className="text-white/50 my-4">Complete the form to see an estimate.</p>
-            )}
-             <p className="text-xs text-white/40 mt-2">A final quote will be provided after a consultation. This is an AI-generated estimate.</p>
-        </div>
-    );
-};
-
 const complianceOptions = [
     { value: 'WHS Certified', label: 'WHS Certified' },
     { value: 'Police Checks', label: 'Police Checks Required' },
@@ -87,8 +51,21 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
   const [data, setData] = useState(INITIAL_DATA);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const { showToast } = useToast();
   const priceCalculator = useMemo(() => new PricingCalculator(), []);
+
+  // Auto-save functionality
+  const { isSaved, loadSaved, clearSaved } = useAutoSave('commercial-quote', data, 2000);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const savedData = loadSaved();
+    if (savedData) {
+      setData(prev => ({ ...prev, ...savedData }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateData = (fields: Partial<CommercialQuoteData>) => {
     setData(prev => ({ ...prev, ...fields }));
@@ -137,7 +114,12 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
     setIsSubmitting(false);
     if(result.success) {
       await saveSubmission({ type: ServiceType.Commercial, data: submissionData });
-      navigateTo('Success', successMsg, { referenceId });
+      clearSaved(); // Clear auto-saved data on success
+      setShowSuccess(true);
+      // Brief delay to show confetti, then navigate
+      setTimeout(() => {
+        navigateTo('Success', successMsg, { referenceId });
+      }, 1500);
     } else {
       saveFailedSubmission({ type: ServiceType.Commercial, data: submissionData });
       onSubmissionFail?.();
@@ -149,32 +131,37 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
 
   return (
     <>
-      {/* COMMERCIAL HERO SECTION - SEO Optimized for Liverpool NSW */}
-      <section className="hero-quote relative min-h-[40vh] bg-[#1A1A1A] overflow-hidden" aria-label="Commercial cleaning services Liverpool NSW">
-        {/* Background Image - Modern Office */}
+      {/* COMMERCIAL HERO SECTION - Matching Home Page Design */}
+      <section className="hero-quote relative min-h-[40vh] bg-black overflow-hidden" aria-label="Commercial cleaning services Liverpool NSW">
+        {/* Background Image - YOUR LOCAL OFFICE IMAGE */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-40"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920)' }}
+          className="absolute inset-0 bg-cover bg-center opacity-35"
+          style={{ backgroundImage: 'url(/images/offices/hero.jpg)' }}
           role="img"
           aria-label="Professional office cleaning Liverpool"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#1A1A1A]" />
+        {/* Gradient overlay matching home page */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.08),transparent_50%)]" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto text-center py-16 px-6">
-          {/* Animated Badge - SEO keyword */}
-          <div className="inline-flex items-center gap-2 bg-[#00D4FF]/20 border border-[#00D4FF]/50 rounded-full px-4 py-2 mb-6">
-            <span className="w-2 h-2 bg-[#00D4FF] rounded-full animate-ping" />
-            <span className="text-[#00D4FF] text-sm font-semibold uppercase tracking-wider">COMMERCIAL & OFFICE CLEANING EXPERTS</span>
+        <div className="relative z-10 max-w-4xl mx-auto text-center pt-28 pb-16 px-6">
+          {/* Animated Badge - Using #30D158 like home page */}
+          <div className="inline-flex items-center gap-2 bg-[#30D158]/10 border border-[#30D158]/30 rounded-full px-4 py-2 mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#30D158] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#30D158]"></span>
+            </span>
+            <span className="text-[#30D158] text-sm font-medium">Commercial & Office Cleaning Experts</span>
           </div>
 
           {/* H1 with primary SEO keyword */}
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            Professional <span className="text-[#00D4FF]">Office Cleaning</span> Liverpool NSW
+          <h1 className="text-4xl md:text-6xl font-semibold text-white tracking-tight mb-4">
+            Professional <span className="text-[#2997FF]">Office Cleaning</span> Liverpool NSW
           </h1>
 
           {/* Subtitle with secondary SEO keywords */}
-          <p className="text-xl text-white/80 mb-4 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-white/60 mb-4 max-w-2xl mx-auto leading-relaxed">
             Western Sydney's trusted commercial cleaners. Offices, medical centres, gyms & warehouses. After-hours service available.
           </p>
 
@@ -187,26 +174,26 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
 
           {/* Service keywords as visible badges */}
           <div className="flex flex-wrap justify-center gap-2 mb-8">
-            <span className="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full">Office Cleaning</span>
-            <span className="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full">Medical Centres</span>
-            <span className="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full">Gyms & Fitness</span>
-            <span className="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full">Warehouses</span>
-            <span className="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full">Retail Spaces</span>
+            <span className="text-xs bg-white/10 text-[#86868B] px-3 py-1 rounded-full">Office Cleaning</span>
+            <span className="text-xs bg-white/10 text-[#86868B] px-3 py-1 rounded-full">Medical Centres</span>
+            <span className="text-xs bg-white/10 text-[#86868B] px-3 py-1 rounded-full">Gyms & Fitness</span>
+            <span className="text-xs bg-white/10 text-[#86868B] px-3 py-1 rounded-full">Warehouses</span>
+            <span className="text-xs bg-white/10 text-[#86868B] px-3 py-1 rounded-full">Retail Spaces</span>
           </div>
 
-          {/* Stats - Updated with SEO-friendly descriptions */}
-          <div className="flex justify-center gap-8 flex-wrap">
+          {/* Stats Row - Matching home page design */}
+          <div className="flex flex-wrap justify-center gap-12 pt-6 border-t border-white/10">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#C8FF00]">200+</div>
-              <div className="text-sm text-white/60">Businesses Served</div>
+              <div className="text-3xl md:text-4xl font-semibold text-white">200+</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Businesses Served</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#FF6B4A]">24/7</div>
-              <div className="text-sm text-white/60">After Hours Available</div>
+              <div className="text-3xl md:text-4xl font-semibold text-white">24/7</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">After Hours</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#00D4FF]">100%</div>
-              <div className="text-sm text-white/60">Fully Insured Team</div>
+              <div className="text-3xl md:text-4xl font-semibold text-white">100%</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Fully Insured</div>
             </div>
           </div>
         </div>
@@ -299,10 +286,24 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
                 onChange={(val) => updateData({ preferredStartDate: val })}
                 required
             />
-            <PriceEstimateDisplay estimate={estimate} isLoading={false} error={null} />
+            <LivePriceEstimate
+              estimate={estimate?.price ?? null}
+              isLoading={false}
+              error={null}
+              confidence={estimate ? 'high' : 'medium'}
+              frequency={data.cleaningFrequency}
+              perUnit={estimate?.per ? `per ${estimate.per}` : 'per clean'}
+              showRange={false}
+            />
           </div>
         ]}
       />
+
+      {/* Success confetti on form submission */}
+      <SubmitConfetti active={showSuccess} />
+
+      {/* Auto-save indicator toast */}
+      <AutoSaveToast show={isSaved} />
     </>
   );
 };

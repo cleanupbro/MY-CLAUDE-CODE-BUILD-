@@ -78,17 +78,40 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
 
   return (
     <div className="bg-black min-h-screen">
+      {/* Ken Burns CSS Animation */}
+      <style>{`
+        @keyframes ken-burns {
+          0% { transform: scale(1) translate(0, 0); }
+          50% { transform: scale(1.1) translate(-2%, -1%); }
+          100% { transform: scale(1) translate(0, 0); }
+        }
+        .ken-burns-bg {
+          animation: ken-burns 20s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1); }
+        }
+        .animate-sparkle { animation: sparkle 3s ease-in-out infinite; }
+        .animate-sparkle-delay-1 { animation: sparkle 3s ease-in-out 0.5s infinite; }
+        .animate-sparkle-delay-2 { animation: sparkle 3s ease-in-out 1s infinite; }
+        .animate-sparkle-delay-3 { animation: sparkle 3s ease-in-out 1.5s infinite; }
+      `}</style>
+
       {/* ==================== HERO SECTION ==================== */}
       <section
         ref={heroReveal.ref}
         className="min-h-[70vh] flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
       >
-        {/* Background image */}
+        {/* Background image with Ken Burns effect */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&q=80)' }}
+          className="absolute inset-0 bg-cover bg-center opacity-25 ken-burns-bg"
+          style={{ backgroundImage: 'url(/images/offices/hero.jpg)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+
+        {/* Radial gradient for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.08),transparent_50%)]" />
 
         <div className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Badge */}
@@ -115,7 +138,7 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
         ref={contactReveal.ref}
         className="py-20 px-6 bg-[#0D0D0D]"
       >
-        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${contactReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${contactReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-16">
             <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Contact Options</p>
@@ -369,7 +392,7 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
         ref={areasReveal.ref}
         className="py-20 px-6 bg-black"
       >
-        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${areasReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${areasReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-12">
             <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Service Areas</p>
@@ -392,25 +415,44 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* ==================== FINAL CTA ==================== */}
+      {/* ==================== FINAL CTA - Premium Gradient ==================== */}
       <section
         ref={ctaReveal.ref}
-        className="py-20 px-6 bg-[#0066CC] relative overflow-hidden"
+        className="py-24 px-6 bg-gradient-to-br from-[#0066CC] via-[#0052A3] to-[#003366] relative overflow-hidden"
       >
+        {/* Radial gradient overlay for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(41,151,255,0.2),transparent_60%)]" />
+
+        {/* Floating sparkles */}
+        <div className="absolute top-10 left-[10%] w-2 h-2 bg-white/30 rounded-full animate-sparkle" />
+        <div className="absolute top-20 right-[15%] w-3 h-3 bg-white/20 rounded-full animate-sparkle-delay-1" />
+        <div className="absolute bottom-32 left-[20%] w-2 h-2 bg-white/25 rounded-full animate-sparkle-delay-2" />
+        <div className="absolute bottom-20 right-[25%] w-2 h-2 bg-white/30 rounded-full animate-sparkle-delay-3" />
+
+        {/* Background text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="text-[20vw] font-bold text-black/5 whitespace-nowrap">HELLO</span>
+          <span className="text-[20vw] font-bold text-white/5 whitespace-nowrap">HELLO</span>
         </div>
 
-        <div className={`relative z-10 text-center max-w-3xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-4xl md:text-6xl font-semibold text-white mb-6">
+        <div className={`relative z-10 text-center max-w-4xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <h2 className="text-5xl md:text-7xl font-semibold text-white mb-6 tracking-tight">
             Ready for a Spotless Space?
           </h2>
-          <p className="text-xl text-white/80 mb-10">
+          <p className="text-xl md:text-2xl text-white/80 mb-12">
             Get your instant quote now. No obligations, no hidden fees.
           </p>
+          {/* Glassmorphic premium button */}
           <button
             onClick={() => navigateTo('Landing')}
-            className="inline-flex items-center gap-3 px-10 py-5 bg-black text-white text-xl font-semibold rounded-full hover:bg-[#1C1C1E] transition-all duration-300 hover:scale-[1.02] shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+            className="
+              inline-flex items-center gap-3 px-10 py-5
+              bg-white/10 backdrop-blur-xl border border-white/30
+              text-white text-xl font-semibold rounded-full
+              hover:bg-white hover:text-[#0066CC]
+              transition-all duration-300 hover:scale-[1.02]
+              shadow-[0_16px_48px_rgba(0,0,0,0.3)]
+              hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]
+            "
           >
             Get Your Free Quote
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

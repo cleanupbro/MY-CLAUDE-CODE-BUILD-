@@ -43,7 +43,8 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         "Post-construction cleanup"
       ],
       price: "From $150",
-      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+      image: "/images/living-room/hero.jpeg",
+      badge: null,
       action: () => navigateTo(ServiceType.Residential)
     },
     {
@@ -57,7 +58,8 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         "Warehouses & industrial"
       ],
       price: "From $200",
-      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
+      image: "/images/offices/hero.jpg",
+      badge: null,
       action: () => navigateTo(ServiceType.Commercial)
     },
     {
@@ -71,7 +73,8 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         "7 days a week service"
       ],
       price: "From $120",
-      image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+      image: "/images/airbnb/hero.jpeg",
+      badge: "MOST POPULAR",
       action: () => navigateTo(ServiceType.Airbnb)
     }
   ];
@@ -131,17 +134,40 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
 
   return (
     <div className="bg-black min-h-screen">
+      {/* Ken Burns CSS Animation */}
+      <style>{`
+        @keyframes ken-burns {
+          0% { transform: scale(1) translate(0, 0); }
+          50% { transform: scale(1.1) translate(-2%, -1%); }
+          100% { transform: scale(1) translate(0, 0); }
+        }
+        .ken-burns-bg {
+          animation: ken-burns 20s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1); }
+        }
+        .animate-sparkle { animation: sparkle 3s ease-in-out infinite; }
+        .animate-sparkle-delay-1 { animation: sparkle 3s ease-in-out 0.5s infinite; }
+        .animate-sparkle-delay-2 { animation: sparkle 3s ease-in-out 1s infinite; }
+        .animate-sparkle-delay-3 { animation: sparkle 3s ease-in-out 1.5s infinite; }
+      `}</style>
+
       {/* ==================== HERO SECTION ==================== */}
       <section
         ref={heroReveal.ref}
         className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
       >
-        {/* Background image */}
+        {/* Background image with Ken Burns effect */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-35"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?w=1920&q=80)' }}
+          className="absolute inset-0 bg-cover bg-center opacity-35 ken-burns-bg"
+          style={{ backgroundImage: 'url(/images/offices/hero.jpg)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+
+        {/* Radial gradient for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.08),transparent_50%)]" />
 
         <div className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Badge */}
@@ -183,7 +209,7 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         ref={coreServicesReveal.ref}
         className="py-20 px-6 bg-black"
       >
-        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${coreServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${coreServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-16">
             <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Core Services</p>
@@ -209,6 +235,17 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1C1C1E] to-transparent" />
+                  {/* MOST POPULAR Badge */}
+                  {service.badge && (
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-[#30D158] text-white text-xs font-bold rounded-full shadow-lg">
+                      {service.badge}
+                    </div>
+                  )}
+                  {/* Available Today indicator */}
+                  <div className="absolute top-4 left-4 flex items-center gap-1.5 px-2 py-1 bg-black/60 backdrop-blur-sm rounded-full">
+                    <span className="w-2 h-2 bg-[#30D158] rounded-full animate-pulse" />
+                    <span className="text-[10px] text-white/80 font-medium">Available Today</span>
+                  </div>
                   {/* Icon overlay */}
                   <div className="absolute bottom-4 left-4 w-12 h-12 bg-[#0066CC]/90 rounded-xl flex items-center justify-center">
                     {index === 0 && <HomeIcon className="w-6 h-6 text-white" />}
@@ -255,7 +292,7 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         ref={addOnReveal.ref}
         className="py-20 px-6 bg-[#0D0D0D]"
       >
-        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${addOnReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${addOnReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-16">
             <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Add-On Services</p>
@@ -292,7 +329,7 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         ref={howItWorksReveal.ref}
         className="py-20 px-6 bg-black"
       >
-        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${howItWorksReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${howItWorksReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-16">
             <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">How It Works</p>
@@ -325,7 +362,7 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         ref={whyUsReveal.ref}
         className="py-20 px-6 bg-[#0D0D0D]"
       >
-        <div className={`max-w-6xl mx-auto transition-all duration-1000 delay-100 ${whyUsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${whyUsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-12">
             <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Why Choose Us</p>
@@ -375,27 +412,89 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* ==================== FINAL CTA ==================== */}
+      {/* ==================== SERVICE AREAS ==================== */}
+      <section className="py-16 px-6 bg-black">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Service Areas</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Cleaning Services Across <span className="text-[#2997FF]">Liverpool & Western Sydney</span>
+            </h2>
+            <p className="text-white/60 max-w-2xl mx-auto">
+              Professional end of lease, bond, commercial, and Airbnb cleaning across all Western Sydney suburbs.
+            </p>
+          </div>
+
+          {/* Suburb Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {['Liverpool', 'Cabramatta', 'Casula', 'Moorebank', 'Prestons', 'Edmondson Park',
+              'Ingleburn', 'Glenfield', 'Leppington', 'Carnes Hill', 'Hoxton Park', 'Green Valley',
+              'Campbelltown', 'Parramatta', 'Bankstown', 'Fairfield', 'Blacktown', 'Penrith'].map((suburb) => (
+              <div
+                key={suburb}
+                className="
+                  bg-white/5 border border-white/10
+                  rounded-xl px-4 py-3
+                  text-center text-white/80 text-sm font-medium
+                  hover:bg-[#0066CC]/10 hover:border-[#0066CC]/30
+                  transition-all duration-200
+                  cursor-default
+                "
+              >
+                {suburb}
+              </div>
+            ))}
+          </div>
+
+          {/* SEO Text */}
+          <p className="text-center text-white/40 text-sm mt-12 max-w-4xl mx-auto leading-relaxed">
+            Clean Up Bros provides professional cleaning services including end of lease cleaning, bond cleaning, vacate cleaning, commercial cleaning, office cleaning, and Airbnb turnover cleaning. We proudly serve Liverpool, Cabramatta, Casula, Moorebank, Prestons, Edmondson Park, Ingleburn, Glenfield, Leppington, Carnes Hill, Hoxton Park, Green Valley, Campbelltown, Parramatta, Bankstown, Fairfield, and all Western Sydney suburbs. 100% bond back guarantee on all end of lease cleans.
+          </p>
+        </div>
+      </section>
+
+      {/* ==================== FINAL CTA - Premium Gradient ==================== */}
       <section
         ref={ctaReveal.ref}
-        className="py-20 px-6 bg-[#0066CC] relative overflow-hidden"
+        className="py-24 px-6 bg-gradient-to-br from-[#0066CC] via-[#0052A3] to-[#003366] relative overflow-hidden"
       >
+        {/* Radial gradient overlay for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(41,151,255,0.2),transparent_60%)]" />
+
+        {/* Floating sparkles */}
+        <div className="absolute top-10 left-[10%] w-2 h-2 bg-white/30 rounded-full animate-sparkle" />
+        <div className="absolute top-20 right-[15%] w-3 h-3 bg-white/20 rounded-full animate-sparkle-delay-1" />
+        <div className="absolute bottom-32 left-[20%] w-2 h-2 bg-white/25 rounded-full animate-sparkle-delay-2" />
+        <div className="absolute bottom-20 right-[25%] w-2 h-2 bg-white/30 rounded-full animate-sparkle-delay-3" />
+        <div className="absolute top-1/2 left-[5%] w-1.5 h-1.5 bg-white/20 rounded-full animate-sparkle-delay-1" />
+        <div className="absolute top-1/3 right-[8%] w-2 h-2 bg-white/25 rounded-full animate-sparkle" />
+
         {/* Background text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="text-[20vw] font-bold text-black/5 whitespace-nowrap">CLEAN</span>
+          <span className="text-[20vw] font-bold text-white/5 whitespace-nowrap">CLEAN</span>
         </div>
 
-        <div className={`relative z-10 text-center max-w-3xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-4xl md:text-6xl font-semibold text-white mb-6">
+        <div className={`relative z-10 text-center max-w-4xl mx-auto transition-all duration-1000 delay-100 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <h2 className="text-5xl md:text-7xl font-semibold text-white mb-6 tracking-tight">
             Ready to Get Started?
           </h2>
-          <p className="text-xl text-white/80 mb-10">
+          <p className="text-xl md:text-2xl text-white/80 mb-12">
             Get your instant quote in 60 seconds. No obligations, no hidden fees.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* Glassmorphic premium button */}
             <button
               onClick={() => navigateTo('Landing')}
-              className="inline-flex items-center gap-3 px-10 py-5 bg-black text-white text-xl font-semibold rounded-full hover:bg-[#1C1C1E] transition-all duration-300 hover:scale-[1.02] shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+              className="
+                inline-flex items-center gap-3 px-10 py-5
+                bg-white/10 backdrop-blur-xl border border-white/30
+                text-white text-xl font-semibold rounded-full
+                hover:bg-white hover:text-[#0066CC]
+                transition-all duration-300 hover:scale-[1.02]
+                shadow-[0_16px_48px_rgba(0,0,0,0.3)]
+                hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]
+              "
             >
               Get Your Free Quote
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -404,7 +503,7 @@ const ServicesView: React.FC<NavigationProps> = ({ navigateTo }) => {
             </button>
             <button
               onClick={() => navigateTo('Contact')}
-              className="px-8 py-4 text-white text-lg font-medium hover:underline transition-colors"
+              className="px-8 py-4 text-white/80 text-lg font-medium hover:text-white hover:underline transition-colors"
             >
               Contact Us
             </button>

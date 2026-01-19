@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { MultiStepForm } from '../components/MultiStepForm';
 import { AirbnbQuoteData, NavigationProps, ServiceType } from '../types';
 import { sendToWebhook } from '../services/webhookService';
@@ -10,6 +10,8 @@ import { PricingCalculator } from '../lib/priceCalculator';
 import { Checkbox } from '../components/Checkbox';
 import { DateInput } from '../components/DateInput';
 import { useToast } from '../contexts/ToastContext';
+import { LivePriceEstimate } from '../components/LivePriceEstimate';
+import { SubmitConfetti, AutoSaveToast, useAutoSave } from '../components/FormEffects';
 
 const formatPhoneNumber = (value: string) => {
   const digitsOnly = value.replace(/\D/g, '');
@@ -38,51 +40,25 @@ const INITIAL_DATA: AirbnbQuoteData = {
   phone: '',
 };
 
-const PriceEstimateDisplay: React.FC<{ estimate: { price: number } | null, isLoading: boolean, error: string | null }> = ({ estimate, isLoading, error }) => {
-    return (
-        <div className="p-5 bg-[#0066CC]/10 border border-[#0066CC]/30 rounded-2xl text-center mt-6">
-            <div className="flex items-center justify-center gap-2 mb-3">
-                <p className="text-sm font-semibold text-[#2997FF] uppercase tracking-wider">Instant Estimate</p>
-                <div className="relative group inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/40 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#1C1C1E] text-white text-xs rounded-xl opacity-0 group-hover:opacity-100 transition-opacity w-56 pointer-events-none z-10 shadow-xl border border-white/10">
-                        This is an AI-generated estimate based on typical turnover rates. Final pricing will be confirmed upon booking.
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-[#1C1C1E]"></div>
-                    </div>
-                </div>
-            </div>
-            {isLoading ? (
-                <div className="flex justify-center items-center my-4">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#2997FF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p className="text-white/60">Calculating...</p>
-                </div>
-            ) : error ? (
-                 <div className="my-2 p-3 bg-[#FF453A]/10 border border-[#FF453A]/30 rounded-xl">
-                    <p className="font-semibold text-sm text-[#FF453A]">Estimation Failed</p>
-                    <p className="text-xs mt-1 text-white/60">{error}</p>
-                </div>
-            ) : estimate ? (
-                <p className="text-4xl font-bold text-white my-2">${estimate.price.toFixed(2)} <span className="text-xl font-semibold text-[#2997FF]">per turnover</span></p>
-            ) : (
-                 <p className="text-white/50 my-4">Complete the form to see an estimate.</p>
-            )}
-             <p className="text-xs text-white/40 mt-2">Final price will be confirmed upon booking. This is an AI-generated estimate.</p>
-        </div>
-    );
-};
-
-
 const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFail }) => {
   const [data, setData] = useState(INITIAL_DATA);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const { showToast } = useToast();
   const priceCalculator = useMemo(() => new PricingCalculator(), []);
+
+  // Auto-save functionality
+  const { isSaved, loadSaved, clearSaved } = useAutoSave('airbnb-quote', data, 2000);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const savedData = loadSaved();
+    if (savedData) {
+      setData(prev => ({ ...prev, ...savedData }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateData = (fields: Partial<AirbnbQuoteData>) => {
     setData(prev => ({ ...prev, ...fields }));
@@ -131,7 +107,12 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
     setIsSubmitting(false);
     if(result.success) {
       await saveSubmission({ type: ServiceType.Airbnb, data: submissionData });
-      navigateTo('Success', successMsg, { referenceId });
+      clearSaved(); // Clear auto-saved data on success
+      setShowSuccess(true);
+      // Brief delay to show confetti, then navigate
+      setTimeout(() => {
+        navigateTo('Success', successMsg, { referenceId });
+      }, 1500);
     } else {
       saveFailedSubmission({ type: ServiceType.Airbnb, data: submissionData });
       onSubmissionFail?.();
@@ -143,44 +124,49 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
 
   return (
     <>
-      {/* AIRBNB HERO SECTION - SEO Optimized for Liverpool & Sydney */}
-      <section className="hero-quote relative min-h-[40vh] bg-[#1A1A1A] overflow-hidden">
-        {/* Background Image - Luxury Hotel Room */}
+      {/* AIRBNB HERO SECTION - Matching Home Page Design */}
+      <section className="hero-quote relative min-h-[40vh] bg-black overflow-hidden">
+        {/* Background Image - YOUR LOCAL AIRBNB IMAGE */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-40"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1920)' }}
+          className="absolute inset-0 bg-cover bg-center opacity-35"
+          style={{ backgroundImage: 'url(/images/airbnb/hero.jpeg)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#1A1A1A]" />
+        {/* Gradient overlay matching home page */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.08),transparent_50%)]" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto text-center py-16 px-6">
-          {/* Animated Badge */}
-          <div className="inline-flex items-center gap-2 bg-[#FF6B4A]/20 border border-[#FF6B4A]/50 rounded-full px-4 py-2 mb-6">
-            <span className="w-2 h-2 bg-[#FF6B4A] rounded-full animate-ping" />
-            <span className="text-[#FF6B4A] text-sm font-semibold uppercase tracking-wider">AIRBNB & SHORT-TERM RENTAL SPECIALISTS</span>
+        <div className="relative z-10 max-w-4xl mx-auto text-center pt-28 pb-16 px-6">
+          {/* Animated Badge - Using #30D158 like home page */}
+          <div className="inline-flex items-center gap-2 bg-[#30D158]/10 border border-[#30D158]/30 rounded-full px-4 py-2 mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#30D158] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#30D158]"></span>
+            </span>
+            <span className="text-[#30D158] text-sm font-medium">Airbnb & Short-Term Rental Specialists</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            <span className="text-[#FF6B4A]">Airbnb Turnover Cleaning</span> Liverpool & Sydney
+          <h1 className="text-4xl md:text-6xl font-semibold text-white tracking-tight mb-4">
+            <span className="text-[#2997FF]">Airbnb Turnover</span> Cleaning
           </h1>
 
-          <p className="text-xl text-white/70 mb-8 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-white/60 mb-8 max-w-3xl mx-auto leading-relaxed">
             Keep your property 5-star guest ready. Same-day turnovers, linen service & quality inspections. Trusted by Airbnb hosts across Western Sydney.
           </p>
 
-          {/* Stats */}
-          <div className="flex justify-center gap-8 flex-wrap">
+          {/* Stats Row - Matching home page design */}
+          <div className="flex flex-wrap justify-center gap-12 pt-6 border-t border-white/10">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#C8FF00]">2hr</div>
-              <div className="text-sm text-white/60">Turnaround</div>
+              <div className="text-3xl md:text-4xl font-semibold text-white">2hr</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Turnaround</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#FF6B4A]">Linen</div>
-              <div className="text-sm text-white/60">Service</div>
+              <div className="text-3xl md:text-4xl font-semibold text-white">Linen</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">Service</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#00D4FF]">100%</div>
-              <div className="text-sm text-white/60">5-Star Reviews</div>
+              <div className="text-3xl md:text-4xl font-semibold text-white">100%</div>
+              <div className="text-sm text-[#86868B] uppercase tracking-wider mt-1">5-Star Ready</div>
             </div>
           </div>
 
@@ -279,10 +265,24 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
               <label className="block text-sm font-medium text-[#1D1D1F]">Phone</label>
               <input type="tel" value={data.phone} onChange={e => updateData({ phone: formatPhoneNumber(e.target.value) })} className="input" required maxLength={12} placeholder="e.g. 0400-123-456" />
             </div>
-            <PriceEstimateDisplay estimate={estimate} isLoading={false} error={null} />
+            <LivePriceEstimate
+              estimate={estimate?.price ?? null}
+              isLoading={false}
+              error={null}
+              confidence={estimate ? 'high' : 'medium'}
+              frequency={data.cleaningFrequency}
+              perUnit="per turnover"
+              showRange={false}
+            />
           </div>
         ]}
       />
+
+      {/* Success confetti on form submission */}
+      <SubmitConfetti active={showSuccess} />
+
+      {/* Auto-save indicator toast */}
+      <AutoSaveToast show={isSaved} />
     </>
   );
 };

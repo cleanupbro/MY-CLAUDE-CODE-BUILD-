@@ -65,23 +65,6 @@ export const Header: React.FC<HeaderProps> = ({ navigateTo, isAdminLoggedIn = fa
                 <NavPill onClick={() => navigateTo('About')}>About</NavPill>
                 <NavPill onClick={() => navigateTo('Reviews')}>Reviews</NavPill>
 
-                {/* We're Hiring Badge with Live Blinker */}
-                <button
-                  onClick={() => navigateTo(ServiceType.Jobs)}
-                  className="
-                    flex items-center gap-2 px-4 py-2
-                    rounded-full text-sm font-medium
-                    text-[#30D158] hover:bg-[#30D158]/10
-                    transition-all duration-200
-                  "
-                >
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#30D158] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#30D158]"></span>
-                  </span>
-                  We're Hiring!
-                </button>
-
                 <NavPill
                   onClick={() => navigateTo('GiftCardPurchase')}
                   highlight
@@ -216,24 +199,6 @@ export const Header: React.FC<HeaderProps> = ({ navigateTo, isAdminLoggedIn = fa
               >
                 Contact
               </MobileNavItem>
-
-              {/* We're Hiring - Mobile */}
-              <button
-                onClick={() => handleNavigate(ServiceType.Jobs)}
-                className="
-                  flex items-center gap-3 px-4 py-3.5
-                  text-[15px] font-medium
-                  rounded-xl text-left
-                  text-[#30D158] hover:bg-[#30D158]/10
-                  transition-colors
-                "
-              >
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#30D158] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#30D158]"></span>
-                </span>
-                We're Hiring!
-              </button>
 
               <div className="h-px bg-white/10 my-3" />
 
