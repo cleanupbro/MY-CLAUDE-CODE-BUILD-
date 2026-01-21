@@ -25,7 +25,8 @@ Say any of these to run the full backup routine:
 2. UPDATE PROTOCOL FILES
    ├── STATUS.md → New Active Focus for next session
    ├── LOG.md → Append session completion entry
-   └── PLAN.md → Update completed phases if any
+   ├── PLAN.md → Update completed phases if any
+   └── README.md → Update "Current Progress" section
 
 3. STAGE ALL CHANGES
    └── git add -A
@@ -120,7 +121,32 @@ Check off any completed roadmap items:
 - [x] Phase X: [Description] (Completed [DATE])
 ```
 
-### 4. Git Operations
+### 4. Update README.md "Current Progress" Section
+
+Update the "Current Progress" section near the top of README.md:
+
+```markdown
+## Current Progress
+
+> **Last Session:** [DATE]
+> **Phase:** [Current phase from PLAN.md]
+> **Status:** [In Progress / Blocked / Complete]
+
+### What Was Done
+- [Bullet 1]
+- [Bullet 2]
+- [Bullet 3]
+
+### Next Session Focus
+- [ ] [Task 1]
+- [ ] [Task 2]
+
+### Active Files
+- `[file1]` - [brief description]
+- `[file2]` - [brief description]
+```
+
+### 5. Git Operations
 
 ```bash
 # Check status
@@ -144,7 +170,7 @@ EOF
 git push origin main
 ```
 
-### 5. Confirm Success
+### 6. Confirm Success
 
 Report:
 ```
@@ -212,5 +238,6 @@ Saving to GitHub...
 - `STATUS.md` - Current state (update this)
 - `LOG.md` - History (append to this)
 - `PLAN.md` - Roadmap (check off completed items)
+- `README.md` - Human-readable progress (update "Current Progress" section)
 - `CLAUDE.md` - Protocol for Claude
 - `GEMINI.md` - Protocol for Gemini

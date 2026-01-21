@@ -210,19 +210,19 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Company Details</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Company Name</label>
+              <label className="block text-sm font-medium text-white/80">Company Name</label>
               <input type="text" value={data.companyName} onChange={e => updateData({ companyName: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Contact Person</label>
+              <label className="block text-sm font-medium text-white/80">Contact Person</label>
               <input type="text" value={data.contactPerson} onChange={e => updateData({ contactPerson: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Email</label>
+              <label className="block text-sm font-medium text-white/80">Email</label>
               <input type="email" value={data.email} onChange={e => updateData({ email: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Phone</label>
+              <label className="block text-sm font-medium text-white/80">Phone</label>
               <input type="tel" value={data.phone} onChange={e => updateData({ phone: formatPhoneNumber(e.target.value) })} className="input" required maxLength={12} placeholder="e.g. 0400-123-456" />
             </div>
           </div>,
@@ -230,15 +230,15 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Facility Details</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Facility Type (e.g., Office, Gym, Medical)</label>
+              <label className="block text-sm font-medium text-white/80">Facility Type (e.g., Office, Gym, Medical)</label>
               <input type="text" value={data.facilityType} onChange={e => updateData({ facilityType: e.target.value })} className="input" required placeholder="e.g. Medical Centre, Office" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Approx. Square Meters</label>
+              <label className="block text-sm font-medium text-white/80">Approx. Square Meters</label>
               <input type="number" value={data.squareMeters} onChange={e => updateData({ squareMeters: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Desired Cleaning Frequency</label>
+              <label className="block text-sm font-medium text-white/80">Desired Cleaning Frequency</label>
               <select value={data.cleaningFrequency} onChange={e => updateData({ cleaningFrequency: e.target.value })} className="select" required>
                 <option value="" disabled>Select...</option>
                 <option>Daily</option>
@@ -248,7 +248,7 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Preferred Contract Term</label>
+              <label className="block text-sm font-medium text-white/80">Preferred Contract Term</label>
               <select value={data.contractTerm} onChange={e => updateData({ contractTerm: e.target.value as CommercialQuoteData['contractTerm'] })} className="select" required>
                 <option value="" disabled>Select...</option>
                 <option>Month-to-Month</option>
@@ -261,7 +261,7 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Scope & Compliance</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Compliance Needs</label>
+              <label className="block text-sm font-medium text-white/80">Compliance Needs</label>
               <p className="text-xs text-gray-500 -mt-1 mb-2">This information helps us assign the right team.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {complianceOptions.map(item => (
@@ -277,7 +277,7 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Specific Needs / Pain Points</label>
+              <label className="block text-sm font-medium text-white/80">Specific Needs / Pain Points</label>
               <textarea value={data.painPoints} onChange={e => updateData({ painPoints: e.target.value })} rows={4} className="input"></textarea>
             </div>
             <DateInput

@@ -1,20 +1,47 @@
 # Clean Up Bros - Robots.txt
 # https://cleanupbros.com.au
+# Updated: January 22, 2026
 
 User-agent: *
 Allow: /
 
+# Public pages - explicitly allowed
+Allow: /services
+Allow: /residential
+Allow: /commercial
+Allow: /airbnb
+Allow: /about
+Allow: /reviews
+Allow: /contact
+Allow: /clean-up-card
+Allow: /gift-card-purchase
+Allow: /check-balance
+Allow: /jobs
+Allow: /client-feedback
+
 # Block admin/API routes
 Disallow: /api/
-Disallow: /admin/
+Disallow: /admin-login
+Disallow: /admin-dashboard
+Disallow: /admin-gift-cards
+Disallow: /admin-contracts
+Disallow: /airbnb-contract
+Disallow: /basic-contract
+Disallow: /commercial-invoice
 Disallow: /_next/
 Disallow: /private/
 
 # Allow important resources
+Allow: /logo.png
 Allow: /images/
 Allow: /styles/
 Allow: /*.css$
 Allow: /*.js$
+Allow: /sitemap.xml
+
+# Block internal files
+Disallow: /manifest.json
+Disallow: /*.json$
 
 # Crawl delay for politeness
 Crawl-delay: 1
@@ -22,7 +49,7 @@ Crawl-delay: 1
 # Sitemap location
 Sitemap: https://cleanupbros.com.au/sitemap.xml
 
-# Google specific
+# Google specific - faster crawling allowed
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0
@@ -31,3 +58,11 @@ Crawl-delay: 0
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
+
+# Facebook crawler
+User-agent: facebookexternalhit
+Allow: /
+
+# Twitter crawler
+User-agent: Twitterbot
+Allow: /

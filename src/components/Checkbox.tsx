@@ -18,8 +18,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({ id, value, checked, onChange
             </svg>
         </div>
         <div className="ml-3">
-            <span className="text-sm font-medium text-gray-800">{label}</span>
-            {description && <p className="text-xs text-gray-500">{description}</p>}
+            <span className="text-sm font-medium text-white/90">{label}</span>
+            {description && <p className="text-xs text-white/60">{description}</p>}
         </div>
     </label>
 );

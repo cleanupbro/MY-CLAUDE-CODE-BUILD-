@@ -7,6 +7,8 @@
 
 ## Available Skills
 
+### Core Skills
+
 | Skill | Trigger Words | Purpose |
 |-------|---------------|---------|
 | `done-for-day.md` | "done", "done for the day", "end session" | End-of-session backup: updates STATUS.md, LOG.md, commits to GitHub |
@@ -14,6 +16,24 @@
 | `bug-fix.md` | "error", "bug", "broken", "fix" | Debug and fix issues in the application |
 | `n8n-manager.md` | "n8n", "workflow", "automation" | Manage N8N workflows: list, activate, execute |
 | `ui-fix.md` | "invisible text", "btn-secondary", "UI broken" | Fix invisible text, buttons, and form elements |
+
+### API Skills
+
+| Skill | Trigger Words | MCP Tools | Purpose |
+|-------|---------------|-----------|---------|
+| `api-n8n.md` | "n8n api", "workflow api" | `mcp__n8n-mcp__*` | N8N REST API: workflows, executions, credentials |
+| `api-stripe.md` | "stripe", "payment", "invoice" | `mcp__stripe__*` | Stripe payments, customers, subscriptions |
+| `api-supabase.md` | "supabase", "database", "query" | - | Supabase DB queries, auth, storage |
+| `api-square.md` | "square", "pos", "terminal" | - | Square POS, invoices, catalog |
+| `api-twilio.md` | "twilio", "sms", "call" | - | Twilio SMS, voice, WhatsApp |
+| `api-google.md` | "google", "gemini", "gmail" | - | Google APIs: Gemini, Gmail, Sheets |
+| `api-elevenlabs.md` | "elevenlabs", "voice", "tts" | - | ElevenLabs text-to-speech |
+| `api-pinecone.md` | "pinecone", "vector", "embed" | `mcp__pinecone__*` | Pinecone vector DB, embeddings |
+| `api-openrouter.md` | "openrouter", "llm", "ai model" | - | OpenRouter multi-model AI |
+| `api-firebase.md` | "firebase", "auth", "realtime" | `mcp__firebase__*` | Firebase auth, Firestore, storage |
+| `api-firecrawl.md` | "firecrawl", "scrape", "crawl" | - | Firecrawl web scraping |
+| `api-apify.md` | "apify", "web automation" | - | Apify actors, scrapers |
+| `api-sentry.md` | "sentry", "error tracking" | `mcp__sentry__*` | Sentry error monitoring, issues |
 
 ---
 
@@ -59,6 +79,75 @@
 - Adds explicit text colors to inputs/selects
 - Provides standard class patterns for buttons & forms
 - Documents common contrast issues with brand colors
+
+---
+
+## API Skills Quick Reference
+
+### api-n8n.md
+**MCP Tools:** `mcp__n8n-mcp__*`
+**Endpoints:** Workflows, executions, credentials
+**Auth:** API key via header
+
+### api-stripe.md
+**MCP Tools:** `mcp__stripe__*`
+**Endpoints:** Customers, products, invoices, payments
+**Auth:** Secret key in Authorization header
+
+### api-supabase.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Database REST, auth, storage
+**Auth:** Service role key + anon key
+
+### api-square.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Payments, invoices, catalog
+**Auth:** Access token in Authorization header
+
+### api-twilio.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** SMS, voice, WhatsApp
+**Auth:** Account SID + Auth Token (Basic auth)
+
+### api-google.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Gemini AI, Gmail, Sheets, Calendar
+**Auth:** API key or OAuth tokens
+
+### api-elevenlabs.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Text-to-speech, voices, models
+**Auth:** API key in xi-api-key header
+
+### api-pinecone.md
+**MCP Tools:** `mcp__pinecone__*`
+**Endpoints:** Index operations, upsert, query
+**Auth:** API key in header
+
+### api-openrouter.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Chat completions, models
+**Auth:** API key in Authorization header
+
+### api-firebase.md
+**MCP Tools:** `mcp__firebase__*`
+**Endpoints:** Auth, Firestore, Realtime DB, Storage
+**Auth:** Firebase Admin SDK or API keys
+
+### api-firecrawl.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Scrape, crawl, map
+**Auth:** API key in Authorization header
+
+### api-apify.md
+**MCP Tools:** None (use HTTP/fetch)
+**Endpoints:** Actors, runs, datasets
+**Auth:** API token in query param or header
+
+### api-sentry.md
+**MCP Tools:** `mcp__sentry__*`
+**Endpoints:** Issues, events, projects
+**Auth:** Auth token in Authorization header
 
 ---
 

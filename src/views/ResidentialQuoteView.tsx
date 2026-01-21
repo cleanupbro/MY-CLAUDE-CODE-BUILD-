@@ -207,11 +207,11 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Property Details</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Suburb</label>
+              <label className="block text-sm font-medium text-white/80">Suburb</label>
               <input type="text" value={data.suburb} onChange={e => updateData({ suburb: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Property Type</label>
+              <label className="block text-sm font-medium text-white/80">Property Type</label>
               <select value={data.propertyType} onChange={e => updateData({ propertyType: e.target.value as ResidentialQuoteData['propertyType'] })} className="select" required>
                 <option value="" disabled>Select...</option>
                 <option>Apartment</option>
@@ -221,11 +221,11 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="block text-sm font-medium text-[#1D1D1F]">Bedrooms</label>
+                <label className="block text-sm font-medium text-white/80">Bedrooms</label>
                 <input type="text" inputMode="numeric" pattern="[0-9]*" value={data.bedrooms || ''} onChange={e => updateData({ bedrooms: parseInt(e.target.value, 10) || 0 })} onBlur={() => { if (data.bedrooms < 1) { updateData({ bedrooms: 1 }) } }} className="input" required />
               </div>
               <div className="flex-1">
-                <label className="block text-sm font-medium text-[#1D1D1F]">Bathrooms</label>
+                <label className="block text-sm font-medium text-white/80">Bathrooms</label>
                 <input type="text" inputMode="numeric" pattern="[0-9]*" value={data.bathrooms || ''} onChange={e => updateData({ bathrooms: parseInt(e.target.value, 10) || 0 })} onBlur={() => { if (data.bathrooms < 1) { updateData({ bathrooms: 1 }) } }} className="input" required />
               </div>
             </div>
@@ -235,7 +235,7 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Service Details</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Service Type</label>
+              <label className="block text-sm font-medium text-white/80">Service Type</label>
               <select value={data.serviceType} onChange={e => updateData({ serviceType: e.target.value as ResidentialQuoteData['serviceType'] })} className="select" required>
                 <option value="" disabled>Select...</option>
                 <option>General</option>
@@ -245,7 +245,7 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Property Condition</label>
+              <label className="block text-sm font-medium text-white/80">Property Condition</label>
               <select value={data.condition} onChange={e => updateData({ condition: e.target.value as ResidentialQuoteData['condition'] })} className="select" required>
                 <option value="Standard">Standard (Well-maintained)</option>
                 <option value="Moderate">Moderate (Regular use, some buildup)</option>
@@ -254,7 +254,7 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Frequency</label>
+              <label className="block text-sm font-medium text-white/80">Frequency</label>
               <select value={data.frequency} onChange={e => updateData({ frequency: e.target.value as ResidentialQuoteData['frequency'] })} className="select" required>
                 <option value="" disabled>Select...</option>
                 <option>One-time</option>
@@ -276,7 +276,7 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
               </label>
             )}
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Add-ons</label>
+              <label className="block text-sm font-medium text-white/80">Add-ons</label>
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {['Oven Cleaning', 'Window Cleaning', 'Carpet Steam Cleaning', 'Fridge Cleaning', 'Wall Washing', 'Balcony/Patio Clean', 'Garage Cleaning'].map(item => (
                   <Checkbox key={item} id={`addon-${item}`} value={item} checked={data.addOns.includes(item)} onChange={handleAddOnsChange} label={item} />
@@ -295,7 +295,7 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
                 required 
              />
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Preferred Time</label>
+              <label className="block text-sm font-medium text-white/80">Preferred Time</label>
               <select value={data.preferredTime} onChange={e => updateData({ preferredTime: e.target.value as ResidentialQuoteData['preferredTime'] })} className="select" required>
                 <option value="" disabled>Select...</option>
                 <option>Morning</option>
@@ -304,7 +304,7 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Notes for the cleaning team (optional)</label>
+              <label className="block text-sm font-medium text-white/80">Notes for the cleaning team (optional)</label>
               <textarea value={data.notes} onChange={e => updateData({ notes: e.target.value })} rows={4} className="input"></textarea>
             </div>
           </div>,
@@ -313,15 +313,15 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact & Confirmation</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Full Name</label>
+              <label className="block text-sm font-medium text-white/80">Full Name</label>
               <input type="text" value={data.fullName} onChange={e => updateData({ fullName: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Email</label>
+              <label className="block text-sm font-medium text-white/80">Email</label>
               <input type="email" value={data.email} onChange={e => updateData({ email: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Phone</label>
+              <label className="block text-sm font-medium text-white/80">Phone</label>
               <input type="tel" value={data.phone} onChange={e => updateData({ phone: formatPhoneNumber(e.target.value) })} className="input" required maxLength={12} placeholder="e.g. 0400-123-456" />
             </div>
             <LivePriceEstimate

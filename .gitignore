@@ -53,3 +53,4 @@ docs/credentials/*.env
 *.njsproj
 *.sln
 *.sw?
+.playwright-mcp/

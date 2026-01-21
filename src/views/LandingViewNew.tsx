@@ -4,7 +4,7 @@ import { QuickQuoteModal } from '../components/QuickQuoteModal';
 import { StickyMobileCTA } from '../components/StickyMobileCTA';
 import { ExitIntentPopup, useExitIntent } from '../components/ExitIntentPopup';
 import { RecentBookingToast } from '../components/RecentBookingToast';
-import { NewsletterPopup, useNewsletterPopup } from '../components/NewsletterPopup';
+// Newsletter popup moved to App.tsx for cross-page functionality
 import { getAvailableSlots, subscribeToSlots } from '../utils/slotsManager';
 
 interface LandingViewProps {
@@ -76,7 +76,7 @@ const useScrollReveal = () => {
 export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServiceType }) => {
   const [showQuickQuote, setShowQuickQuote] = useState(false);
   const { showExitPopup, closeExitPopup } = useExitIntent();
-  const { showPopup: showNewsletter, closePopup: closeNewsletter } = useNewsletterPopup(45000); // Show after 45 seconds
+  // Newsletter popup handled in App.tsx
 
   // Slots left counter - synced with booking popup via shared manager
   const [slotsLeft, setSlotsLeft] = useState(() => getAvailableSlots());
@@ -175,12 +175,12 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
   ];
 
   const whyChooseUs = [
-    { icon: ShieldIcon, title: 'Fully Insured', description: 'Complete peace of mind with comprehensive coverage' },
-    { icon: CheckBadgeIcon, title: 'Police Checked', description: 'Every team member is verified and trustworthy' },
-    { icon: ClockIcon, title: 'Same Day Service', description: 'Need us today? We\'re there.' },
-    { icon: SparklesIcon, title: 'Bond Back Guarantee', description: '100% of your bond back or we re-clean free' },
-    { icon: HeartIcon, title: 'Family Owned', description: 'Local Liverpool business, community focused' },
-    { icon: StarIcon, title: '4.9 Star Rating', description: '500+ happy customers can\'t be wrong' },
+    { emoji: '🛡️', title: 'Fully Insured', description: 'Complete peace of mind with comprehensive coverage' },
+    { emoji: '✅', title: 'Police Checked', description: 'Every team member is verified and trustworthy' },
+    { emoji: '⚡', title: 'Same Day Service', description: 'Need us today? We\'re there.' },
+    { emoji: '💯', title: 'Bond Back Guarantee', description: '100% of your bond back or we re-clean free' },
+    { emoji: '❤️', title: 'Family Owned', description: 'Local Liverpool business, community focused' },
+    { emoji: '⭐', title: '4.9 Star Rating', description: '500+ happy customers can\'t be wrong' },
   ];
 
   // FAQ accordion state
@@ -808,7 +808,7 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
                 style={{ transitionDelay: `${index * 50}ms` }}
               >
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-[#0066CC]/20 rounded-xl flex items-center justify-center mb-3 md:mb-4">
-                  <feature.icon className="w-5 h-5 md:w-6 md:h-6 text-[#2997FF]" />
+                  <span className="text-2xl md:text-3xl">{feature.emoji}</span>
                 </div>
                 <h3 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2">{feature.title}</h3>
                 <p className="text-white/60 text-xs md:text-sm leading-relaxed">{feature.description}</p>
@@ -1140,13 +1140,7 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
         />
       )}
 
-      {/* Newsletter Popup - shows after 45 seconds of browsing */}
-      {showNewsletter && (
-        <NewsletterPopup
-          onClose={closeNewsletter}
-          onSubmit={(email: string) => console.log('Newsletter signup:', email)}
-        />
-      )}
+      {/* Newsletter Popup moved to App.tsx for cross-page functionality */}
 
       {/* Recent Booking Toast */}
       <RecentBookingToast />

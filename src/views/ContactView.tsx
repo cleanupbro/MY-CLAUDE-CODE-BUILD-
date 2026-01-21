@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavigationProps, ServiceType } from '../types';
+import { sendToWebhook } from '../services/webhookService';
+import { WEBHOOK_URLS } from '../constants';
 
 // Scroll reveal hook
 const useScrollReveal = () => {
@@ -40,15 +42,32 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Contact form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-    }, 3000);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const submissionData = {
+      ...formData,
+      referenceId: `CUB-CON-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+      submittedAt: new Date().toISOString(),
+    };
+
+    const result = await sendToWebhook(WEBHOOK_URLS[ServiceType.Contact], submissionData);
+    setIsSubmitting(false);
+
+    if (result.success) {
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      }, 3000);
+    } else {
+      setSubmitError(result.error || 'Failed to send message. Please try again.');
+    }
   };
 
   const suburbs = [
@@ -346,11 +365,18 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
                   ></textarea>
                 </div>
 
+                {submitError && (
+                  <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm">
+                    {submitError}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-4 bg-[#0066CC] text-white text-lg font-semibold rounded-full hover:bg-[#0077ED] transition-all duration-300 shadow-[0_0_20px_rgba(0,102,204,0.3)]"
+                  disabled={isSubmitting}
+                  className="w-full py-4 bg-[#0066CC] text-white text-lg font-semibold rounded-full hover:bg-[#0077ED] transition-all duration-300 shadow-[0_0_20px_rgba(0,102,204,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             )}

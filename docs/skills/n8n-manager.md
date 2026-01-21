@@ -52,19 +52,34 @@ curl -X POST "https://nioctibinu.online/webhook/{WEBHOOK_PATH}" \
 | ID | Name | Status | Webhook |
 |----|------|--------|---------|
 | `49xi6gSdDwMlcHmj` | ROI Calculator (OPTIMIZED) | Active | `/clean-up-bros-roi` |
-| `BhC9oeocD3MLWDRK` | AI Chat Widget (Gemini) | Active | - |
-| `FO3EBleUNJlLkscB` | Outbound Sales Caller | Active | - |
-| `Qw5wXjnkwktS7C9e` | Booking Confirmation | Active | - |
+| `BhC9oeocD3MLWDRK` | AI Chat Widget (Gemini) | Active | `/cub-ai-chat` |
+| `FO3EBleUNJlLkscB` | Outbound Sales Caller | Active | `/cub-outbound-call` |
+| `Qw5wXjnkwktS7C9e` | Booking Confirmation | Active | `/booking-confirmed` |
 | `TWo7Fvva39DKed5t` | Accounting Logger | Active | - |
 | `UkiGz64ysmifd3q9` | Review Request | Active | - |
-| `WMPRz55gvZx9ePOb` | SMS Follow-up (Twilio) | Active | - |
-| `aK91nwonDiEdNLxQ` | Inbound Call Agent | Active | - |
-| `b3OulillXkWze5nK` | Payment Notifications | Active | - |
+| `WMPRz55gvZx9ePOb` | SMS Follow-up (Twilio) | Active | `/cub-sms-followup` |
+| `aK91nwonDiEdNLxQ` | Inbound Call Agent | Active | `/cub-inbound-call` |
+| `b3OulillXkWze5nK` | Payment Notifications | Active | `/create-payment-link` |
 | `j4xK5E8kdx8OC1Is` | Gift Card System | Active | - |
 | `nHp2wFED5I6iW8fT` | Telegram Assistant | Active | - |
 | `pw5VQWwoNYQ2IAdQ` | Email Follow-Up | Active | - |
 | `ED04aRzwOmsA3gOA` | Call Transcript | Inactive | - |
 | `xRF5aBAZZ8BLptYb` | Google Sheets Caller | Inactive | - |
+
+---
+
+## Verified Lead Webhooks (Jan 22, 2026)
+
+All tested and working:
+
+| Lead Type | Webhook Path | Status |
+|-----------|--------------|--------|
+| Residential | `/webhook/98d35453-4f18-40ca-bdfa-ba3aaa02646c` | ✅ Working |
+| Commercial | `/webhook/bb5fdb61-31d7-4001-9dd1-44ef7dc64d32` | ✅ Working |
+| Airbnb | `/webhook/5d3f6ff4-5f08-4ccf-9b78-03b62ae6b72f` | ✅ Working |
+| Jobs | `/webhook/67f764f2-adff-481e-aa49-fd3de1feecde` | ✅ Working |
+| Client Feedback | `/webhook/client-feedback` | ✅ Working |
+| Landing Lead | `/webhook/8fe0b2c9-3d5b-44f5-84ff-0d0ef896e1fa` | ✅ Working |
 
 ---
 

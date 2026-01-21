@@ -140,34 +140,84 @@ export const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ onClose, onSub
   );
 };
 
-// Hook to manage auto-showing newsletter popup after delay
-export const useNewsletterPopup = (delayMs: number = 30000) => {
+// Form pages where popup should NOT appear
+const FORM_PAGES = [
+  'Residential', 'Commercial', 'Airbnb', 'Jobs',
+  'ClientFeedback', 'GiftCardPurchase', 'Success',
+  'AdminLogin', 'AdminDashboard', 'AdminGiftCards',
+  'AirbnbContract', 'BasicContract', 'CommercialInvoice', 'AdminContracts'
+];
+
+// Hook to manage recurring newsletter popup (every 2-3 minutes)
+// Does NOT show on form pages
+export const useNewsletterPopup = (currentView: string) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [hasShown, setHasShown] = useState(false);
+  const [hasSubscribed, setHasSubscribed] = useState(false);
+  const [lastScrollTime, setLastScrollTime] = useState(Date.now());
+
+  // Check if user is on a form page
+  const isOnFormPage = FORM_PAGES.includes(currentView);
 
   useEffect(() => {
-    // Check if already shown this session
-    const alreadyShown = sessionStorage.getItem('newsletterPopupShown');
-    if (alreadyShown) {
-      setHasShown(true);
+    // Check if user already subscribed
+    const subscribed = localStorage.getItem('newsletterSubscribed');
+    if (subscribed) {
+      setHasSubscribed(true);
       return;
     }
 
-    // Show popup after delay
-    const timer = setTimeout(() => {
-      if (!hasShown) {
-        setShowPopup(true);
-        setHasShown(true);
-        sessionStorage.setItem('newsletterPopupShown', 'true');
-      }
-    }, delayMs);
+    // Don't run timer if on form page or already subscribed
+    if (isOnFormPage || hasSubscribed) return;
 
-    return () => clearTimeout(timer);
-  }, [delayMs, hasShown]);
+    // Random delay between 2-3 minutes (120000 - 180000ms)
+    const getRandomDelay = () => 120000 + Math.random() * 60000;
+
+    let timer: NodeJS.Timeout;
+
+    const schedulePopup = () => {
+      timer = setTimeout(() => {
+        // Only show if user has been active (scrolled in last 5 minutes)
+        // and not on a form page
+        const timeSinceScroll = Date.now() - lastScrollTime;
+        if (timeSinceScroll < 300000 && !isOnFormPage) {
+          setShowPopup(true);
+        } else {
+          // Reschedule if inactive
+          schedulePopup();
+        }
+      }, getRandomDelay());
+    };
+
+    // Track scroll activity
+    const handleScroll = () => {
+      setLastScrollTime(Date.now());
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    schedulePopup();
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isOnFormPage, hasSubscribed, lastScrollTime]);
+
+  // Reset timer and close popup when view changes to form
+  useEffect(() => {
+    if (isOnFormPage && showPopup) {
+      setShowPopup(false);
+    }
+  }, [isOnFormPage, showPopup]);
 
   const closePopup = () => setShowPopup(false);
 
-  return { showPopup, closePopup };
+  const markSubscribed = () => {
+    setHasSubscribed(true);
+    localStorage.setItem('newsletterSubscribed', 'true');
+    setShowPopup(false);
+  };
+
+  return { showPopup, closePopup, markSubscribed };
 };
 
 export default NewsletterPopup;

@@ -190,20 +190,20 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Listing Details</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Airbnb Listing URL</label>
+              <label className="block text-sm font-medium text-white/80">Airbnb Listing URL</label>
               <input type="text" placeholder="e.g., https://airbnb.com/h/your-listing" value={data.listingUrl} onChange={e => updateData({ listingUrl: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Property Type</label>
+              <label className="block text-sm font-medium text-white/80">Property Type</label>
               <input type="text" value={data.propertyType} onChange={e => updateData({ propertyType: e.target.value })} placeholder="e.g., 2-Bed Apartment" className="input" required />
             </div>
             <div className="flex gap-4">
                 <div className="flex-1">
-                    <label className="block text-sm font-medium text-[#1D1D1F]">Bedrooms</label>
+                    <label className="block text-sm font-medium text-white/80">Bedrooms</label>
                     <input type="text" inputMode="numeric" pattern="[0-9]*" value={data.bedrooms} onChange={e => updateData({ bedrooms: e.target.value.replace(/\D/g, '') })} onBlur={() => { if (!data.bedrooms || parseInt(data.bedrooms, 10) < 1) { updateData({ bedrooms: '1' }) } }} className="input" required />
                 </div>
                 <div className="flex-1">
-                    <label className="block text-sm font-medium text-[#1D1D1F]">Bathrooms</label>
+                    <label className="block text-sm font-medium text-white/80">Bathrooms</label>
                     <input type="text" inputMode="numeric" pattern="[0-9]*" value={data.bathrooms} onChange={e => updateData({ bathrooms: e.target.value.replace(/\D/g, '') })} onBlur={() => { if (!data.bathrooms || parseInt(data.bathrooms, 10) < 1) { updateData({ bathrooms: '1' }) } }} className="input" required />
                 </div>
             </div>
@@ -212,7 +212,7 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Turnover Requirements</h3>
             <div>
-                <label className="block text-sm font-medium text-[#1D1D1F]">Services Needed</label>
+                <label className="block text-sm font-medium text-white/80">Services Needed</label>
                 <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {['Linen Change', 'Restock Amenities', 'Guest Communication', 'Damage Report'].map(item => (
                       <Checkbox
@@ -227,11 +227,11 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1D1D1F]">Property Access Method</label>
+                <label className="block text-sm font-medium text-white/80">Property Access Method</label>
                 <input type="text" value={data.accessMethod} onChange={e => updateData({ accessMethod: e.target.value })} placeholder="e.g., Lockbox code, Key handover" className="input" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1D1D1F]">Preferred Turnover Window (e.g., 11am - 3pm)</label>
+                <label className="block text-sm font-medium text-white/80">Preferred Turnover Window (e.g., 11am - 3pm)</label>
                 <input type="text" value={data.preferredTurnoverTime} onChange={e => updateData({ preferredTurnoverTime: e.target.value })} className="input" required />
               </div>
               <DateInput
@@ -245,7 +245,7 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Your Information</h3>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Cleaning Frequency</label>
+              <label className="block text-sm font-medium text-white/80">Cleaning Frequency</label>
               <select value={data.cleaningFrequency} onChange={e => updateData({ cleaningFrequency: e.target.value as AirbnbQuoteData['cleaningFrequency'] })} className="select" required>
                   <option value="" disabled>Select...</option>
                   <option value="On Checkout">On Checkout (Standard)</option>
@@ -254,15 +254,15 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Contact Name</label>
+              <label className="block text-sm font-medium text-white/80">Contact Name</label>
               <input type="text" value={data.contactName} onChange={e => updateData({ contactName: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Email</label>
+              <label className="block text-sm font-medium text-white/80">Email</label>
               <input type="email" value={data.email} onChange={e => updateData({ email: e.target.value })} className="input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1D1D1F]">Phone</label>
+              <label className="block text-sm font-medium text-white/80">Phone</label>
               <input type="tel" value={data.phone} onChange={e => updateData({ phone: formatPhoneNumber(e.target.value) })} className="input" required maxLength={12} placeholder="e.g. 0400-123-456" />
             </div>
             <LivePriceEstimate

@@ -6,33 +6,49 @@ import { ResidentialQuoteData, CommercialQuoteData, AirbnbQuoteData } from '../t
  * Derived from Clean Up Bros Knowledge Base
  */
 
-// Residential Base Prices - 2026 Sydney Market Competitive (Updated Jan 21, 2026)
-// Sources: Exit Cleaners, Miracle Maid, Jim's Cleaning, Calibre, Clean Effortlessly
+// Residential Base Prices - 2026 Sydney Market WITH 30% PROFIT MARGIN (Updated Jan 22, 2026)
+// Sources: Exit Cleaners, MultiCleaning, The Local Guys, Airtasker, SMK Carpet Cleaning
+// Market research: Studio $200-400, 2BR $350-550, 3BR $400-600, 4BR $500-800, 5BR+ $650-850
+// Formula: Market Average × 1.30 (30% profit margin)
 const RESIDENTIAL_BASE: Record<string, Record<string, number>> = {
-  'General': { '1': 120, '2': 160, '3': 210, '4': 260, '5': 320 },
-  'Deep': { '1': 180, '2': 240, '3': 320, '4': 400, '5': 500 },
-  'End-of-Lease': { '1': 280, '2': 360, '3': 450, '4': 550, '5': 680 },
-  'Post-Construction': { '1': 350, '2': 450, '3': 580, '4': 720, '5': 900 },
+  // General cleaning: ~40% less than EOL (standard maintenance clean)
+  'General': { '1': 165, '2': 215, '3': 275, '4': 350, '5': 430 },
+  // Deep cleaning: ~65% of EOL (thorough but not bond-ready)
+  'Deep': { '1': 260, '2': 340, '3': 425, '4': 550, '5': 680 },
+  // End-of-Lease: Market avg × 1.30 (30% margin)
+  // 1BR: $300 avg × 1.30 = $390, 2BR: $400 × 1.30 = $520, etc.
+  'End-of-Lease': { '1': 390, '2': 520, '3': 650, '4': 845, '5': 975 },
+  // Post-Construction: EOL + 40% (heavy debris, hazard premium)
+  'Post-Construction': { '1': 545, '2': 730, '3': 910, '4': 1185, '5': 1365 },
 };
 
-// Airbnb Turnover Prices - 2026 Sydney Market (Airtasker avg $80-180)
+// Airbnb Turnover Prices - 2026 Sydney Market WITH 25% PROFIT MARGIN (Updated Jan 22, 2026)
+// Sources: Airtasker, HouseKept, Hospitable, Property Providers
+// Market: 1BR $80-180, 2BR $150-220, 3BR $220-320, 4BR+ $300-400
+// Formula: Market Average × 1.25 (25% margin - competitive short-term rental market)
 const AIRBNB_BASE: Record<string, number> = {
-  '1': 90,
-  '2': 130,
-  '3': 170,
-  '4': 210,
-  '5': 260,
+  '1': 165,  // $130 avg × 1.25 = $163 → $165
+  '2': 235,  // $185 avg × 1.25 = $231 → $235
+  '3': 340,  // $270 avg × 1.25 = $338 → $340
+  '4': 440,  // $350 avg × 1.25 = $438 → $440
+  '5': 550,  // $440 avg × 1.25 = $550
 };
 
-// Commercial Monthly Averages (Base for estimates)
-// We use m2 to bucket them.
-const COMMERCIAL_RATES = {
-  'Medical': { small: 1000, medium: 2000, large: 3250 },
-  'Office': { small: 800, medium: 1700, large: 3750 },
-  'Gym': { small: 1500, medium: 2750, large: 4750 },
-  'Retail': { small: 700, medium: 1550, large: 3350 },
-  'Other': { small: 600, medium: 1200, large: 2500 }
+// Commercial Per-Square-Metre Rates - 2026 Sydney Market WITH 30% PROFIT MARGIN (Updated Jan 22, 2026)
+// Sources: SMK Carpet Cleaning, WDC Facility Services, Versatile Cleaning, Hope Clean, JBN Cleaning
+// Base rate: $4/m² (market avg) × 1.30 = $5.20/m² for standard office
+// Medical/Gym premium: +30%, Retail discount: -10%
+const COMMERCIAL_RATES_PER_SQM = {
+  'Medical': 6.75,   // $5.20 × 1.30 (premium for sanitization/compliance)
+  'Office': 5.20,    // Base rate with 30% margin
+  'Gym': 6.50,       // $5.20 × 1.25 (equipment cleaning, hygiene focus)
+  'Retail': 4.70,    // $5.20 × 0.90 (simpler open layouts)
+  'Warehouse': 3.90, // $5.20 × 0.75 (large open spaces, less detail)
+  'Other': 4.95      // Slightly below office rate
 };
+
+// Minimum charges per visit (covers fixed costs: travel, setup, equipment)
+const COMMERCIAL_MINIMUM_CHARGE = 220;
 
 // Add-ons Pricing - 2026 Sydney Market Competitive (Updated Jan 21, 2026)
 // Sources: Airtasker, JBN Cleaning, Exit Cleaners, Industry Averages
@@ -132,63 +148,58 @@ export class PricingCalculator {
   }
 
   // --- COMMERCIAL ---
+  // Updated Jan 22, 2026 with market-competitive per-sqm pricing
   calculateCommercial(data: CommercialQuoteData): { total: number; per: string } | null {
     const { facilityType, squareMeters, cleaningFrequency } = data;
-    
+
     if (!facilityType || !squareMeters || !cleaningFrequency) return null;
-    
+
     const sqm = parseFloat(squareMeters);
-    if (isNaN(sqm)) return null;
+    if (isNaN(sqm) || sqm <= 0) return null;
 
-    // Identify Category
-    let category: keyof typeof COMMERCIAL_RATES = 'Other';
+    // Identify Category based on facility type
+    let category: keyof typeof COMMERCIAL_RATES_PER_SQM = 'Other';
     const typeLower = facilityType.toLowerCase();
-    if (typeLower.includes('medical') || typeLower.includes('clinic') || typeLower.includes('doctor')) category = 'Medical';
-    else if (typeLower.includes('office') || typeLower.includes('corporate')) category = 'Office';
-    else if (typeLower.includes('gym') || typeLower.includes('fitness')) category = 'Gym';
-    else if (typeLower.includes('retail') || typeLower.includes('shop') || typeLower.includes('store')) category = 'Retail';
-
-    // Identify Size Bucket
-    let sizeBucket: 'small' | 'medium' | 'large' = 'small';
-    if (sqm < 200) sizeBucket = 'small'; // Note: Office cutoff is 100 in KB, using 200 generic to simplify
-    else if (sqm < 500) sizeBucket = 'medium';
-    else sizeBucket = 'large';
-
-    // Adjust specific cutoffs for Office/Retail if needed based on KB
-    if (category === 'Office' || category === 'Retail') {
-        if (sqm < 100) sizeBucket = 'small';
-        else if (sqm < 300) sizeBucket = 'medium';
-        else sizeBucket = 'large';
+    if (typeLower.includes('medical') || typeLower.includes('clinic') || typeLower.includes('doctor') || typeLower.includes('dental')) {
+      category = 'Medical';
+    } else if (typeLower.includes('office') || typeLower.includes('corporate') || typeLower.includes('building')) {
+      category = 'Office';
+    } else if (typeLower.includes('gym') || typeLower.includes('fitness') || typeLower.includes('sport')) {
+      category = 'Gym';
+    } else if (typeLower.includes('retail') || typeLower.includes('shop') || typeLower.includes('store')) {
+      category = 'Retail';
+    } else if (typeLower.includes('warehouse') || typeLower.includes('factory') || typeLower.includes('industrial')) {
+      category = 'Warehouse';
     }
 
-    let monthlyPrice = COMMERCIAL_RATES[category][sizeBucket];
-    
-    // Adjust by exact sqm scaling (simple linear interpolation for better accuracy)
-    // This prevents a 99sqm office being same price as 10sqm
-    // Use the base rate as the midpoint of the category
-    
-    // Frequency Multipliers for CONTRACT value
-    // The KB gives Monthly prices. Usually assumes Standard Frequency (e.g. 2x/week or Weekly for small)
-    // Let's adjust based on selected frequency relative to "Standard"
-    
-    const freqMultiplier: Record<string, number> = {
-        'Daily': 2.5, // Daily is much more expensive per month than weekly
-        'Weekly': 1.0, // Base
-        'Fortnightly': 0.6, 
-        'Monthly': 0.4
-    };
-    
-    // Adjust monthly price by frequency
-    const multiplier = freqMultiplier[cleaningFrequency] || 1.0;
-    let finalPrice = monthlyPrice * multiplier;
-    
-    // Contract Term Discounts (KB: Frequency discounts apply, Term discounts implied in prompt text)
-    if (data.contractTerm === '1 Year') finalPrice *= 0.9;
-    if (data.contractTerm === '6 Months') finalPrice *= 0.95;
+    // Get per-sqm rate for this category
+    const ratePerSqm = COMMERCIAL_RATES_PER_SQM[category];
 
-    return { 
-        total: Math.ceil(finalPrice), 
-        per: 'month' 
+    // Calculate per-visit cost (with minimum charge)
+    let perVisitCost = Math.max(sqm * ratePerSqm, COMMERCIAL_MINIMUM_CHARGE);
+
+    // Volume discount for larger spaces (economy of scale)
+    if (sqm > 500) perVisitCost *= 0.92;      // 8% discount for 500+ sqm
+    else if (sqm > 300) perVisitCost *= 0.95; // 5% discount for 300-500 sqm
+
+    // Visits per month based on frequency
+    const visitsPerMonth: Record<string, number> = {
+      'Daily': 22,       // ~5 days/week × 4.3 weeks
+      'Weekly': 4.3,     // Once per week
+      'Fortnightly': 2,  // Every 2 weeks
+      'Monthly': 1       // Once per month
+    };
+
+    const visits = visitsPerMonth[cleaningFrequency] || 4.3;
+    let monthlyPrice = perVisitCost * visits;
+
+    // Contract term discounts
+    if (data.contractTerm === '1 Year') monthlyPrice *= 0.90;       // 10% off for annual
+    else if (data.contractTerm === '6 Months') monthlyPrice *= 0.95; // 5% off for 6 months
+
+    return {
+      total: Math.ceil(monthlyPrice),
+      per: 'month'
     };
   }
 

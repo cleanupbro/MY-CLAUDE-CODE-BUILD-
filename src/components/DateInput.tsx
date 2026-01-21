@@ -24,7 +24,7 @@ export const DateInput: React.FC<DateInputProps> = ({ label, value, onChange, re
 
   return (
     <div className={className}>
-      <label className="block text-sm font-medium text-[#1D1D1F]">{label}</label>
+      <label className="block text-sm font-medium text-white/80">{label}</label>
       <div className="relative">
         <input 
             type="date" 
@@ -42,7 +42,7 @@ export const DateInput: React.FC<DateInputProps> = ({ label, value, onChange, re
            </svg>
         </div>
       </div>
-      <p className="text-xs text-gray-500 mt-1">Bookings open for the next 3 months.</p>
+      <p className="text-xs text-white/60 mt-1">Bookings open for the next 3 months.</p>
     </div>
   );
 };

@@ -6,6 +6,7 @@ export enum ServiceType {
   Airbnb = 'Airbnb Cleaning',
   Jobs = 'Job Application',
   ClientFeedback = 'Client Feedback',
+  Contact = 'Contact Form',
 }
 
 // Admin/CRM Types
@@ -87,7 +88,7 @@ export interface InvoiceItem {
   total: number;
 }
 
-export type ViewType = ServiceType | 'Landing' | 'Success' | 'AdminLogin' | 'AdminDashboard' | 'ClientFeedback' | 'About' | 'Reviews' | 'Contact' | 'Services' | 'CleanUpCard' | 'GiftCardPurchase' | 'CheckBalance' | 'AdminGiftCards' | 'AirbnbContract' | 'BasicContract' | 'CommercialInvoice' | 'AdminContracts';
+export type ViewType = ServiceType | 'Landing' | 'Success' | 'AdminLogin' | 'AdminDashboard' | 'ClientFeedback' | 'About' | 'Reviews' | 'Contact' | 'Services' | 'CleanUpCard' | 'GiftCardPurchase' | 'CheckBalance' | 'AdminGiftCards' | 'AirbnbContract' | 'BasicContract' | 'CommercialInvoice' | 'AdminContracts' | 'BookingLookup';
 
 export interface NavigationProps {
   navigateTo: (view: ViewType, message?: string, initialState?: any) => void;

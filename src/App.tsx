@@ -6,6 +6,7 @@ import { Footer } from './components/Footer';
 // import { ChatWidget } from './components/ChatWidget';
 import { AntigravityBackground } from './components/AntigravityBackground';
 import { FloatingWhatsAppWithStyles } from './components/FloatingWhatsApp';
+import { NewsletterPopup, useNewsletterPopup } from './components/NewsletterPopup';
 import { ServiceType, ViewType } from './types';
 import { RetryBanner } from './components/RetryBanner';
 import { ToastProvider } from './contexts/ToastContext';
@@ -38,6 +39,49 @@ const BasicContractView = lazy(() => import('./views/BasicContractView'));
 const CommercialInvoiceView = lazy(() => import('./views/CommercialInvoiceView'));
 const AdminContractsView = lazy(() => import('./views/AdminContractsView'));
 const CheckBalanceView = lazy(() => import('./views/CheckBalanceView'));
+const BookingLookupView = lazy(() => import('./views/BookingLookupView'));
+
+// URL to View mapping - enables direct URL navigation
+const urlToViewMap: Record<string, ViewType> = {
+  '/': 'Landing',
+  '/residential': ServiceType.Residential,
+  '/residential-cleaning': ServiceType.Residential,
+  '/commercial': ServiceType.Commercial,
+  '/commercial-cleaning': ServiceType.Commercial,
+  '/airbnb': ServiceType.Airbnb,
+  '/airbnb-cleaning': ServiceType.Airbnb,
+  '/jobs': ServiceType.Jobs,
+  '/careers': ServiceType.Jobs,
+  '/client-feedback': 'ClientFeedback',
+  '/feedback': 'ClientFeedback',
+  '/success': 'Success',
+  '/about': 'About',
+  '/reviews': 'Reviews',
+  '/contact': 'Contact',
+  '/services': 'Services',
+  '/clean-up-card': 'CleanUpCard',
+  '/gift-card': 'CleanUpCard',
+  '/gift-card-purchase': 'GiftCardPurchase',
+  '/check-balance': 'CheckBalance',
+  '/admin-login': 'AdminLogin',
+  '/adminlogin': 'AdminLogin',
+  '/admin-dashboard': 'AdminDashboard',
+  '/admindashboard': 'AdminDashboard',
+  '/admin-gift-cards': 'AdminGiftCards',
+  '/airbnb-contract': 'AirbnbContract',
+  '/basic-contract': 'BasicContract',
+  '/commercial-invoice': 'CommercialInvoice',
+  '/admin-contracts': 'AdminContracts',
+  '/track': 'BookingLookup',
+  '/booking-lookup': 'BookingLookup',
+  '/track-booking': 'BookingLookup',
+};
+
+// Get initial view from URL
+const getViewFromUrl = (): ViewType => {
+  const path = window.location.pathname.toLowerCase();
+  return urlToViewMap[path] || 'Landing';
+};
 
 // Loading component
 const LoadingSpinner = () => (
@@ -53,7 +97,7 @@ const LoadingSpinner = () => (
 );
 
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<ViewType>('Landing');
+  const [currentView, setCurrentView] = useState<ViewType>(getViewFromUrl);
   const [successMessage, setSuccessMessage] = useState('');
   const [initialFormData, setInitialFormData] = useState<any | null>(null);
   const [authState, setAuthState] = useState<AuthState>({
@@ -64,6 +108,9 @@ const App: React.FC = () => {
   });
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [retryKey, setRetryKey] = useState(0);
+
+  // Newsletter popup - shows every 2-3 minutes, NOT on form pages
+  const { showPopup: showNewsletter, closePopup: closeNewsletter, markSubscribed } = useNewsletterPopup(currentView);
 
   const handleSubmissionFail = () => {
     setRetryKey(k => k + 1);
@@ -93,8 +140,10 @@ const App: React.FC = () => {
       }
     };
 
-    // Set initial state so back from first navigation works
-    window.history.replaceState({ view: 'Landing' }, '', '/');
+    // Set initial state based on current URL so back button works correctly
+    const initialView = getViewFromUrl();
+    const currentPath = window.location.pathname;
+    window.history.replaceState({ view: initialView }, '', currentPath);
 
     window.addEventListener('popstate', handlePopState);
 
@@ -239,6 +288,8 @@ const App: React.FC = () => {
           return <AdminContractsView navigateTo={navigateTo} />;
         }
         return <AdminLoginView onLoginSuccess={handleLoginSuccess} />;
+      case 'BookingLookup':
+        return <BookingLookupView navigateTo={navigateTo} />;
       case 'Landing':
       default:
         return <LandingView navigateTo={navigateTo} onSubmissionFail={handleSubmissionFail} />;
@@ -261,6 +312,17 @@ const App: React.FC = () => {
         <Footer navigateTo={navigateTo} />
         {/* ChatWidget removed - user will add 11 Labs widget later */}
         <FloatingWhatsAppWithStyles />
+
+        {/* Newsletter Popup - shows every 2-3 mins, NOT on form pages */}
+        {showNewsletter && (
+          <NewsletterPopup
+            onClose={closeNewsletter}
+            onSubmit={(email: string) => {
+              console.log('Newsletter signup:', email);
+              markSubscribed();
+            }}
+          />
+        )}
       </div>
     </ToastProvider>
   );

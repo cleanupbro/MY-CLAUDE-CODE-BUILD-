@@ -114,7 +114,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
 
   return (
     <div className="signature-pad-container">
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <label className="block text-sm font-semibold text-white/80 mb-2">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -150,7 +150,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
           Clear
         </button>
 
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-white/60">
           {isEmpty ? 'Draw your signature above' : 'Signature captured'}
         </p>
       </div>

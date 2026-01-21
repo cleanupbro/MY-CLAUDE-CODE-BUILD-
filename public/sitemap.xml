@@ -1,132 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
   <!-- Homepage - Highest Priority -->
   <url>
     <loc>https://cleanupbros.com.au/</loc>
-    <lastmod>2025-12-29</lastmod>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://cleanupbros.com.au/logo.png</image:loc>
       <image:title>Clean Up Bros Logo</image:title>
-      <image:caption>Professional Cleaning Services Sydney</image:caption>
+      <image:caption>Professional Cleaning Services Liverpool NSW</image:caption>
     </image:image>
+  </url>
+
+  <!-- Services Overview -->
+  <url>
+    <loc>https://cleanupbros.com.au/services</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
   </url>
 
   <!-- Core Service Quote Pages -->
   <url>
-    <loc>https://cleanupbros.com.au/#residential</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/residential</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://cleanupbros.com.au/#commercial</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/commercial</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://cleanupbros.com.au/#airbnb</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/airbnb</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <!-- Information Pages -->
   <url>
-    <loc>https://cleanupbros.com.au/#services</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://cleanupbros.com.au/#about</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/about</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cleanupbros.com.au/#reviews</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/reviews</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://cleanupbros.com.au/#contact</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/contact</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Gift Card / Clean Up Card -->
   <url>
-    <loc>https://cleanupbros.com.au/#cleanup-card</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/clean-up-card</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://cleanupbros.com.au/#gift-card</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/gift-card-purchase</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cleanupbros.com.au/check-balance</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <!-- Jobs / Careers -->
   <url>
-    <loc>https://cleanupbros.com.au/#jobs</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/jobs</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Feedback -->
   <url>
-    <loc>https://cleanupbros.com.au/#feedback</loc>
-    <lastmod>2025-12-29</lastmod>
+    <loc>https://cleanupbros.com.au/client-feedback</loc>
+    <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
-
-  <!-- Location-Based SEO Pages (Virtual) -->
-  <url>
-    <loc>https://cleanupbros.com.au/cleaning-services-liverpool</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://cleanupbros.com.au/cleaning-services-western-sydney</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://cleanupbros.com.au/end-of-lease-cleaning-sydney</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://cleanupbros.com.au/airbnb-cleaning-sydney</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://cleanupbros.com.au/commercial-cleaning-sydney</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://cleanupbros.com.au/office-cleaning-sydney</loc>
-    <lastmod>2025-12-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
   </url>
 
 </urlset>

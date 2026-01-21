@@ -31,6 +31,7 @@ const DEV_FALLBACK_URLS = {
   airbnb: `${N8N_BASE}/webhook/5d3f6ff4-5f08-4ccf-9b78-03b62ae6b72f`,
   jobs: `${N8N_BASE}/webhook/67f764f2-adff-481e-aa49-fd3de1feecde`,
   clientFeedback: `${N8N_BASE}/webhook/client-feedback`,
+  contact: `${N8N_BASE}/webhook/contact-form`,
   landingLead: `${N8N_BASE}/webhook/8fe0b2c9-3d5b-44f5-84ff-0d0ef896e1fa`,
 };
 
@@ -46,6 +47,7 @@ export const WEBHOOK_URLS = {
   [ServiceType.Airbnb]: isProd ? API_PROXY_URLS.quote : DEV_FALLBACK_URLS.airbnb,
   [ServiceType.Jobs]: isProd ? API_PROXY_URLS.jobApplication : DEV_FALLBACK_URLS.jobs,
   [ServiceType.ClientFeedback]: isProd ? API_PROXY_URLS.feedback : DEV_FALLBACK_URLS.clientFeedback,
+  [ServiceType.Contact]: isProd ? API_PROXY_URLS.feedback : DEV_FALLBACK_URLS.contact,
   LANDING_LEAD: isProd ? API_PROXY_URLS.quote : DEV_FALLBACK_URLS.landingLead,
 
   // Admin-only operations (require authentication)
@@ -85,4 +87,5 @@ export const SUCCESS_MESSAGES = {
   [ServiceType.Airbnb]: "Turnover Request Received! We'll be in touch shortly.",
   [ServiceType.Jobs]: "Application Submitted. Good luck!",
   [ServiceType.ClientFeedback]: "Feedback Received. Thank you!",
+  [ServiceType.Contact]: "Message Sent! We'll get back to you within 24 hours.",
 };
