@@ -6,19 +6,22 @@ import { ResidentialQuoteData, CommercialQuoteData, AirbnbQuoteData } from '../t
  * Derived from Clean Up Bros Knowledge Base
  */
 
-// Residential Base Prices (Average of range)
+// Residential Base Prices - 2026 Sydney Market Competitive (Updated Jan 21, 2026)
+// Sources: Exit Cleaners, Miracle Maid, Jim's Cleaning, Calibre, Clean Effortlessly
 const RESIDENTIAL_BASE: Record<string, Record<string, number>> = {
-  'General': { '1': 140, '2': 190, '3': 260, '4': 330, '5': 425 },
-  'Deep': { '1': 210, '2': 285, '3': 390, '4': 495, '5': 635 },
-  'End-of-Lease': { '1': 260, '2': 360, '3': 500, '4': 650, '5': 850 },
-  // Updated averages from new Knowledge Base
-  'Post-Construction': { '1': 300, '2': 425, '3': 600, '4': 775, '5': 1025 }, 
+  'General': { '1': 120, '2': 160, '3': 210, '4': 260, '5': 320 },
+  'Deep': { '1': 180, '2': 240, '3': 320, '4': 400, '5': 500 },
+  'End-of-Lease': { '1': 280, '2': 360, '3': 450, '4': 550, '5': 680 },
+  'Post-Construction': { '1': 350, '2': 450, '3': 580, '4': 720, '5': 900 },
 };
 
+// Airbnb Turnover Prices - 2026 Sydney Market (Airtasker avg $80-180)
 const AIRBNB_BASE: Record<string, number> = {
-  '1': 100,
-  '2': 150,
-  '3': 230, // 3BR+
+  '1': 90,
+  '2': 130,
+  '3': 170,
+  '4': 210,
+  '5': 260,
 };
 
 // Commercial Monthly Averages (Base for estimates)
@@ -31,22 +34,31 @@ const COMMERCIAL_RATES = {
   'Other': { small: 600, medium: 1200, large: 2500 }
 };
 
+// Add-ons Pricing - 2026 Sydney Market Competitive (Updated Jan 21, 2026)
+// Sources: Airtasker, JBN Cleaning, Exit Cleaners, Industry Averages
 const EXTRAS_PRICING: Record<string, number> = {
-  'Oven Cleaning': 100,
-  'Window Cleaning': 15, // Averaged Internal/External
-  'Carpet Steam Cleaning': 65, // Per room
-  'Fridge Cleaning': 50,
-  'Wall Washing': 160,
-  'Balcony/Patio Clean': 90,
-  'Garage Cleaning': 140,
-  'Laundry': 60,
-  'Blinds Cleaning': 15,
-  'Restock Amenities': 20, // Airbnb specific
-  'Linen Change': 0, // Included in base Airbnb, but if separate item needed
+  'Oven Cleaning': 80,        // Market avg $195, Sydney $215 - we undercut
+  'Window Cleaning': 12,      // Per window, market $8-15
+  'Carpet Steam Cleaning': 55, // Per room, Sydney $28-48 avg
+  'Fridge Cleaning': 45,      // Market avg $55
+  'Wall Washing': 40,         // Per room, market $30-60
+  'Balcony/Patio Clean': 75,  // Market avg $85
+  'Garage Cleaning': 120,     // Market avg $140
+  'Laundry': 60,              // Per load
+  'Blinds Cleaning': 12,      // Per blind
+  'Restock Amenities': 20,    // Airbnb specific
+  'Linen Change': 0,          // Included in Airbnb base
+  'BBQ Cleaning': 85,         // Market avg $110
+  'Rangehood': 45,            // Market avg $55
+  'Dishwasher': 35,           // Interior clean
+  'Microwave': 20,            // Interior + exterior
+  'Skirting Boards': 60,      // Whole house
+  'Light Fittings': 8,        // Per fitting
+  'Ceiling Fan': 15,          // Per fan
 };
 
-const BATHROOM_SURCHARGE = 30;
-const TRAVEL_CHARGE_FLAT = 25; // Averaged travel charge
+const BATHROOM_SURCHARGE = 25; // Per extra bathroom (updated 2026)
+const TRAVEL_CHARGE_FLAT = 0;  // Removed - included in base price
 
 export class PricingCalculator {
 
