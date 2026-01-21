@@ -320,7 +320,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                   type="text"
                   value={editingTemplate?.name || ''}
                   onChange={(e) => setEditingTemplate({ ...editingTemplate!, name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] text-gray-900 bg-white placeholder-gray-400"
                   placeholder="e.g., Welcome Email"
                 />
               </div>
@@ -331,7 +331,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                   type="text"
                   value={editingTemplate?.subject || ''}
                   onChange={(e) => setEditingTemplate({ ...editingTemplate!, subject: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] text-gray-900 bg-white placeholder-gray-400"
                   placeholder="Email subject line"
                 />
               </div>
@@ -342,7 +342,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                   value={editingTemplate?.body || ''}
                   onChange={(e) => setEditingTemplate({ ...editingTemplate!, body: e.target.value })}
                   rows={10}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] font-mono text-sm"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] font-mono text-sm text-gray-900 bg-white placeholder-gray-400"
                   placeholder="Use {{customerName}}, {{serviceType}}, {{price}}, {{date}} as placeholders"
                 />
               </div>
@@ -353,7 +353,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                 </button>
                 <button
                   onClick={() => { setIsEditing(false); setEditingTemplate(null); }}
-                  className="btn-secondary py-3 px-6"
+                  className="py-3 px-6 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -391,7 +391,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                   type="email"
                   value={recipientEmail}
                   onChange={(e) => setRecipientEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] text-gray-900 bg-white placeholder-gray-400"
                   placeholder="customer@email.com"
                 />
               </div>
@@ -403,7 +403,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                   type="text"
                   value={composedEmail.subject}
                   onChange={(e) => setComposedEmail({ ...composedEmail, subject: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] text-gray-900 bg-white placeholder-gray-400"
                   placeholder="Email subject"
                 />
               </div>
@@ -415,7 +415,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                   value={composedEmail.body}
                   onChange={(e) => setComposedEmail({ ...composedEmail, body: e.target.value })}
                   rows={10}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] text-gray-900 bg-white placeholder-gray-400"
                   placeholder="Select a template or write your message..."
                 />
               </div>
@@ -443,7 +443,7 @@ export const EmailTemplates: React.FC<EmailTemplatesProps> = ({ submissions }) =
                 </button>
                 <button
                   onClick={handleCopyToClipboard}
-                  className="btn-secondary py-3 px-6"
+                  className="py-3 px-6 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-100 transition-colors font-semibold"
                 >
                   Copy to Clipboard
                 </button>

@@ -69,6 +69,40 @@ const App: React.FC = () => {
     setRetryKey(k => k + 1);
   };
 
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        // User pressed back/forward, restore the view from history
+        setCurrentView(event.state.view);
+        if (event.state.message) {
+          setSuccessMessage(event.state.message);
+        }
+        if (event.state.initialState) {
+          setInitialFormData(event.state.initialState);
+        } else {
+          setInitialFormData(null);
+        }
+        window.scrollTo(0, 0);
+      } else {
+        // No state means we're at the initial page (Landing)
+        setCurrentView('Landing');
+        setSuccessMessage('');
+        setInitialFormData(null);
+        window.scrollTo(0, 0);
+      }
+    };
+
+    // Set initial state so back from first navigation works
+    window.history.replaceState({ view: 'Landing' }, '', '/');
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   // Check session on mount and set up auth listener
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
@@ -125,6 +159,11 @@ const App: React.FC = () => {
     } else {
         setInitialFormData(null);
     }
+
+    // Push to browser history for proper back button support
+    const viewPath = view === 'Landing' ? '/' : `/${view.toLowerCase().replace(/([A-Z])/g, '-$1').replace(/^-/, '')}`;
+    window.history.pushState({ view, message, initialState }, '', viewPath);
+
     window.scrollTo(0, 0);
   }, []);
 

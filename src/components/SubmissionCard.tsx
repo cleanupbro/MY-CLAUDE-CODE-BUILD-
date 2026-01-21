@@ -193,7 +193,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
       <div className="flex justify-between items-start mb-4 border-b pb-4 flex-wrap gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold text-brand-navy">{type}</h3>
+            <h3 className="text-xl font-bold text-gray-900">{type}</h3>
              {score !== undefined && <ScoreBadge score={score} />}
           </div>
           <p className="text-xs text-gray-500 mt-1">
@@ -240,10 +240,10 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
       </div>
       
       {/* AI Intelligence Suite */}
-      <div className="mt-4 bg-brand-off-white rounded-xl p-4 border border-gray-200">
+      <div className="mt-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
          <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-bold text-brand-navy uppercase tracking-wider flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-brand-gold" viewBox="0 0 20 20" fill="currentColor">
+            <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
                 </svg>
                 Gemini 3 Pro Intelligence
@@ -253,16 +253,16 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
          {/* Action Buttons */}
          <div className="flex gap-2 mb-4 flex-wrap">
              {!summary && (
-                <button onClick={handleGenerateSummary} disabled={isSummaryLoading} className="btn-secondary py-1 px-3 text-xs border border-gray-300 bg-white">
+                <button onClick={handleGenerateSummary} disabled={isSummaryLoading} className="py-1 px-3 text-xs font-semibold text-gray-700 border border-gray-300 bg-white rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50">
                     {isSummaryLoading ? 'Summarizing...' : 'Generate Summary'}
                 </button>
              )}
              {score === undefined && (
-                 <button onClick={handleGenerateScore} disabled={isScoringLoading} className="btn-secondary py-1 px-3 text-xs border border-gray-300 bg-white">
+                 <button onClick={handleGenerateScore} disabled={isScoringLoading} className="py-1 px-3 text-xs font-semibold text-gray-700 border border-gray-300 bg-white rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50">
                      {isScoringLoading ? 'Scoring...' : 'Analyze Lead Value'}
                  </button>
              )}
-             <button onClick={handleGenerateDraft} disabled={isDrafting} className="btn-secondary py-1 px-3 text-xs border border-gray-300 bg-white">
+             <button onClick={handleGenerateDraft} disabled={isDrafting} className="py-1 px-3 text-xs font-semibold text-gray-700 border border-gray-300 bg-white rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50">
                   {isDrafting ? 'Drafting...' : 'Draft Email Response'}
              </button>
              {status === SubmissionStatus.Pending && (
@@ -310,9 +310,9 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
                         />
                     )}
                     {!isDrafting && (
-                        <button 
+                        <button
                             onClick={() => navigator.clipboard.writeText(emailDraft || '')}
-                            className="mt-2 text-xs text-brand-navy font-bold hover:underline"
+                            className="mt-2 text-xs text-blue-600 font-bold hover:underline"
                         >
                             Copy to Clipboard
                         </button>

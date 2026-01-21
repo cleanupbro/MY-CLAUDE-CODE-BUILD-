@@ -5,6 +5,7 @@ import { StickyMobileCTA } from '../components/StickyMobileCTA';
 import { ExitIntentPopup, useExitIntent } from '../components/ExitIntentPopup';
 import { RecentBookingToast } from '../components/RecentBookingToast';
 import { NewsletterPopup, useNewsletterPopup } from '../components/NewsletterPopup';
+import { getAvailableSlots, subscribeToSlots } from '../utils/slotsManager';
 
 interface LandingViewProps {
   navigateTo: (view: ViewType) => void;
@@ -77,25 +78,24 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
   const { showExitPopup, closeExitPopup } = useExitIntent();
   const { showPopup: showNewsletter, closePopup: closeNewsletter } = useNewsletterPopup(45000); // Show after 45 seconds
 
-  // Slots left counter - changes based on hour of day
-  const getAvailableSlots = () => {
-    const hour = new Date().getHours();
-    // Fewer slots as day progresses (urgency increases)
-    if (hour < 9) return 8;   // Early morning - plenty available
-    if (hour < 12) return 6;  // Morning - still good
-    if (hour < 15) return 4;  // Afternoon - getting busy
-    if (hour < 18) return 3;  // Late afternoon - limited
-    return 2;                  // Evening - urgent
-  };
-
-  const [slotsLeft, setSlotsLeft] = useState(getAvailableSlots);
+  // Slots left counter - synced with booking popup via shared manager
+  const [slotsLeft, setSlotsLeft] = useState(() => getAvailableSlots());
 
   useEffect(() => {
-    // Update slots every hour
+    // Subscribe to slot changes from other components (like booking popup)
+    const unsubscribe = subscribeToSlots((newSlots) => {
+      setSlotsLeft(newSlots);
+    });
+
+    // Also check periodically in case localStorage was updated elsewhere
     const interval = setInterval(() => {
       setSlotsLeft(getAvailableSlots());
-    }, 3600000); // Every hour
-    return () => clearInterval(interval);
+    }, 10000); // Check every 10 seconds
+
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
   }, []);
 
   // Testimonials are now displayed in a grid, no rotation needed

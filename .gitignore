@@ -28,6 +28,11 @@ MASTER_API.md
 .ai/secrets/
 _AI/secrets/
 
+# Credentials folder (API keys)
+docs/credentials/API_KEYS.env
+docs/credentials/*.env
+!docs/credentials/*.example
+
 # Google secrets and credentials
 **/google.secrects/
 **/*.json

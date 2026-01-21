@@ -12,6 +12,8 @@
 | `done-for-day.md` | "done", "done for the day", "end session" | End-of-session backup: updates STATUS.md, LOG.md, commits to GitHub |
 | `deploy.md` | "deploy", "go live", "ship it" | Deploy changes to cleanupbros.com.au via Vercel |
 | `bug-fix.md` | "error", "bug", "broken", "fix" | Debug and fix issues in the application |
+| `n8n-manager.md` | "n8n", "workflow", "automation" | Manage N8N workflows: list, activate, execute |
+| `ui-fix.md` | "invisible text", "btn-secondary", "UI broken" | Fix invisible text, buttons, and form elements |
 
 ---
 
@@ -49,6 +51,14 @@
 - Identifies common issues
 - Documents fix in LOG.md
 - Provides rollback instructions
+
+### ui-fix.md
+**When:** Text/buttons are invisible or hard to see
+**Does:**
+- Fixes `btn-secondary` class issues
+- Adds explicit text colors to inputs/selects
+- Provides standard class patterns for buttons & forms
+- Documents common contrast issues with brand colors
 
 ---
 

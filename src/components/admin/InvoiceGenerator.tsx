@@ -335,7 +335,7 @@ export const InvoiceGenerator: React.FC<InvoiceGeneratorProps> = ({
                   type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] text-gray-900 bg-white"
                 />
               </div>
 
@@ -359,20 +359,20 @@ export const InvoiceGenerator: React.FC<InvoiceGeneratorProps> = ({
                         value={item.description}
                         onChange={(e) => updateItem(index, 'description', e.target.value)}
                         placeholder="Description"
-                        className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                        className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-white placeholder-gray-400"
                       />
                       <input
                         type="number"
                         value={item.quantity}
                         onChange={(e) => updateItem(index, 'quantity', parseInt(e.target.value) || 0)}
-                        className="w-16 px-2 py-2 border border-gray-200 rounded-lg text-sm text-center"
+                        className="w-16 px-2 py-2 border border-gray-200 rounded-lg text-sm text-center text-gray-900 bg-white"
                         min="1"
                       />
                       <input
                         type="number"
                         value={item.unit_price}
                         onChange={(e) => updateItem(index, 'unit_price', parseFloat(e.target.value) || 0)}
-                        className="w-24 px-2 py-2 border border-gray-200 rounded-lg text-sm"
+                        className="w-24 px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-white"
                         step="0.01"
                       />
                       <button
@@ -403,15 +403,15 @@ export const InvoiceGenerator: React.FC<InvoiceGeneratorProps> = ({
               {/* Totals */}
               <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-500">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="font-medium text-gray-900">${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-500">GST (10%)</span>
-                  <span className="font-medium">${tax.toFixed(2)}</span>
+                  <span className="text-gray-600">GST (10%)</span>
+                  <span className="font-medium text-gray-900">${tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
-                  <span>Total</span>
+                  <span className="text-gray-900">Total</span>
                   <span className="text-[#0071e3]">${total.toFixed(2)}</span>
                 </div>
               </div>
