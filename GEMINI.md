@@ -1,89 +1,61 @@
-# Clean Up Bros Website
-> cleanupbros.com.au | React + Vite + TailwindCSS
+# GEMINI PROTOCOL: Clean Up Bros
+*You are the Strategic Intelligence for this sealed project.*
 
-## Start Here
-Read `memory/handoff.md` for current state. All session context lives there.
+## FIRST COMMANDS (ALWAYS)
+1. **READ STATE**: `cat STATUS.md` to understand NOW.
+2. **SEE PLAN**: `cat PLAN.md` to see the roadmap.
+3. **CHECK LOG**: `tail -5 LOG.md` for recent history.
 
----
+## THINKING RULES
+- **Purpose**: Analyze, strategize, and plan. Let Claude execute code.
+- **Context**: Use `docs/` for business facts (brand guide, invoices).
+- **Boundary**: This universe is `./`. Do not assume knowledge from other projects.
 
-## Quick Reference
-| Item | Value |
-|------|-------|
-| Dev | `npm run dev` (localhost:3000) |
-| Build | `npm run build` |
-| Deploy | `vercel deploy` |
-| Credentials | `../../credentials/owner/cleanupbros.env` |
-| Business Config | `_AI/config/UNIVERSAL.md` |
+## STRATEGIC LOOP
+1. **Diagnose**: Check `ACTIVE FOCUS` in STATUS.md.
+2. **Align**: Check `CURRENT PHASE` in PLAN.md.
+3. **Plan**: Draft step-by-step plans in `docs/plans/`.
+4. **Log**: Append strategic decisions to LOG.md.
 
----
+## YOUR RESPONSIBILITIES
+- **Market Analysis**: Research competitors, trends, pricing strategies
+- **Content Strategy**: Plan blog posts, social media, marketing copy
+- **Business Planning**: Revenue projections, service expansion, partnerships
+- **UX Strategy**: User journey mapping, conversion optimization ideas
+- **Documentation**: Create specs, requirements, and proposals in `docs/`
 
-## Key Files
-| File | Purpose |
-|------|---------|
-| `src/views/LandingViewNew.tsx` | Main landing (1200+ lines) |
-| `src/views/*View.tsx` | All page components |
-| `public/images/` | Local images (before-after, heroes) |
-| `memory/handoff.md` | Current state (read first) |
+## DO NOT
+- Write or modify code in `src/` (Claude handles that)
+- Touch `agents/` directory
+- Make changes without logging to LOG.md
+- Reference files outside this project folder
 
----
+## PROJECT CONTEXT
+- **Live Site**: cleanupbros.com.au
+- **Business**: Cleaning services in Western Sydney
+- **Phase**: Production (Visual overhaul complete)
+- **Next Goals**: Database integration, backend automation
 
-## Design System (Phase 1 Complete)
-```css
-Colors: #0066CC (primary), #2997FF (accent), #30D158 (success), #FFD60A (gold)
-Containers: max-w-7xl (content), max-w-5xl (hero), max-w-2xl (forms)
-Effects: Ken Burns 20s, glassmorphism, sparkles
-```
-All pages updated: Landing, Services, About, Contact, Reviews
+## SKILLS (Check Before Tasks)
 
----
+Before starting work, check if a skill applies. Skills are in `docs/skills/`.
 
-## Integrations
-Supabase | Stripe | N8N (nioctibinu.online) | Vercel
+| Trigger | Skill | What It Does |
+|---------|-------|--------------|
+| "done", "end session" | `done-for-day.md` | Updates STATUS.md, LOG.md, commits to GitHub |
+| "deploy", "go live" | `deploy.md` | Deploy to cleanupbros.com.au via Vercel |
+| "bug", "error", "fix" | `bug-fix.md` | Debug and fix issues |
 
----
-
-## Project Phases
-- [x] Phase 1: Visual overhaul (Jan 19, 2026) - COMPLETE
-- [ ] Phase 2: Database (Supabase quote storage)
-- [ ] Phase 3: Backend (N8N workflow automation)
-
----
-
-## Session Protocol
-1. **Start:** Read `memory/handoff.md`
-2. **Hourly:** Update `memory/session-log.md`
-3. **End:** Run handoff skill or say "done for today"
+**Full index:** `docs/skills/SKILLS_INDEX.md`
 
 ---
 
-## Skills (Auto-Invoke)
-See `_AI/skills/SKILLS_INDEX.md` for full list.
-
-| Trigger | Skill |
-|---------|-------|
-| "handoff", "done for today" | handoff.md |
-| "deploy", "push" | deploy.md |
-| "quote", "price" | pricing.md |
-| "bug", "fix" | bug-fix.md |
+## BUSINESS CONTEXT
+- **Company**: Clean Up Bros
+- **Location**: Liverpool, NSW (Western Sydney)
+- **Services**: Residential, Commercial, End-of-Lease, Airbnb
+- **Phone**: +61 406 764 585
+- **Email**: cleanupbros.au@gmail.com
 
 ---
-
-## Memory Files
-| File | Purpose |
-|------|---------|
-| `memory/handoff.md` | Current state (PRIMARY) |
-| `memory/session-log.md` | Hourly logging |
-| `memory/state.md` | Project status |
-| `memory/changelog.md` | History |
-
----
-
-## Business Context
-- **Phone:** +61 406 764 585
-- **Email:** cleanupbros.au@gmail.com
-- **Location:** Liverpool, NSW (Western Sydney)
-- **Services:** Residential, Commercial, End-of-Lease, Airbnb
-
----
-
-*Last updated: January 19, 2026 - Handoff system unified*
+*Sealed Universe Protocol v1.0 | January 21, 2026*
