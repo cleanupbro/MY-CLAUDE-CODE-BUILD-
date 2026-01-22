@@ -6,6 +6,7 @@ interface GiftCardRedemptionProps {
   onApply: (giftCard: GiftCard, amountToApply: number) => void;
   onRemove?: () => void;
   appliedGiftCard?: { code: string; amount: number };
+  navigateTo?: (view: string) => void;
 }
 
 export const GiftCardRedemption: React.FC<GiftCardRedemptionProps> = ({
@@ -13,6 +14,7 @@ export const GiftCardRedemption: React.FC<GiftCardRedemptionProps> = ({
   onApply,
   onRemove,
   appliedGiftCard,
+  navigateTo,
 }) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -165,7 +167,20 @@ export const GiftCardRedemption: React.FC<GiftCardRedemptionProps> = ({
           )}
 
           <p className="text-xs text-gray-500 mt-3">
-            💡 Don't have a gift card? <a href="/gift-cards" className="text-blue-600 hover:underline font-semibold">Purchase one now</a> and get 15% bonus credit!
+            💡 Don't have a gift card?{' '}
+            {navigateTo ? (
+              <button
+                onClick={() => navigateTo('CleanUpCard')}
+                className="text-blue-600 hover:underline font-semibold"
+              >
+                Purchase one now
+              </button>
+            ) : (
+              <a href="/gift-card" className="text-blue-600 hover:underline font-semibold">
+                Purchase one now
+              </a>
+            )}{' '}
+            and get 15% bonus credit!
           </p>
         </div>
       ) : (

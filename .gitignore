@@ -42,6 +42,7 @@ docs/credentials/*.env
 !vite.config.ts
 !tailwind.config.ts
 !n8n_workflow_complete.json
+!vercel.json
 
 # Editor directories and files
 .vscode/*

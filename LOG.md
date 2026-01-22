@@ -76,3 +76,14 @@
 2026-01-22 | INFO | WhatsApp needs verification in Meta Business Suite (free, no $5 subscription needed).
 2026-01-22 | SESSION END | 3/4 notifications working. WhatsApp pending user verification.
 2026-01-22 | NEXT | Complete WhatsApp verification, then continue Phase 2.
+2026-01-22 | START | Session 6 - Deploy + WhatsApp Test Account + Navigation Audit.
+2026-01-22 | CRITICAL | Discovered root cause of 404 errors - missing vercel.json for SPA routing.
+2026-01-22 | ACTION | Created vercel.json with SPA rewrites and security headers.
+2026-01-22 | ACTION | Fixed GiftCardRedemption.tsx - broken /gift-cards link now uses navigateTo('CleanUpCard').
+2026-01-22 | ACTION | Updated docs/skills/api-whatsapp.md with Test Account vs CUBS Account documentation.
+2026-01-22 | INFO | WhatsApp Test Account (880203244738731) ready for Cloud API.
+2026-01-22 | INFO | WhatsApp CUBS Account blocked - created via mobile app, needs migration.
+2026-01-22 | INFO | N8N MCP auth failing - workflow 49xi6gSdDwMlcHmj needs manual update.
+2026-01-22 | INFO | Admin login uses Supabase Auth - user needs to be created in admin_users table.
+2026-01-22 | VERIFY | Build passed - npm run build successful.
+2026-01-22 | NEXT | Deploy to Vercel (vercel.json will fix all 404s on routes).

@@ -3,12 +3,26 @@
 ## Trigger Words
 "whatsapp", "wa", "whatsapp message", "send whatsapp"
 
-## Config
+## Current Status
+**Test Account**: Ready for Cloud API (Account ID: 880203244738731)
+**CUBS Account**: Blocked - Created via mobile app, cannot use Cloud API
+
+## Account Configuration
+
+### Test WhatsApp Business Account (ACTIVE)
 ```
-Provider: Meta (Facebook) Business Cloud API
-Phone Number ID: See API_KEYS.env → WHATSAPP_PHONE_NUMBER_ID
-Business Account ID: See API_KEYS.env → WHATSAPP_BUSINESS_ACCOUNT_ID
-Access Token: See API_KEYS.env → FACEBOOK_SYSTEM_USER_TOKEN
+Business Account ID: 880203244738731
+Phone Number ID: 92512258402625
+Access Token: FACEBOOK_SYSTEM_USER_TOKEN (see API_KEYS.env)
+Status: 3 people assigned, Cloud API ready
+```
+
+### Clean Up Bros - CUBS Account (BLOCKED)
+```
+Business Account ID: 1784171325827278
+Phone Number: +61 406 764 585
+Status: Created via mobile app, 0 people assigned
+Issue: Cannot use Cloud API - needs migration
 ```
 
 ## API Endpoint
@@ -37,9 +51,9 @@ Content-Type: `application/json`
 }
 ```
 
-## cURL Example
+## cURL Example (Test Account)
 ```bash
-curl -X POST "https://graph.facebook.com/v18.0/${WHATSAPP_PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v18.0/92512258402625/messages" \
   -H "Authorization: Bearer ${FACEBOOK_SYSTEM_USER_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -50,11 +64,21 @@ curl -X POST "https://graph.facebook.com/v18.0/${WHATSAPP_PHONE_NUMBER_ID}/messa
   }'
 ```
 
-## N8N HTTP Request Node Setup
+## N8N Workflow Configuration
+
+### Workflow ID: `49xi6gSdDwMlcHmj`
+
+**Manual Update Instructions** (N8N MCP auth currently unavailable):
+
+1. Log in to N8N at https://nioctibinu.online
+2. Open workflow `49xi6gSdDwMlcHmj`
+3. Find the WhatsApp HTTP Request node
+4. Update the node configuration:
+
 ```json
 {
   "method": "POST",
-  "url": "https://graph.facebook.com/v18.0/${WHATSAPP_PHONE_NUMBER_ID}/messages",
+  "url": "https://graph.facebook.com/v18.0/92512258402625/messages",
   "sendHeaders": true,
   "headerParameters": {
     "parameters": [
@@ -74,6 +98,9 @@ curl -X POST "https://graph.facebook.com/v18.0/${WHATSAPP_PHONE_NUMBER_ID}/messa
   "jsonBody": "={{ JSON.stringify({ messaging_product: 'whatsapp', to: '61406764585', type: 'text', text: { body: $json.message } }) }}"
 }
 ```
+
+5. Save and activate the workflow
+6. Test by triggering with a test payload
 
 ## Response Example
 ```json
@@ -130,8 +157,34 @@ Common errors:
 - `131047`: 24h window expired, use template
 - `100`: Invalid parameter
 
-## N8N Workflow Integration
-The WhatsApp node in workflow `49xi6gSdDwMlcHmj` sends messages to +61406764585 for all leads.
+## Migration Plan for +61 406 764 585 (Future)
+
+### Why Migration is Needed
+The CUBS account was created via WhatsApp Business mobile app, which:
+- Cannot be assigned to people in Meta Business Suite
+- Has limited Cloud API capabilities
+- Blocks verification code delivery
+
+### Migration Steps (When Ready)
+1. **Backup**: Export chat history from WhatsApp Business app
+2. **Uninstall**: Remove WhatsApp Business app from phone
+3. **Wait**: Allow 24-48 hours for number to be released
+4. **Register**: Add phone number through Cloud API in Meta Business Suite
+5. **Configure**: Update all credentials with new Phone Number ID
+6. **Test**: Verify messages send and receive correctly
+
+### Files to Update After Migration
+| File | Change |
+|------|--------|
+| `src/services/whatsappService.ts` | New Phone Number ID |
+| `docs/credentials/API_KEYS.env` | New credentials |
+| N8N Workflow `49xi6gSdDwMlcHmj` | New Phone Number ID in HTTP node |
+| This file (`api-whatsapp.md`) | Updated documentation |
+
+### Important Notes
+- User will lose access to mobile WhatsApp Business app for this number
+- Existing chat history will not transfer to Cloud API
+- Consider using a second number if mobile app access is important
 
 ## Use Cases
 - Lead notifications (business owner)
@@ -140,4 +193,6 @@ The WhatsApp node in workflow `49xi6gSdDwMlcHmj` sends messages to +61406764585 
 - Interactive buttons (confirm/reschedule)
 
 ## Status
-Working | Node: Send WhatsApp | Workflow: 49xi6gSdDwMlcHmj
+- Test Account: **Ready** | Phone Number ID: 92512258402625
+- Production (CUBS): **Blocked** | Needs migration
+- N8N Workflow: `49xi6gSdDwMlcHmj` | Update manually required

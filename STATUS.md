@@ -1,22 +1,53 @@
 # STATUS: Clean Up Bros
-*Last Sync: January 22, 2026 (Session 5)*
+*Last Sync: January 22, 2026 (Session 6)*
 
 ## ACTIVE FOCUS
-- **Current Task**: WhatsApp Business Verification + Continue Phase 2
-- **Working In**: Notification System & Backend SaaS Build
-- **Blockers**: WhatsApp phone number needs Meta Business verification
+- **Current Task**: Deploy vercel.json + Test WhatsApp + Admin Login Fix
+- **Working In**: Phase 2 Navigation Fixes & Deployment
+- **Blockers**: N8N MCP auth issue (manual workflow update needed), Admin user needs Supabase setup
 
 ## RESUME CHECKLIST
-1. Complete WhatsApp phone verification in Meta Business Suite
-2. Test WhatsApp notification after verification
-3. Continue Phase 2: Navigation audit & Square integration
+1. Deploy changes to Vercel (vercel.json will fix 404s on all routes)
+2. Update N8N workflow manually with WhatsApp test credentials
+3. Set up admin user in Supabase Auth + admin_users table
+4. Test all routes after deployment
 
 ## SESSION CONTEXT
-- **Phase**: Backend SaaS Build (7-phase roadmap)
+- **Phase**: Backend SaaS Build (7-phase roadmap) - Phase 2 Navigation
 - **Tech Stack**: React 19 + TypeScript + Vite + Supabase + Stripe + Square + N8N
-- **Recent Changes**: N8N workflow fixed, 3/4 notifications working, API docs created
+- **Recent Changes**: vercel.json created, GiftCardRedemption fix, WhatsApp docs updated
 
-## WHAT WAS DONE THIS SESSION (Session 5)
+## WHAT WAS DONE THIS SESSION (Session 6)
+
+### Critical: Vercel SPA Routing Fixed
+- **Issue Found**: All routes except root (/) returned 404 on live site
+- **Root Cause**: Missing vercel.json for SPA routing
+- **Solution**: Created `vercel.json` with rewrites to serve index.html for all routes
+- **Status**: Will work after deploy
+
+### Navigation Issues Fixed
+- **GiftCardRedemption.tsx**: Fixed broken `/gift-cards` link (was 404, now uses proper navigateTo)
+- **All navigateTo calls audited**: No broken view references found
+- **codebase navigation**: All 30+ routes properly mapped in App.tsx
+
+### WhatsApp Test Account Documented
+- **Test Account ID**: 880203244738731 (Ready for Cloud API)
+- **CUBS Account**: Blocked - created via mobile app, needs migration
+- **N8N Workflow**: 49xi6gSdDwMlcHmj needs manual update (MCP auth failing)
+- **Documentation**: Updated `docs/skills/api-whatsapp.md` with full migration plan
+
+### Admin Login Clarification
+- Uses Supabase Auth (not hardcoded credentials)
+- Requires user in Supabase Auth + admin_users table
+- Current documented credentials may not have user created
+
+### Build Verification
+- `npm run build` passed successfully
+- No TypeScript errors in navigation changes
+
+---
+
+## WHAT WAS DONE LAST SESSION (Session 5)
 
 ### N8N Workflow Notifications Fixed
 - **Workflow ID**: 49xi6gSdDwMlcHmj (CLEAN UP BROS ROI - OPTIMIZED)
