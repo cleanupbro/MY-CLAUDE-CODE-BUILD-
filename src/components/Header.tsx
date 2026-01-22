@@ -5,9 +5,10 @@ interface HeaderProps {
   navigateTo: (view: ViewType) => void;
   isAdminLoggedIn?: boolean;
   onLogout?: () => void;
+  onGetQuote?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ navigateTo, isAdminLoggedIn = false, onLogout }) => {
+export const Header: React.FC<HeaderProps> = ({ navigateTo, isAdminLoggedIn = false, onLogout, onGetQuote }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -97,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ navigateTo, isAdminLoggedIn = fa
 
           {/* CTA Button - Primary Action */}
           <button
-            onClick={() => navigateTo('Services')}
+            onClick={() => onGetQuote ? onGetQuote() : navigateTo('Services')}
             className="
               ml-1 px-5 py-2.5
               bg-[#0066CC] text-white

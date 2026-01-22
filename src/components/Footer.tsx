@@ -23,7 +23,7 @@ const useScrollReveal = () => {
   return { ref, isVisible };
 };
 
-export const Footer: React.FC<{ navigateTo: (view: ViewType) => void }> = ({ navigateTo }) => {
+export const Footer: React.FC<{ navigateTo: (view: ViewType) => void; onGetQuote?: () => void }> = ({ navigateTo, onGetQuote }) => {
   const ctaReveal = useScrollReveal();
   const linksReveal = useScrollReveal();
 
@@ -40,7 +40,7 @@ export const Footer: React.FC<{ navigateTo: (view: ViewType) => void }> = ({ nav
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => navigateTo('Services')}
+              onClick={() => onGetQuote ? onGetQuote() : navigateTo('Services')}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#0066CC] text-white text-lg font-medium rounded-full hover:bg-[#0077ED] transition-all duration-300 hover:scale-[1.02] animate-pulse-subtle shadow-[0_0_30px_rgba(0,102,204,0.4)] hover:shadow-[0_0_50px_rgba(0,102,204,0.6)]"
             >
               Get a Quote

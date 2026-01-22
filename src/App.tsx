@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { AntigravityBackground } from './components/AntigravityBackground';
 import { FloatingWhatsAppWithStyles } from './components/FloatingWhatsApp';
 import { NewsletterPopup, useNewsletterPopup } from './components/NewsletterPopup';
+import { QuickQuoteModal } from './components/QuickQuoteModal';
 import { ServiceType, ViewType } from './types';
 import { RetryBanner } from './components/RetryBanner';
 import { ToastProvider } from './contexts/ToastContext';
@@ -108,6 +109,7 @@ const App: React.FC = () => {
   });
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [retryKey, setRetryKey] = useState(0);
+  const [showQuickQuote, setShowQuickQuote] = useState(false);
 
   // Newsletter popup - shows every 2-3 minutes, NOT on form pages
   const { showPopup: showNewsletter, closePopup: closeNewsletter, markSubscribed } = useNewsletterPopup(currentView);
@@ -300,7 +302,7 @@ const App: React.FC = () => {
     <ToastProvider>
       <div className="min-h-screen flex flex-col font-sans antialiased bg-luxury-bg text-luxury-text">
         <AntigravityBackground />
-        <Header navigateTo={navigateTo} isAdminLoggedIn={hasAdminAccess} onLogout={handleLogout} />
+        <Header navigateTo={navigateTo} isAdminLoggedIn={hasAdminAccess} onLogout={handleLogout} onGetQuote={() => setShowQuickQuote(true)} />
         <main className="flex-grow w-full relative z-10">
           <div className="w-full">
               <RetryBanner key={retryKey} />
@@ -309,7 +311,7 @@ const App: React.FC = () => {
               </Suspense>
           </div>
         </main>
-        <Footer navigateTo={navigateTo} />
+        <Footer navigateTo={navigateTo} onGetQuote={() => setShowQuickQuote(true)} />
         {/* ChatWidget removed - user will add 11 Labs widget later */}
         <FloatingWhatsAppWithStyles />
 
@@ -323,6 +325,13 @@ const App: React.FC = () => {
             }}
           />
         )}
+
+        {/* Quick Quote Modal - Global access from any page */}
+        <QuickQuoteModal
+          isOpen={showQuickQuote}
+          onClose={() => setShowQuickQuote(false)}
+          navigateTo={navigateTo}
+        />
       </div>
     </ToastProvider>
   );

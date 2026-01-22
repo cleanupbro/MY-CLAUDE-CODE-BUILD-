@@ -55,3 +55,4 @@ docs/credentials/*.env
 *.sln
 *.sw?
 .playwright-mcp/
+.vercel
