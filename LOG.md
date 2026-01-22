@@ -59,3 +59,20 @@
 2026-01-22 | COMPLETE | Phase 1 fully complete. Admin dashboard ready for testing.
 2026-01-22 | SESSION END | N8N API key updated. MCP configuration provided.
 2026-01-22 | NEXT | Phase 2: Navigation audit, then Square/Calendar integrations.
+2026-01-22 | START | Session 5 - N8N Workflow Notifications Fix.
+2026-01-22 | ACTION | Fixed SMS node connection in N8N workflow 49xi6gSdDwMlcHmj.
+2026-01-22 | ACTION | Added WhatsApp node to N8N workflow (Meta Cloud API).
+2026-01-22 | ACTION | Made Email node dynamic - sends to customer email from form.
+2026-01-22 | TEST | Telegram notification - SUCCESS (Message ID 364).
+2026-01-22 | TEST | Email notification - SUCCESS (Gmail OAuth Hafsah account).
+2026-01-22 | TEST | SMS notification - SUCCESS (Twilio US region).
+2026-01-22 | TEST | WhatsApp - PENDING (phone needs Meta Business verification).
+2026-01-22 | ACTION | Updated Twilio credentials with new US region keys.
+2026-01-22 | ACTION | Created docs/skills/api-twilio.md - SMS API documentation.
+2026-01-22 | ACTION | Created docs/skills/api-whatsapp.md - WhatsApp API documentation.
+2026-01-22 | ACTION | Sanitized all skill docs to use ${VARIABLE} placeholders (GitHub push protection).
+2026-01-22 | VERIFY | Meta Graph API permissions - Facebook, Instagram, Ads, WhatsApp all granted.
+2026-01-22 | INFO | WhatsApp Phone Number ID: 650353521505440 (+61 406 764 585).
+2026-01-22 | INFO | WhatsApp needs verification in Meta Business Suite (free, no $5 subscription needed).
+2026-01-22 | SESSION END | 3/4 notifications working. WhatsApp pending user verification.
+2026-01-22 | NEXT | Complete WhatsApp verification, then continue Phase 2.
