@@ -86,4 +86,11 @@
 2026-01-22 | INFO | N8N MCP auth failing - workflow 49xi6gSdDwMlcHmj needs manual update.
 2026-01-22 | INFO | Admin login uses Supabase Auth - user needs to be created in admin_users table.
 2026-01-22 | VERIFY | Build passed - npm run build successful.
-2026-01-22 | NEXT | Deploy to Vercel (vercel.json will fix all 404s on routes).
+2026-01-22 | ACTION | Simplified vercel.json rewrite pattern for SPA routing.
+2026-01-22 | ACTION | Added global QuickQuoteModal to App.tsx.
+2026-01-22 | ACTION | Header "Get Quote" button now opens quick quote modal.
+2026-01-22 | ACTION | Footer "Get a Quote" button now opens quick quote modal.
+2026-01-22 | ACTION | Reset admin password in Supabase (admin2026Secure).
+2026-01-22 | DEPLOY | Pushed commits 4eaab82, f4e41b3, bfeb2d7 to GitHub.
+2026-01-22 | SESSION END | Session 6 complete. Vercel redeploy pending.
+2026-01-22 | NEXT | Verify site works after Vercel redeploy, test admin login.
