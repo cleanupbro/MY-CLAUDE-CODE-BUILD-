@@ -150,6 +150,36 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
           referenceId: id,
         }).catch(err => console.warn('Telegram notification failed:', err));
         break;
+      case 'Landing Lead':
+        // Landing page quick quote lead
+        sendTelegramMessage(`
+🎯 <b>NEW LANDING PAGE LEAD</b>
+
+📍 <b>Suburb:</b> ${d.suburb || 'N/A'}
+🏠 <b>Property:</b> ${d.bedrooms || '?'} bed, ${d.bathrooms || '?'} bath
+🧹 <b>Service:</b> ${d.serviceType || 'Not specified'}
+💰 <b>Est. Price:</b> $${d.priceEstimate || 'Quote needed'}
+📱 <b>Phone:</b> ${d.phone || 'N/A'}
+🔗 <b>Ref:</b> <code>${id}</code>
+
+⏰ <i>Hot lead - Quote requested on landing page!</i>
+        `.trim()).catch(err => console.warn('Telegram notification failed:', err));
+        break;
+      case 'Client Feedback':
+        sendTelegramMessage(`
+⭐ <b>NEW CLIENT FEEDBACK</b>
+
+👤 <b>Name:</b> ${d.name || d.fullName || 'Anonymous'}
+📧 <b>Email:</b> ${d.email || 'N/A'}
+⭐ <b>Rating:</b> ${'⭐'.repeat(d.rating || 0)} (${d.rating || 0}/5)
+📋 <b>Type:</b> ${d.feedbackType || 'General'}
+
+💬 <b>Message:</b>
+${d.message || d.feedback || 'No message'}
+
+🔗 <b>Ref:</b> <code>${id}</code>
+        `.trim()).catch(err => console.warn('Telegram notification failed:', err));
+        break;
       default:
         // Generic notification for other types
         sendTelegramMessage(`
