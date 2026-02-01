@@ -5,6 +5,7 @@
 
 import { supabase } from '../lib/supabaseClient';
 import { logGiftCardRedemption } from './googleSheetsService';
+import { notifyGiftCardPurchased, notifyGiftCardRedeemed } from './adminNotificationService';
 
 export interface GiftCard {
   id: string;
@@ -181,6 +182,16 @@ export const activateGiftCard = async (
 
     if (transError) throw transError;
 
+    // Send Telegram notification
+    const gc = giftCard as GiftCard;
+    notifyGiftCardPurchased({
+      purchaserName: gc.purchaser_name,
+      purchaserEmail: gc.purchaser_email,
+      recipientName: gc.recipient_name,
+      amount: gc.current_balance,
+      cardCode: gc.code,
+    }).catch(err => console.warn('Gift card notification failed:', err));
+
     return { success: true };
   } catch (error) {
     console.error('Error activating gift card:', error);
@@ -303,6 +314,15 @@ export const redeemGiftCard = async (
       bookingTotal: data.amountToRedeem,
       customerEmail: data.customerEmail,
     }, data.submissionId).catch(err => console.warn('Google Sheets logging failed:', err));
+
+    // Send Telegram notification
+    notifyGiftCardRedeemed({
+      customerName: data.customerEmail.split('@')[0], // Use email prefix as name
+      cardCode: giftCard.code,
+      amountUsed: amountToApply,
+      remainingBalance: newBalance,
+      bookingRef: data.submissionId,
+    }).catch(err => console.warn('Gift card redemption notification failed:', err));
 
     return {
       success: true,

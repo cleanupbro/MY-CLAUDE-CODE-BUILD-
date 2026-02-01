@@ -4,6 +4,7 @@
  */
 
 import { supabase, isSupabaseConfigured, Complaint, Database } from '../lib/supabaseClient';
+import { notifyNewComplaint, notifyComplaintResolved } from './adminNotificationService';
 
 type ComplaintInsert = Database['public']['Tables']['complaints']['Insert'];
 type ComplaintUpdate = Database['public']['Tables']['complaints']['Update'];
