@@ -258,17 +258,24 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
       {/* ==================== HERO SECTION ==================== */}
       <section
         ref={heroReveal.ref}
-        className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
+        className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden bg-mesh"
       >
+        {/* Floating gradient orbs */}
+        <div className="floating-elements">
+          <div className="floating-element"></div>
+          <div className="floating-element"></div>
+          <div className="floating-element"></div>
+        </div>
         {/* Background image with Ken Burns effect */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-35 ken-burns-bg"
+          className="absolute inset-0 bg-cover bg-center opacity-25 ken-burns-bg"
           style={{ backgroundImage: 'url(/images/living-room/hero.jpeg)' }}
         />
         {/* Background gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-[#0D0D0D]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.08),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(41,151,255,0.05),transparent_50%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0D0D0D]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(0,102,204,0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(0,201,167,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(175,82,222,0.08),transparent_60%)]" />
 
         <div className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Badge */}
@@ -280,12 +287,14 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
             <span className="text-[#30D158] text-sm font-medium">Liverpool's #1 Rated Cleaning Service</span>
           </div>
 
-          {/* Main Headline - Apple Style */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold text-white tracking-tight leading-[0.95] mb-4">
-            Clean Up Bros
+          {/* Main Headline - Gradient Style */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.95] mb-4">
+            <span className="text-white">Clean Up</span>{' '}
+            <span className="text-gradient">Bros</span>
           </h1>
-          <p className="text-2xl md:text-4xl lg:text-5xl font-semibold text-[#86868B] mb-6">
-            Clean. Beyond.
+          <p className="text-2xl md:text-4xl lg:text-5xl font-semibold mb-6">
+            <span className="text-white">Clean.</span>{' '}
+            <span className="text-gradient-gold">Beyond.</span>
           </p>
 
           {/* Subtitle */}
@@ -301,25 +310,22 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
             </span>
           </div>
 
-          {/* CTA Buttons - Apple Pattern with Enhanced Conversion */}
+          {/* CTA Buttons - Vibrant Gradient Style */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <button
               onClick={() => setShowQuickQuote(true)}
               className="
+                btn-gradient
                 px-10 py-5
-                bg-[#0066CC] text-white
-                text-lg font-semibold
+                text-lg font-bold
                 rounded-full
-                hover:bg-[#0077ED]
                 transition-all duration-300
-                hover:scale-[1.03]
+                hover:scale-[1.05]
                 active:scale-[0.98]
-                shadow-[0_0_40px_rgba(0,102,204,0.5)]
-                hover:shadow-[0_0_60px_rgba(0,102,204,0.7)]
-                animate-cta-pulse
+                click-feedback
               "
             >
-              Get My Free Quote Now →
+              ✨ Get My Free Quote Now →
             </button>
             <a
               href="tel:+61406764585"
@@ -462,9 +468,9 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
         <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-12">
-            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">Our Services</p>
+            <p className="badge-gradient text-sm mb-4">Our Services</p>
             <h2 className="text-4xl md:text-5xl font-semibold text-white">
-              Pick Your Clean.
+              Pick Your <span className="text-gradient">Clean.</span>
             </h2>
           </div>
 
@@ -476,15 +482,16 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
                 onClick={() => handleServiceClick(service.type, service.view)}
                 className={`
                   group relative
+                  card-neon
                   bg-[#1C1C1E] rounded-[20px] overflow-hidden
                   text-left
                   border
                   transition-all duration-300
-                  hover:scale-[1.02]
-                  hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]
+                  hover:scale-[1.03]
+                  hover-lift
                   ${service.badge
-                    ? 'border-[#2997FF]/30 hover:border-[#2997FF]/50'
-                    : 'border-transparent hover:border-[#2997FF]/30'
+                    ? 'border-[#2997FF]/40 hover:border-[#2997FF]/60'
+                    : 'border-[#2997FF]/20 hover:border-[#2997FF]/40'
                   }
                 `}
                 style={{ transitionDelay: `${index * 100}ms` }}
@@ -549,17 +556,17 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
         <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-100 ${howItWorksReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section Header */}
           <div className="text-center mb-12">
-            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">How It Works</p>
+            <p className="badge-gradient text-sm mb-4">How It Works</p>
             <h2 className="text-4xl md:text-5xl font-semibold text-white">
-              3 Simple Steps.
+              <span className="text-gradient">3</span> Simple Steps.
             </h2>
           </div>
 
           {/* Steps Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Step 1 */}
-            <div className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center hover:border-[#2997FF]/30 transition-all duration-300 group">
-              <div className="w-20 h-20 bg-[#0066CC] rounded-full flex items-center justify-center text-3xl font-bold text-white mx-auto mb-6 group-hover:scale-110 transition-transform">
+            <div className="card-glass hover-lift p-8 text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#0066CC] to-[#00C9A7] rounded-full flex items-center justify-center text-3xl font-bold text-white mx-auto mb-6 group-hover:scale-110 transition-transform shadow-glow-blue">
                 1
               </div>
               <div className="w-12 h-12 bg-[#0066CC]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -570,20 +577,20 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
             </div>
 
             {/* Step 2 */}
-            <div className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center hover:border-[#2997FF]/30 transition-all duration-300 group">
-              <div className="w-20 h-20 bg-[#0066CC] rounded-full flex items-center justify-center text-3xl font-bold text-white mx-auto mb-6 group-hover:scale-110 transition-transform">
+            <div className="card-glass hover-lift p-8 text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#5856D6] to-[#AF52DE] rounded-full flex items-center justify-center text-3xl font-bold text-white mx-auto mb-6 group-hover:scale-110 transition-transform shadow-glow-blue">
                 2
               </div>
-              <div className="w-12 h-12 bg-[#0066CC]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <TruckIcon className="w-6 h-6 text-[#2997FF]" />
+              <div className="w-12 h-12 bg-[#5856D6]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <TruckIcon className="w-6 h-6 text-[#AF52DE]" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">We Come to You</h3>
               <p className="text-white/60 text-sm leading-relaxed">Same-day service available. Our professional team arrives on time.</p>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center hover:border-[#2997FF]/30 transition-all duration-300 group">
-              <div className="w-20 h-20 bg-[#30D158] rounded-full flex items-center justify-center text-3xl font-bold text-white mx-auto mb-6 group-hover:scale-110 transition-transform">
+            <div className="card-glass hover-lift p-8 text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#30D158] to-[#00C9A7] rounded-full flex items-center justify-center text-3xl font-bold text-white mx-auto mb-6 group-hover:scale-110 transition-transform shadow-glow-success">
                 ✓
               </div>
               <div className="w-12 h-12 bg-[#30D158]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -598,9 +605,9 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
           <div className="text-center mt-10">
             <button
               onClick={() => navigateTo('Services')}
-              className="px-8 py-4 bg-[#0066CC] text-white text-lg font-semibold rounded-full hover:bg-[#0077ED] transition-all duration-300 hover:scale-[1.02] shadow-[0_0_30px_rgba(0,102,204,0.4)]"
+              className="btn-gradient px-10 py-5 text-lg font-bold rounded-full hover:scale-[1.05] transition-all duration-300 click-feedback"
             >
-              Start Your Quote Now
+              ✨ Start Your Quote Now
             </button>
           </div>
         </div>
