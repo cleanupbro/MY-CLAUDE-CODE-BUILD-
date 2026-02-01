@@ -42,9 +42,12 @@ const AdminContractsView = lazy(() => import('./views/AdminContractsView'));
 const CheckBalanceView = lazy(() => import('./views/CheckBalanceView'));
 const BookingLookupView = lazy(() => import('./views/BookingLookupView'));
 const SuburbLandingView = lazy(() => import('./views/SuburbLandingView'));
+const ServiceLandingView = lazy(() => import('./views/ServiceLandingView'));
+const PricingView = lazy(() => import('./views/PricingView'));
 
-// Import suburb data
+// Import suburb and service data
 import { SUBURBS } from './views/SuburbLandingView';
+import { SERVICES } from './views/ServiceLandingView';
 
 // URL to View mapping - enables direct URL navigation
 const urlToViewMap: Record<string, ViewType> = {
@@ -94,6 +97,15 @@ const urlToViewMap: Record<string, ViewType> = {
   '/cleaning-services-edmondson-park': 'SuburbLanding',
   '/bond-cleaning-liverpool': 'SuburbLanding',
   '/end-of-lease-cleaning-liverpool': 'SuburbLanding',
+  // Service-specific landing pages
+  '/residential-cleaning-liverpool': 'ServiceLanding',
+  '/airbnb-cleaning-liverpool': 'ServiceLanding',
+  '/commercial-cleaning-liverpool': 'ServiceLanding',
+  '/office-cleaning-western-sydney': 'ServiceLanding',
+  // Content pages
+  '/pricing': 'Pricing',
+  '/prices': 'Pricing',
+  '/cleaning-prices': 'Pricing',
 };
 
 // Get suburb slug from URL path
@@ -103,6 +115,19 @@ const getSuburbFromUrl = (): string | null => {
   const match = path.match(/(?:cleaning-services-|bond-cleaning-|end-of-lease-cleaning-)([a-z-]+)$/);
   if (match) {
     return match[1]; // Returns 'liverpool', 'cabramatta', etc.
+  }
+  return null;
+};
+
+// Get service slug from URL path
+const getServiceFromUrl = (): string | null => {
+  const path = window.location.pathname.toLowerCase().replace(/^\//, '');
+  // Check if it matches a service landing page
+  if (path.includes('residential-cleaning-') || 
+      path.includes('airbnb-cleaning-') || 
+      path.includes('commercial-cleaning-') || 
+      path.includes('office-cleaning-')) {
+    return path;
   }
   return null;
 };
@@ -321,6 +346,16 @@ const App: React.FC = () => {
         return <AdminLoginView onLoginSuccess={handleLoginSuccess} />;
       case 'BookingLookup':
         return <BookingLookupView navigateTo={navigateTo} />;
+      case 'Pricing':
+        return <PricingView navigateTo={navigateTo} />;
+      case 'ServiceLanding':
+        const serviceSlug = getServiceFromUrl();
+        const serviceData = serviceSlug ? SERVICES[serviceSlug] : null;
+        if (serviceData) {
+          return <ServiceLandingView navigateTo={navigateTo} service={serviceData} />;
+        }
+        // Fallback to services page if service not found
+        return <ServicesView navigateTo={navigateTo} />;
       case 'SuburbLanding':
         const suburbSlug = getSuburbFromUrl();
         const suburbData = suburbSlug ? SUBURBS[suburbSlug] : null;
