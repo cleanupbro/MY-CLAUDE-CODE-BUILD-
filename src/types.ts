@@ -88,7 +88,7 @@ export interface InvoiceItem {
   total: number;
 }
 
-export type ViewType = ServiceType | 'Landing' | 'Success' | 'AdminLogin' | 'AdminDashboard' | 'ClientFeedback' | 'About' | 'Reviews' | 'Contact' | 'Services' | 'CleanUpCard' | 'GiftCardPurchase' | 'CheckBalance' | 'AdminGiftCards' | 'AirbnbContract' | 'BasicContract' | 'CommercialInvoice' | 'AdminContracts' | 'BookingLookup';
+export type ViewType = ServiceType | 'Landing' | 'Success' | 'AdminLogin' | 'AdminDashboard' | 'ClientFeedback' | 'About' | 'Reviews' | 'Contact' | 'Services' | 'CleanUpCard' | 'GiftCardPurchase' | 'CheckBalance' | 'AdminGiftCards' | 'AirbnbContract' | 'BasicContract' | 'CommercialInvoice' | 'AdminContracts' | 'BookingLookup' | 'SuburbLanding';
 
 export interface NavigationProps {
   navigateTo: (view: ViewType, message?: string, initialState?: any) => void;

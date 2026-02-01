@@ -41,6 +41,10 @@ const CommercialInvoiceView = lazy(() => import('./views/CommercialInvoiceView')
 const AdminContractsView = lazy(() => import('./views/AdminContractsView'));
 const CheckBalanceView = lazy(() => import('./views/CheckBalanceView'));
 const BookingLookupView = lazy(() => import('./views/BookingLookupView'));
+const SuburbLandingView = lazy(() => import('./views/SuburbLandingView'));
+
+// Import suburb data
+import { SUBURBS } from './views/SuburbLandingView';
 
 // URL to View mapping - enables direct URL navigation
 const urlToViewMap: Record<string, ViewType> = {
@@ -76,6 +80,31 @@ const urlToViewMap: Record<string, ViewType> = {
   '/track': 'BookingLookup',
   '/booking-lookup': 'BookingLookup',
   '/track-booking': 'BookingLookup',
+  // Suburb landing pages
+  '/cleaning-services-liverpool': 'SuburbLanding',
+  '/cleaning-services-cabramatta': 'SuburbLanding',
+  '/cleaning-services-casula': 'SuburbLanding',
+  '/cleaning-services-moorebank': 'SuburbLanding',
+  '/cleaning-services-prestons': 'SuburbLanding',
+  '/cleaning-services-bankstown': 'SuburbLanding',
+  '/cleaning-services-fairfield': 'SuburbLanding',
+  '/cleaning-services-campbelltown': 'SuburbLanding',
+  '/cleaning-services-ingleburn': 'SuburbLanding',
+  '/cleaning-services-glenfield': 'SuburbLanding',
+  '/cleaning-services-edmondson-park': 'SuburbLanding',
+  '/bond-cleaning-liverpool': 'SuburbLanding',
+  '/end-of-lease-cleaning-liverpool': 'SuburbLanding',
+};
+
+// Get suburb slug from URL path
+const getSuburbFromUrl = (): string | null => {
+  const path = window.location.pathname.toLowerCase();
+  // Match patterns like /cleaning-services-liverpool or /bond-cleaning-liverpool
+  const match = path.match(/(?:cleaning-services-|bond-cleaning-|end-of-lease-cleaning-)([a-z-]+)$/);
+  if (match) {
+    return match[1]; // Returns 'liverpool', 'cabramatta', etc.
+  }
+  return null;
 };
 
 // Get initial view from URL
@@ -292,6 +321,14 @@ const App: React.FC = () => {
         return <AdminLoginView onLoginSuccess={handleLoginSuccess} />;
       case 'BookingLookup':
         return <BookingLookupView navigateTo={navigateTo} />;
+      case 'SuburbLanding':
+        const suburbSlug = getSuburbFromUrl();
+        const suburbData = suburbSlug ? SUBURBS[suburbSlug] : null;
+        if (suburbData) {
+          return <SuburbLandingView navigateTo={navigateTo} suburb={suburbData} />;
+        }
+        // Fallback to landing if suburb not found
+        return <LandingView navigateTo={navigateTo} onSubmissionFail={handleSubmissionFail} />;
       case 'Landing':
       default:
         return <LandingView navigateTo={navigateTo} onSubmissionFail={handleSubmissionFail} />;
