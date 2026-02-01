@@ -5,6 +5,7 @@ import { Card } from './Card';
 import { generateSubmissionSummary, generateLeadScore, generateEmailDraft } from '../services/geminiService';
 import { updateSubmissionSummary, updateSubmissionScore, updateSubmissionData } from '../services/submissionService';
 import { BookingConfirmationModal } from './BookingConfirmationModal';
+import { QuickActionsModal } from './admin/QuickActionsModal';
 
 // N8N Webhook URLs for backend triggers
 const N8N_WEBHOOKS = {
@@ -84,6 +85,9 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
 
   // Booking Confirmation Modal State
   const [showBookingModal, setShowBookingModal] = useState(false);
+
+  // Quick Actions Modal State
+  const [showQuickActions, setShowQuickActions] = useState(false);
 
   // Edit Modal State
   const [showEditModal, setShowEditModal] = useState(false);
@@ -273,6 +277,12 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
                      💳 Confirm Booking & Send Payment Link
                  </button>
              )}
+             <button
+                 onClick={() => setShowQuickActions(true)}
+                 className="py-1 px-3 text-xs font-semibold bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:from-purple-600 hover:to-blue-600 shadow-md transition-all"
+             >
+                 ⚡ Quick Actions
+             </button>
          </div>
 
          <div className="space-y-3">
@@ -340,6 +350,17 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, onSt
           onStatusChange(submission.id, SubmissionStatus.Confirmed);
         }}
       />
+
+      {/* Quick Actions Modal */}
+      {showQuickActions && (
+        <QuickActionsModal
+          submission={submission}
+          onClose={() => setShowQuickActions(false)}
+          onUpdate={(updatedSubmission) => {
+            onStatusChange(updatedSubmission.id, updatedSubmission.status);
+          }}
+        />
+      )}
 
       {/* Edit Submission Modal */}
       {showEditModal && (
