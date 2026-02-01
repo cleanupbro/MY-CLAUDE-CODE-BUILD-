@@ -8,6 +8,13 @@ import {
   logClientFeedback,
   logLandingLead,
 } from './googleSheetsService';
+import {
+  sendTelegramMessage,
+  sendResidentialQuoteNotification,
+  sendCommercialQuoteNotification,
+  sendAirbnbQuoteNotification,
+  sendJobApplicationNotification,
+} from './telegramService';
 
 const SUBMISSIONS_KEY = 'cleanUpBrosSubmissions';
 
@@ -85,6 +92,78 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
   } catch (error) {
     // Don't let Google Sheets logging break the main flow
     console.warn('Google Sheets logging error:', error);
+  }
+
+  // Send Telegram notification to team (async, don't wait)
+  try {
+    const d = submission.data as any;
+    switch (submission.type) {
+      case ServiceType.Residential:
+        sendResidentialQuoteNotification({
+          fullName: d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          email: d.email || 'N/A',
+          suburb: d.suburb || d.address || 'N/A',
+          serviceType: d.serviceType || 'Residential',
+          bedrooms: d.bedrooms || 0,
+          bathrooms: d.bathrooms || 0,
+          preferredDate: d.preferredDate,
+          priceEstimate: d.estimatedPrice || d.price,
+          referenceId: id,
+        }).catch(err => console.warn('Telegram notification failed:', err));
+        break;
+      case ServiceType.Commercial:
+        sendCommercialQuoteNotification({
+          companyName: d.companyName || d.company || 'Unknown',
+          contactPerson: d.contactPerson || d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          email: d.email || 'N/A',
+          facilityType: d.facilityType,
+          squareMeters: d.squareMeters || d.size,
+          cleaningFrequency: d.frequency,
+          priceEstimate: d.estimatedPrice || d.price,
+          referenceId: id,
+        }).catch(err => console.warn('Telegram notification failed:', err));
+        break;
+      case ServiceType.Airbnb:
+        sendAirbnbQuoteNotification({
+          contactName: d.contactName || d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          email: d.email || 'N/A',
+          propertyType: d.propertyType,
+          bedrooms: d.bedrooms?.toString(),
+          bathrooms: d.bathrooms?.toString(),
+          cleaningFrequency: d.frequency,
+          preferredStartDate: d.startDate || d.preferredDate,
+          priceEstimate: d.estimatedPrice || d.price,
+          referenceId: id,
+        }).catch(err => console.warn('Telegram notification failed:', err));
+        break;
+      case ServiceType.Jobs:
+        sendJobApplicationNotification({
+          fullName: d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          email: d.email || 'N/A',
+          experience: d.experience,
+          availability: d.availability,
+          serviceSuburbs: d.suburbs,
+          referenceId: id,
+        }).catch(err => console.warn('Telegram notification failed:', err));
+        break;
+      default:
+        // Generic notification for other types
+        sendTelegramMessage(`
+📩 <b>NEW SUBMISSION</b>
+
+📋 <b>Type:</b> ${submission.type}
+👤 <b>Name:</b> ${d.fullName || d.name || d.contactName || 'Unknown'}
+📱 <b>Phone:</b> ${d.phone || 'N/A'}
+📧 <b>Email:</b> ${d.email || 'N/A'}
+🔗 <b>Ref:</b> <code>${id}</code>
+        `.trim()).catch(err => console.warn('Telegram notification failed:', err));
+    }
+  } catch (error) {
+    console.warn('Telegram notification error:', error);
   }
 
   // Save to Supabase if configured
