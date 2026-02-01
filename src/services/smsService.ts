@@ -5,8 +5,8 @@
  * Admin Phone: 0415 429 117
  */
 
-// N8N webhook for SMS (safer than exposing Twilio creds in frontend)
-const N8N_SMS_WEBHOOK = 'https://nioctibinu.online/webhook/send-sms';
+// Vercel API route for SMS (safer than exposing Twilio creds in frontend)
+const SMS_API_URL = '/api/send-sms';
 
 // Admin phone number for notifications
 const ADMIN_PHONE = '+61415429117';
@@ -18,31 +18,35 @@ export interface SMSResult {
 }
 
 /**
- * Send SMS via N8N webhook
+ * Send SMS via Vercel API route
  */
 export const sendSMS = async (
   to: string,
   message: string
 ): Promise<SMSResult> => {
   try {
-    const response = await fetch(N8N_SMS_WEBHOOK, {
+    // Use toAdmin flag to send to admin phone
+    const isAdminNumber = to === ADMIN_PHONE;
+    
+    const response = await fetch(SMS_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to,
+        to: isAdminNumber ? undefined : to,
+        toAdmin: isAdminNumber,
         message,
-        from: 'CleanUpBros',
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`SMS webhook failed: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `SMS API failed: ${response.statusText}`);
     }
 
     const result = await response.json();
     return {
       success: true,
-      messageId: result.sid || result.messageId,
+      messageId: result.messageId,
     };
   } catch (error) {
     console.error('SMS send error:', error);
