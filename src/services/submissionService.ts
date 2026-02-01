@@ -15,6 +15,14 @@ import {
   sendAirbnbQuoteNotification,
   sendJobApplicationNotification,
 } from './telegramService';
+import {
+  sendResidentialLeadSMS,
+  sendCommercialLeadSMS,
+  sendAirbnbLeadSMS,
+  sendJobApplicationSMS,
+  sendLandingLeadSMS,
+  notifyAdminNewLead,
+} from './smsService';
 
 const SUBMISSIONS_KEY = 'cleanUpBrosSubmissions';
 
@@ -108,9 +116,20 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
           bedrooms: d.bedrooms || 0,
           bathrooms: d.bathrooms || 0,
           preferredDate: d.preferredDate,
-          priceEstimate: d.estimatedPrice || d.price,
+          priceEstimate: d.estimatedPrice || d.price || d.priceEstimate,
           referenceId: id,
         }).catch(err => console.warn('Telegram notification failed:', err));
+        // SMS to admin
+        sendResidentialLeadSMS({
+          name: d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          suburb: d.suburb || d.address || 'N/A',
+          bedrooms: d.bedrooms || 0,
+          bathrooms: d.bathrooms || 0,
+          serviceType: d.serviceType || 'Residential',
+          price: d.estimatedPrice || d.price || d.priceEstimate,
+          referenceId: id,
+        }).catch(err => console.warn('SMS notification failed:', err));
         break;
       case ServiceType.Commercial:
         sendCommercialQuoteNotification({
@@ -121,9 +140,17 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
           facilityType: d.facilityType,
           squareMeters: d.squareMeters || d.size,
           cleaningFrequency: d.frequency,
-          priceEstimate: d.estimatedPrice || d.price,
+          priceEstimate: d.estimatedPrice || d.price || d.priceEstimate,
           referenceId: id,
         }).catch(err => console.warn('Telegram notification failed:', err));
+        // SMS to admin
+        sendCommercialLeadSMS({
+          company: d.companyName || d.company || 'Unknown',
+          contact: d.contactPerson || d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          price: d.estimatedPrice || d.price || d.priceEstimate,
+          referenceId: id,
+        }).catch(err => console.warn('SMS notification failed:', err));
         break;
       case ServiceType.Airbnb:
         sendAirbnbQuoteNotification({
@@ -135,9 +162,17 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
           bathrooms: d.bathrooms?.toString(),
           cleaningFrequency: d.frequency,
           preferredStartDate: d.startDate || d.preferredDate,
-          priceEstimate: d.estimatedPrice || d.price,
+          priceEstimate: d.estimatedPrice || d.price || d.priceEstimate,
           referenceId: id,
         }).catch(err => console.warn('Telegram notification failed:', err));
+        // SMS to admin
+        sendAirbnbLeadSMS({
+          name: d.contactName || d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          bedrooms: d.bedrooms?.toString(),
+          price: d.estimatedPrice || d.price || d.priceEstimate,
+          referenceId: id,
+        }).catch(err => console.warn('SMS notification failed:', err));
         break;
       case ServiceType.Jobs:
         sendJobApplicationNotification({
@@ -149,6 +184,13 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
           serviceSuburbs: d.suburbs,
           referenceId: id,
         }).catch(err => console.warn('Telegram notification failed:', err));
+        // SMS to admin
+        sendJobApplicationSMS({
+          name: d.fullName || d.name || 'Unknown',
+          phone: d.phone || 'N/A',
+          experience: d.experience,
+          referenceId: id,
+        }).catch(err => console.warn('SMS notification failed:', err));
         break;
       case 'Landing Lead':
         // Landing page quick quote lead
@@ -164,6 +206,14 @@ export const saveSubmission = async (submission: { type: SubmissionType, data: S
 
 ⏰ <i>Hot lead - Quote requested on landing page!</i>
         `.trim()).catch(err => console.warn('Telegram notification failed:', err));
+        // SMS to admin - HOT LEAD!
+        sendLandingLeadSMS({
+          phone: d.phone || 'N/A',
+          suburb: d.suburb,
+          serviceType: d.serviceType,
+          price: d.priceEstimate,
+          referenceId: id,
+        }).catch(err => console.warn('SMS notification failed:', err));
         break;
       case 'Client Feedback':
         sendTelegramMessage(`
@@ -191,6 +241,15 @@ ${d.message || d.feedback || 'No message'}
 📧 <b>Email:</b> ${d.email || 'N/A'}
 🔗 <b>Ref:</b> <code>${id}</code>
         `.trim()).catch(err => console.warn('Telegram notification failed:', err));
+        // SMS to admin for any submission
+        notifyAdminNewLead({
+          type: submission.type,
+          name: d.fullName || d.name || d.contactName || 'Unknown',
+          phone: d.phone || 'N/A',
+          suburb: d.suburb,
+          price: d.priceEstimate || d.price || d.estimatedPrice,
+          referenceId: id,
+        }).catch(err => console.warn('SMS notification failed:', err));
     }
   } catch (error) {
     console.warn('Telegram notification error:', error);
