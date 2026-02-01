@@ -1,44 +1,52 @@
-# Clean Up Bros Website
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║     ██████╗██╗     ███████╗ █████╗ ███╗   ██╗    ██╗   ██╗██████╗            ║
+║    ██╔════╝██║     ██╔════╝██╔══██╗████╗  ██║    ██║   ██║██╔══██╗           ║
+║    ██║     ██║     █████╗  ███████║██╔██╗ ██║    ██║   ██║██████╔╝           ║
+║    ██║     ██║     ██╔══╝  ██╔══██║██║╚██╗██║    ██║   ██║██╔═══╝            ║
+║    ╚██████╗███████╗███████╗██║  ██║██║ ╚████║    ╚██████╔╝██║                ║
+║     ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝                ║
+║                                                                               ║
+║             ██████╗ ██████╗  ██████╗ ███████╗                                 ║
+║             ██╔══██╗██╔══██╗██╔═══██╗██╔════╝                                 ║
+║             ██████╔╝██████╔╝██║   ██║███████╗                                 ║
+║             ██╔══██╗██╔══██╗██║   ██║╚════██║                                 ║
+║             ██████╔╝██║  ██║╚██████╔╝███████║                                 ║
+║             ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝                                 ║
+║                                                                               ║
+║                    ✨ Professional Cleaning Services ✨                        ║
+║                      Liverpool & Western Sydney, NSW                          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
 
-> Professional cleaning services website for Liverpool & Western Sydney
-> Live at: https://cleanupbros.com.au
+<div align="center">
+
+[![Live Site](https://img.shields.io/badge/🌐_LIVE-cleanupbros.com.au-0066CC?style=for-the-badge)](https://cleanupbros.com.au)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+
+**Modern booking platform for professional cleaning services**
+
+[View Live](https://cleanupbros.com.au) • [Report Bug](https://github.com/issues) • [Request Feature](https://github.com/issues)
+
+</div>
 
 ---
 
-## Current Progress
-
-> **Last Session:** January 22, 2026
-> **Phase:** Phase 0 - Backend SaaS Build Foundation
-> **Status:** In Progress
-
-### What Was Done
-- Organized 13 API skill files (Stripe, Supabase, N8N, etc.)
-- Copied skills to master directory for cross-project use
-- Added Skill Protocol to CLAUDE.md and GEMINI.md
-- Updated SKILLS_INDEX.md with all API skills
-- Implemented persistent context system (startup/shutdown protocols)
-
-### Next Session Focus
-- [ ] Continue Phase 1: Database schema design
-- [ ] Supabase table structure for bookings
-- [ ] Payment integration testing
-
-### Active Files
-- `CLAUDE.md` - AI protocol with skill system
-- `docs/skills/` - 17 skill files (4 core + 13 API)
-- `src/services/` - Backend service files
-
----
-
-## Quick Start
+## ⚡ Quick Start
 
 ```bash
-# Install dependencies
+# Clone & install
+git clone https://github.com/yourusername/cleanupbros.git
+cd cleanupbros
 npm install
 
-# Start development server
+# Start dev server
 npm run dev
-# → Opens at localhost:3000
+# → http://localhost:3000
 
 # Build for production
 npm run build
@@ -46,173 +54,192 @@ npm run build
 
 ---
 
-## Project Structure
+## 🏗️ Architecture
 
 ```
-./
-├── STATUS.md              # Current state (READ FIRST)
-├── PLAN.md                # Roadmap & phases
-├── LOG.md                 # Session history
-├── CLAUDE.md              # AI protocol (Claude)
-├── GEMINI.md              # AI protocol (Gemini)
+┌─────────────────────────────────────────────────────────────────────┐
+│                           CLEAN UP BROS                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐            │
+│   │   VERCEL    │    │  SUPABASE   │    │   STRIPE    │            │
+│   │   Hosting   │◄──►│  Database   │◄──►│  Payments   │            │
+│   └─────────────┘    └─────────────┘    └─────────────┘            │
+│          │                  │                  │                    │
+│          ▼                  ▼                  ▼                    │
+│   ┌─────────────────────────────────────────────────┐              │
+│   │              REACT 19 FRONTEND                  │              │
+│   │  ┌─────────┐  ┌─────────┐  ┌─────────┐        │              │
+│   │  │  Views  │  │ Services│  │  Utils  │        │              │
+│   │  └─────────┘  └─────────┘  └─────────┘        │              │
+│   └─────────────────────────────────────────────────┘              │
+│          │                                                          │
+│          ▼                                                          │
+│   ┌─────────────┐                                                  │
+│   │     N8N     │  Automation & Webhooks                           │
+│   └─────────────┘                                                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📁 Project Structure
+
+```
+cleanupbros/
 │
-├── src/                   # React application
+├── 📋 Protocol Files
+│   ├── STATUS.md          # Current state (READ FIRST)
+│   ├── PLAN.md            # Roadmap & phases
+│   ├── LOG.md             # Session history
+│   ├── CLAUDE.md          # AI protocol (Claude)
+│   └── GEMINI.md          # AI protocol (Gemini)
+│
+├── 🎨 src/                # React application
 │   ├── views/             # Page components
 │   ├── components/        # Reusable UI
 │   ├── services/          # API services
 │   └── lib/               # Utilities
 │
-├── public/                # Static assets
+├── 🌐 public/             # Static assets
 │   ├── images/            # Before-after photos
-│   ├── logo.png           # Main logo
-│   └── sitemap.xml        # SEO
+│   └── logo.png           # Main logo
 │
-├── api/                   # Vercel serverless functions
-│   └── webhooks/          # N8N webhook handlers
+├── ⚡ api/                # Vercel serverless
+│   └── webhooks/          # N8N handlers
 │
-├── docs/                  # Documentation
-│   ├── skills/            # AI skill files
-│   ├── media/             # Business assets (logos, ads)
-│   ├── _legacy_memory/    # Archived old memory system
-│   └── _legacy_AI/        # Archived old AI workspace
-│
-├── index.html             # Vite entry
-├── package.json           # Dependencies
-├── vite.config.ts         # Build config
-├── tailwind.config.js     # CSS config
-└── tsconfig.json          # TypeScript config
+└── 📚 docs/               # Documentation
+    ├── skills/            # AI skill files
+    └── media/             # Business assets
 ```
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| React 19 | Frontend framework |
-| TypeScript | Type safety |
-| Vite | Build tool |
-| TailwindCSS | Styling |
-| Supabase | Database & Auth |
-| Stripe | Payments |
-| Vercel | Hosting |
-| N8N | Automation (nioctibinu.online) |
+<div align="center">
+
+| Layer | Technology | Purpose |
+|:-----:|:----------:|:-------:|
+| 🎨 | **React 19** | Frontend Framework |
+| 📘 | **TypeScript** | Type Safety |
+| ⚡ | **Vite** | Build Tool |
+| 🎯 | **TailwindCSS** | Styling |
+| 🗄️ | **Supabase** | Database & Auth |
+| 💳 | **Stripe** | Payments |
+| 🚀 | **Vercel** | Hosting |
+| 🔄 | **N8N** | Automation |
+
+</div>
 
 ---
 
-## Design System
+## 🎨 Design System
 
 ```css
-/* Colors */
-Primary:    #0066CC
-Accent:     #2997FF
-Success:    #30D158
-Gold:       #FFD60A
+/* ═══════════════════════════════════════════════════════════════════
+   COLOR PALETTE
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* Containers */
-Content:    max-w-7xl
-Hero:       max-w-5xl
-Forms:      max-w-2xl
+--primary:     #0066CC    /* Clean Up Bros Blue       */
+--accent:      #2997FF    /* Highlight Blue           */
+--success:     #30D158    /* Success Green            */
+--gold:        #FFD60A    /* Premium Gold             */
 
-/* Effects */
+/* ═══════════════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════════════ */
+
+--content-max:  1280px    /* max-w-7xl               */
+--hero-max:     1024px    /* max-w-5xl               */
+--form-max:     672px     /* max-w-2xl               */
+
+/* ═══════════════════════════════════════════════════════════════════
+   EFFECTS
+   ═══════════════════════════════════════════════════════════════════ */
+
 Ken Burns animation: 20s
 Glassmorphism backgrounds
-Sparkle decorations
+Sparkle decorations ✨
 ```
 
 ---
 
-## Protocol Files (Sealed Universe)
+## 📜 Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run test` | Run unit tests |
+| `npm run test:e2e` | Run E2E tests |
+
+---
+
+## 🚀 Deployment
+
+```bash
+# Auto-deploy: Push to main triggers Vercel deployment
+
+git add -A
+git commit -m "feat: your changes"
+git push origin main
+
+# ✅ Vercel auto-deploys to cleanupbros.com.au
+```
+
+---
+
+## 🤖 AI Protocol (Sealed Universe)
 
 This project uses the **Sealed Universe Protocol** for AI-assisted development.
 
-| File | Purpose |
-|------|---------|
-| `STATUS.md` | Current state - READ THIS FIRST |
-| `PLAN.md` | Roadmap and build status |
-| `LOG.md` | Chronological history |
-| `CLAUDE.md` | Protocol for Claude AI |
-| `GEMINI.md` | Protocol for Gemini AI |
-
-### How It Works
-
-1. AI reads `STATUS.md` to understand current state
-2. AI checks `PLAN.md` for roadmap context
-3. AI reviews `LOG.md` for recent history
-4. AI makes changes and logs to `LOG.md`
-5. AI updates `STATUS.md` with new focus
-
----
-
-## Skills
-
-Skills are reusable procedures in `docs/skills/`. See `docs/skills/SKILLS_INDEX.md` for full list.
-
-| Skill | Trigger | Purpose |
-|-------|---------|---------|
-| `done-for-day.md` | "done", "end session" | End-of-session backup |
-| `deploy.md` | "deploy", "go live" | Deploy to production |
-| `bug-fix.md` | "bug", "error", "fix" | Debug issues |
-
----
-
-## Deployment
-
-Changes pushed to `main` branch auto-deploy via Vercel.
-
-```bash
-# Manual deploy process
-npm run build              # Verify build passes
-git add -A                 # Stage changes
-git commit -m "message"    # Commit
-git push origin main       # Push (triggers Vercel)
+```
+┌─────────────────────────────────────────────────────────┐
+│  1. Read STATUS.md   →  Understand current state        │
+│  2. Check PLAN.md    →  Review roadmap context          │
+│  3. Review LOG.md    →  Recent history                  │
+│  4. Make changes     →  Update LOG.md                   │
+│  5. Update STATUS    →  Set new focus                   │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Business Context
+## 🏢 Business Info
 
-- **Company**: Clean Up Bros
-- **Location**: Liverpool, NSW 2170 (Western Sydney)
-- **Services**: Residential, Commercial, End-of-Lease, Airbnb
-- **Phone**: +61 406 764 585
-- **Email**: cleanupbros.au@gmail.com
-- **ABN**: 26 443 426 374
-
----
-
-## Migration Notes (January 21, 2026)
-
-### What Changed
-
-1. **Sealed Universe Protocol** - New AI context system
-   - Replaced old `memory/` folder with `STATUS.md`, `PLAN.md`, `LOG.md`
-   - Replaced old `_AI/` folder with `CLAUDE.md`, `GEMINI.md`
-
-2. **Directory Cleanup**
-   - Moved `memory/` → `docs/_legacy_memory/`
-   - Moved `_AI/` → `docs/_legacy_AI/`
-   - Moved `media/` → `docs/media/`
-   - Moved business assets from `public/cleanupbrosbible.md/` → `docs/media/`
-   - Removed empty `ops/`, `agents/`, `system/` folders
-
-3. **Skills System**
-   - Created `docs/skills/` with reusable procedures
-   - Added `done-for-day.md`, `deploy.md`, `bug-fix.md`
-
-### What Stayed the Same
-
-- All source code in `src/` unchanged
-- Build process unchanged (`npm run dev`, `npm run build`)
-- Deployment unchanged (Vercel auto-deploy)
-- All integrations (Supabase, Stripe, N8N) unchanged
+```
+┌─────────────────────────────────────────────────────────┐
+│                    CLEAN UP BROS                        │
+│              Professional Cleaning Services             │
+├─────────────────────────────────────────────────────────┤
+│  📍  Liverpool, NSW 2170 (Western Sydney)               │
+│  📞  +61 406 764 585                                    │
+│  ✉️   cleanupbros.au@gmail.com                          │
+│  🔢  ABN: 26 443 426 374                                │
+├─────────────────────────────────────────────────────────┤
+│  SERVICES                                               │
+│  ├── 🏠 Residential Cleaning                            │
+│  ├── 🏢 Commercial Cleaning                             │
+│  ├── 🔑 End-of-Lease (Bond Back Guarantee)              │
+│  └── 🏨 Airbnb Turnovers                                │
+└─────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## License
+<div align="center">
 
-Private - Clean Up Bros Pty Ltd
+```
+═══════════════════════════════════════════════════════════════════════
+                         MADE WITH 💙 IN SYDNEY
+                    © 2024-2026 Clean Up Bros Pty Ltd
+═══════════════════════════════════════════════════════════════════════
+```
 
----
+[![Website](https://img.shields.io/badge/Website-cleanupbros.com.au-0066CC?style=flat-square)](https://cleanupbros.com.au)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](./LICENSE)
 
-*Last updated: January 22, 2026*
+</div>
