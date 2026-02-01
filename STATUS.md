@@ -20,8 +20,27 @@
 - `src/App.tsx` - Added suburb routes and rendering logic
 - `public/sitemap.xml` - Added 13 new suburb URLs for SEO
 
+### Phase 2: Service Landing Pages + Pricing
+- **Service Pages Created** (5 pages):
+  - `/residential-cleaning-liverpool`
+  - `/airbnb-cleaning-liverpool`
+  - `/commercial-cleaning-liverpool`
+  - `/office-cleaning-western-sydney`
+- **Pricing Page**: `/pricing` - Comprehensive transparent pricing
+- Each page has SEO meta tags, schema markup, benefits, FAQs
+
+### Phase 4: Testing Infrastructure
+- **Vitest** configured for unit tests with jsdom
+- **Playwright** configured for E2E tests (chromium)
+- Test files:
+  - `src/lib/priceCalculator.test.ts` (9 tests passing)
+  - `e2e/homepage.spec.ts`
+  - `e2e/suburb-pages.spec.ts`
+- npm scripts: `test`, `test:run`, `test:coverage`, `test:e2e`
+
 ### Build Status
 - ✅ `npm run build` passes successfully
+- ✅ `npm run test:run` - 9 tests passing
 - ✅ No TypeScript errors
 - Ready for deployment
 
