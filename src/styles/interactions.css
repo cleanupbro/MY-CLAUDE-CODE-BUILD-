@@ -1,0 +1,524 @@
+/*
+ * CLEAN UP BROS - MICRO-INTERACTIONS
+ * Everything feels alive and responsive
+ */
+
+/* ============================================
+   GLOBAL INTERACTIVE DEFAULTS
+   ============================================ */
+
+/* All buttons get feedback */
+button, a, [role="button"] {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:active, a:active, [role="button"]:active {
+  transform: scale(0.97);
+}
+
+/* All cards get lift */
+.interactive {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.interactive:hover {
+  transform: translateY(-4px);
+}
+
+.interactive:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+/* ============================================
+   MAGNETIC BUTTONS (Follow cursor slightly)
+   ============================================ */
+
+.btn-magnetic {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+/* ============================================
+   RIPPLE EFFECT ON CLICK
+   ============================================ */
+
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  border-radius: inherit;
+  pointer-events: none;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+}
+
+.ripple:active::after {
+  transform: translate(-50%, -50%) scale(2.5);
+  opacity: 1;
+  transition: transform 0s, opacity 0s;
+}
+
+/* ============================================
+   MORPHING ICONS
+   ============================================ */
+
+.icon-morph {
+  transition: transform 0.3s ease;
+}
+
+.icon-morph:hover {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Arrow icons slide on hover */
+.icon-arrow {
+  transition: transform 0.2s ease;
+}
+
+*:hover > .icon-arrow {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   TEXT INTERACTIONS
+   ============================================ */
+
+/* Links with underline animation */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Text highlight on hover */
+.text-highlight {
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.text-highlight:hover {
+  color: #2997FF;
+  text-shadow: 0 0 20px rgba(41, 151, 255, 0.3);
+}
+
+/* ============================================
+   IMAGE INTERACTIONS
+   ============================================ */
+
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* Parallax tilt effect */
+.tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.tilt:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg);
+}
+
+/* ============================================
+   CARD INTERACTIONS
+   ============================================ */
+
+/* Spotlight effect following cursor */
+.spotlight {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(41, 151, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Border glow pulse */
+.border-glow {
+  position: relative;
+}
+
+.border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, #0066CC, #00C9A7, #AF52DE, #0066CC);
+  background-size: 300% 300%;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: borderRotate 3s linear infinite;
+}
+
+.border-glow:hover::before {
+  opacity: 1;
+}
+
+@keyframes borderRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ============================================
+   FORM INTERACTIONS
+   ============================================ */
+
+/* Input focus glow */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #0066CC !important;
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.15), 0 0 20px rgba(0, 102, 204, 0.1) !important;
+}
+
+/* Checkbox/Radio bounce */
+input[type="checkbox"], input[type="radio"] {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+input[type="checkbox"]:checked, input[type="radio"]:checked {
+  animation: checkBounce 0.3s ease;
+}
+
+@keyframes checkBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Label hover */
+label {
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+label:hover {
+  color: #2997FF;
+}
+
+/* ============================================
+   SCROLL-TRIGGERED ANIMATIONS
+   ============================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered reveal for lists */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(90deg, #1C1C1E 25%, #2C2C2E 50%, #1C1C1E 75%);
+  background-size: 200% 100%;
+  animation: skeleton 1.5s ease infinite;
+}
+
+@keyframes skeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Button loading spinner */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent !important;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   PRICE COUNTER ANIMATION
+   ============================================ */
+
+.price-update {
+  animation: priceFlash 0.3s ease;
+}
+
+@keyframes priceFlash {
+  0% { transform: scale(1); color: inherit; }
+  50% { transform: scale(1.05); color: #30D158; }
+  100% { transform: scale(1); color: inherit; }
+}
+
+/* ============================================
+   TESTIMONIAL INTERACTIONS
+   ============================================ */
+
+.testimonial-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Star rating hover */
+.star-rating .star {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.star-rating:hover .star {
+  color: #FFD60A;
+}
+
+.star-rating .star:hover {
+  transform: scale(1.3) rotate(10deg);
+}
+
+/* ============================================
+   FAQ ACCORDION
+   ============================================ */
+
+.faq-item {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: rgba(41, 151, 255, 0.3);
+}
+
+.faq-item.open {
+  border-color: rgba(41, 151, 255, 0.5);
+  box-shadow: 0 0 20px rgba(41, 151, 255, 0.1);
+}
+
+.faq-question {
+  cursor: pointer;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1C1C1E;
+  transition: background 0.2s ease;
+}
+
+.faq-question:hover {
+  background: #252528;
+}
+
+.faq-icon {
+  transition: transform 0.3s ease;
+}
+
+.faq-item.open .faq-icon {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+  background: #141416;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 500px;
+  padding: 20px 24px;
+}
+
+/* ============================================
+   NOTIFICATION TOAST
+   ============================================ */
+
+.toast {
+  animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-exit {
+  animation: toastOut 0.2s ease forwards;
+}
+
+@keyframes toastOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+/* ============================================
+   MODAL/POPUP INTERACTIONS
+   ============================================ */
+
+.modal-backdrop {
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+
+.progress-bar {
+  background: #2C2C2E;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0066CC, #00C9A7);
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0D0D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3A3A3C;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5A5A5C;
+}
+
+/* ============================================
+   REDUCED MOTION (Accessibility)
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

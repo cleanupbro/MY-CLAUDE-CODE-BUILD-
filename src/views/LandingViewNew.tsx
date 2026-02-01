@@ -4,7 +4,7 @@ import { QuickQuoteModal } from '../components/QuickQuoteModal';
 import { StickyMobileCTA } from '../components/StickyMobileCTA';
 import { ExitIntentPopup, useExitIntent } from '../components/ExitIntentPopup';
 import { RecentBookingToast } from '../components/RecentBookingToast';
-// Newsletter popup moved to App.tsx for cross-page functionality
+import { InteractiveFAQ } from '../components/InteractiveFAQ';
 import { getAvailableSlots, subscribeToSlots } from '../utils/slotsManager';
 
 interface LandingViewProps {
@@ -739,9 +739,9 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
           <div className="text-center mt-10">
             <button
               onClick={() => navigateTo('Services')}
-              className="px-8 py-4 bg-[#0066CC] text-white text-lg font-semibold rounded-full hover:bg-[#0077ED] transition-all duration-300 hover:scale-[1.02] shadow-[0_0_30px_rgba(0,102,204,0.4)]"
+              className="btn-gradient px-10 py-5 text-lg font-bold rounded-full hover:scale-[1.05] transition-all duration-300 ripple click-feedback"
             >
-              Get Your Exact Price
+              💰 Get Your Exact Price
             </button>
           </div>
         </div>
@@ -756,29 +756,29 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
           {/* Section Header */}
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-              Every Clean Includes <span className="text-[#30D158]">FREE</span> Extras
+              Every Clean Includes <span className="text-gradient-gold">FREE</span> Extras
             </h2>
           </div>
 
           {/* Value Items Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 transition-colors">
-              <span className="text-2xl mb-2 block">✅</span>
+            <div className="interactive bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 hover:border-[#30D158]/60 cursor-pointer">
+              <span className="text-3xl mb-2 block icon-morph">✅</span>
               <h3 className="text-white font-semibold mb-1">FREE Re-Clean</h3>
               <p className="text-white/60 text-xs">If needed within 24hrs</p>
             </div>
-            <div className="bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 transition-colors">
-              <span className="text-2xl mb-2 block">🔥</span>
+            <div className="interactive bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 hover:border-[#30D158]/60 cursor-pointer">
+              <span className="text-3xl mb-2 block icon-morph">🔥</span>
               <h3 className="text-white font-semibold mb-1">FREE Oven Clean</h3>
               <p className="text-white/60 text-xs">$80 value included</p>
             </div>
-            <div className="bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 transition-colors">
-              <span className="text-2xl mb-2 block">🪟</span>
+            <div className="interactive bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 hover:border-[#30D158]/60 cursor-pointer">
+              <span className="text-3xl mb-2 block icon-morph">🪟</span>
               <h3 className="text-white font-semibold mb-1">FREE Windows</h3>
               <p className="text-white/60 text-xs">Inside window cleaning</p>
             </div>
-            <div className="bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 transition-colors">
-              <span className="text-2xl mb-2 block">🧹</span>
+            <div className="interactive bg-[#30D158]/10 border border-[#30D158]/30 rounded-2xl p-5 text-center hover:bg-[#30D158]/20 hover:border-[#30D158]/60 cursor-pointer">
+              <span className="text-3xl mb-2 block icon-morph">🧹</span>
               <h3 className="text-white font-semibold mb-1">ALL Supplies</h3>
               <p className="text-white/60 text-xs">Pro-grade included</p>
             </div>
@@ -859,7 +859,7 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-gradient-to-br from-[#1C1C1E] to-[#0D0D0D] rounded-[20px] p-6 border border-white/10 hover:border-[#2997FF]/30 transition-all duration-300 hover:transform hover:-translate-y-1 group"
+                className="testimonial-card interactive bg-gradient-to-br from-[#1C1C1E] to-[#0D0D0D] rounded-[20px] p-6 border border-white/10 hover:border-[#2997FF]/50 group cursor-pointer"
               >
                 {/* Service Badge & Stars */}
                 <div className="flex items-center justify-between mb-4">
@@ -911,10 +911,10 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
           <div className="text-center mt-10">
             <button
               onClick={() => navigateTo('Reviews')}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white font-medium rounded-full hover:border-[#2997FF] hover:text-[#2997FF] transition-all duration-300 group"
+              className="btn-outline-glow inline-flex items-center gap-2 ripple group"
             >
               See All 500+ Reviews
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 icon-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -995,47 +995,17 @@ export const LandingViewNew: React.FC<LandingViewProps> = ({ navigateTo, setServ
         className="py-20 px-6 bg-[#0D0D0D]"
       >
         <div className={`max-w-5xl mx-auto transition-all duration-1000 delay-100 ${faqReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <p className="text-[#2997FF] text-sm font-semibold uppercase tracking-wider mb-4">FAQ</p>
-            <h2 className="text-4xl md:text-5xl font-semibold text-white">
-              Common Questions.
-            </h2>
-          </div>
-
-          {/* FAQ Accordion */}
-          <div className="space-y-4">
-            {faqData.map((faq, index) => (
-              <div
-                key={index}
-                className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden hover:border-white/20 transition-colors"
-              >
-                <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left"
-                >
-                  <span className="text-white font-medium pr-4">{faq.question}</span>
-                  <span className={`text-[#2997FF] transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`}>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </span>
-                </button>
-                <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-96' : 'max-h-0'}`}>
-                  <div className="px-6 pb-5 text-white/60 text-sm leading-relaxed border-t border-white/5 pt-4">
-                    {faq.answer}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <InteractiveFAQ 
+            faqs={faqData}
+            title="Got Questions?"
+            subtitle="Click to expand"
+          />
 
           {/* More Questions CTA */}
           <div className="text-center mt-10">
-            <p className="text-white/60 mb-4">Still have questions?</p>
             <a
               href="tel:+61406764585"
-              className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white font-medium rounded-full hover:border-[#2997FF] hover:text-[#2997FF] transition-all duration-300"
+              className="btn-outline-glow inline-flex items-center gap-2 ripple"
             >
               <PhoneIcon className="w-5 h-5" />
               Call 0406 764 585
