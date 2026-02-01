@@ -90,6 +90,26 @@ const JobApplicationView: React.FC<NavigationProps> = ({ navigateTo, onSubmissio
   };
 
   const onSubmit = async () => {
+    // Name Validation
+    if (!data.fullName || data.fullName.trim().length < 2) {
+      showToast("Please enter your full name.", "error");
+      return;
+    }
+
+    // Phone Validation (REQUIRED)
+    const phoneDigits = data.phone?.replace(/\D/g, '') || '';
+    if (phoneDigits.length < 10) {
+      showToast("Please enter a valid Australian phone number.", "error");
+      return;
+    }
+
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      showToast("Please enter a valid email address.", "error");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const referenceId = `CUB-JOB-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;

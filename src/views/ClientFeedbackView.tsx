@@ -51,6 +51,20 @@ const ClientFeedbackView: React.FC<NavigationProps> = ({ navigateTo, onSubmissio
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Name Validation
+    if (!data.name || data.name.trim().length < 2) {
+      setSubmissionError("Please enter your name.");
+      return;
+    }
+
+    // Email Validation (REQUIRED for feedback)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      setSubmissionError("Please enter a valid email address.");
+      return;
+    }
+
     if (data.rating === 0) {
       setSubmissionError("Please select a star rating before submitting.");
       return;

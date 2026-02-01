@@ -96,6 +96,33 @@ const CommercialQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissi
 
   const onSubmit = async () => {
     setSubmissionError(null);
+
+    // Contact Person Validation
+    if (!data.contactPerson || data.contactPerson.trim().length < 2) {
+      const errorMsg = "Please enter a contact person name.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
+    // Phone Validation (REQUIRED)
+    const phoneDigits = data.phone?.replace(/\D/g, '') || '';
+    if (phoneDigits.length < 10) {
+      const errorMsg = "Please enter a valid Australian phone number.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      const errorMsg = "Please enter a valid email address.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
     setIsSubmitting(true);
     
     const referenceId = `CUB-COM-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;

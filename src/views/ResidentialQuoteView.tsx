@@ -96,6 +96,23 @@ const ResidentialQuoteView: React.FC<NavigationProps & { initialData?: Partial<R
   const onSubmit = async () => {
     setSubmissionError(null);
 
+    // Name Validation
+    if (!data.fullName || data.fullName.trim().length < 2) {
+      const errorMsg = "Please enter your full name.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
+    // Phone Validation (REQUIRED)
+    const phoneDigits = data.phone?.replace(/\D/g, '') || '';
+    if (phoneDigits.length < 10) {
+      const errorMsg = "Please enter a valid Australian phone number.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
     // Email Validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {

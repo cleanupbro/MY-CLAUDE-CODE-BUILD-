@@ -47,8 +47,26 @@ const ContactView: React.FC<NavigationProps> = ({ navigateTo }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setSubmitError(null);
+
+    // Name Validation
+    if (!formData.name || formData.name.trim().length < 2) {
+      setSubmitError("Please enter your name.");
+      return;
+    }
+
+    // Phone OR Email Required
+    const phoneDigits = formData.phone?.replace(/\D/g, '') || '';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const hasValidPhone = phoneDigits.length >= 10;
+    const hasValidEmail = emailRegex.test(formData.email);
+
+    if (!hasValidPhone && !hasValidEmail) {
+      setSubmitError("Please enter a valid phone number or email address.");
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const submissionData = {
       ...formData,

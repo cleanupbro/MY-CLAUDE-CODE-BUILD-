@@ -89,6 +89,33 @@ const AirbnbQuoteView: React.FC<NavigationProps> = ({ navigateTo, onSubmissionFa
 
   const onSubmit = async () => {
     setSubmissionError(null);
+
+    // Contact Name Validation
+    if (!data.contactName || data.contactName.trim().length < 2) {
+      const errorMsg = "Please enter your name.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
+    // Phone Validation (REQUIRED)
+    const phoneDigits = data.phone?.replace(/\D/g, '') || '';
+    if (phoneDigits.length < 10) {
+      const errorMsg = "Please enter a valid Australian phone number.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      const errorMsg = "Please enter a valid email address.";
+      setSubmissionError(errorMsg);
+      showToast(errorMsg, "error");
+      return;
+    }
+
     setIsSubmitting(true);
     
     const referenceId = `CUB-AIR-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
