@@ -19,8 +19,9 @@ Allow: /check-balance
 Allow: /jobs
 Allow: /client-feedback
 
-# Block admin/API routes
-Disallow: /api/
+# Block ALL admin routes - DO NOT CRAWL
+Disallow: /admin
+Disallow: /admin/
 Disallow: /admin-login
 Disallow: /admin-dashboard
 Disallow: /admin-gift-cards
@@ -28,8 +29,13 @@ Disallow: /admin-contracts
 Disallow: /airbnb-contract
 Disallow: /basic-contract
 Disallow: /commercial-invoice
+Disallow: /api/
 Disallow: /_next/
 Disallow: /private/
+Disallow: /.env
+Disallow: /.git
+Disallow: /wp-admin
+Disallow: /wp-login
 
 # Allow important resources
 Allow: /logo.png

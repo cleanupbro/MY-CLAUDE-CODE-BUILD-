@@ -1,6 +1,17 @@
 /**
- * API Middleware - Rate limiting and security utilities
+ * API Middleware - Rate limiting, bot detection, and security utilities
+ * Clean Up Bros - February 2026
  */
+
+// Bot detection patterns - block these user agents
+const BOT_PATTERNS = [
+  /bot/i, /crawl/i, /spider/i, /scrape/i, /curl/i, /wget/i,
+  /python-requests/i, /axios/i, /node-fetch/i, /postman/i,
+  /scrapy/i, /selenium/i, /puppeteer/i, /playwright/i, /headless/i,
+];
+
+// Block list for IPs (add manually blocked IPs here)
+const BLOCKED_IPS = new Set<string>();
 
 // Simple in-memory rate limiter (for development)
 // In production, use Upstash Redis for distributed rate limiting
@@ -154,6 +165,56 @@ export function successResponse(
       },
     }
   );
+}
+
+/**
+ * Check if user agent looks like a bot/scraper
+ */
+export function isBot(request: Request): boolean {
+  const userAgent = request.headers.get('user-agent') || '';
+  if (!userAgent) return true; // No user agent = suspicious
+  return BOT_PATTERNS.some(pattern => pattern.test(userAgent));
+}
+
+/**
+ * Check if IP is blocked
+ */
+export function isBlockedIp(ip: string): boolean {
+  return BLOCKED_IPS.has(ip);
+}
+
+/**
+ * Block an IP address
+ */
+export function blockIp(ip: string): void {
+  BLOCKED_IPS.add(ip);
+}
+
+/**
+ * Full security check - returns error response if blocked, null if allowed
+ */
+export function securityCheck(request: Request): Response | null {
+  const ip = getClientIp(request);
+  
+  // Check blocked IPs
+  if (isBlockedIp(ip)) {
+    return errorResponse('Access denied', 403, request);
+  }
+  
+  // Check for bots (except for certain endpoints)
+  const url = new URL(request.url);
+  const allowBots = url.pathname.includes('/sitemap') || url.pathname.includes('/robots');
+  if (!allowBots && isBot(request)) {
+    blockIp(ip);
+    return errorResponse('Access denied', 403, request);
+  }
+  
+  // Check origin
+  if (request.method !== 'GET' && !validateOrigin(request)) {
+    return errorResponse('Invalid origin', 403, request);
+  }
+  
+  return null; // All checks passed
 }
 
 /**
