@@ -14,12 +14,10 @@ interface AdminLayoutProps {
   onNavigate: (page: string) => void;
 }
 
-// Whitelisted admin emails
+// Whitelisted admin emails - ONLY these can access
+// DO NOT add any other emails without owner permission
 const ALLOWED_ADMINS = [
-  'admin@cleanupbros.com.au',
-  'hafsah@cleanupbros.com.au',
-  'hafsahnuzhat@gmail.com',
-  'shamalkrishna@gmail.com',
+  'cleanupbros.au@gmail.com',
 ];
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({
