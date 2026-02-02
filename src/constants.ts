@@ -62,6 +62,12 @@ export const WEBHOOK_URLS = {
   // Voice Calling (admin only)
   INBOUND_CALL: N8N_ADMIN_URLS.inboundCall,
   OUTBOUND_CALL: N8N_ADMIN_URLS.outboundCall,
+
+  // Google Sheets logging (backup)
+  GOOGLE_SHEETS_LOG: `${N8N_BASE}/webhook/google-sheets-log`,
+
+  // Direct email sending (uses /api/send-email)
+  SEND_EMAIL: '/api/send-email',
 };
 
 /**

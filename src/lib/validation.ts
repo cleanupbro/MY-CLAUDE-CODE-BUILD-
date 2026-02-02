@@ -14,24 +14,16 @@ const phoneSchema = z.string()
 // Residential Quote Schema
 export const residentialQuoteSchema = z.object({
   suburb: z.string().min(2, 'Please enter your suburb'),
-  propertyType: z.enum(['Apartment', 'Townhouse', 'House'], {
-    errorMap: () => ({ message: 'Please select a property type' })
-  }),
+  propertyType: z.enum(['Apartment', 'Townhouse', 'House']),
   bedrooms: z.number().min(1).max(10, 'Maximum 10 bedrooms'),
   bathrooms: z.number().min(1).max(10, 'Maximum 10 bathrooms'),
-  serviceType: z.enum(['General', 'Deep', 'End-of-Lease', 'Post-Construction'], {
-    errorMap: () => ({ message: 'Please select a service type' })
-  }),
+  serviceType: z.enum(['General', 'Deep', 'End-of-Lease', 'Post-Construction']),
   condition: z.enum(['Standard', 'Moderate', 'Heavy', 'Extreme']),
-  frequency: z.enum(['One-time', 'Weekly', 'Bi-weekly', 'Monthly'], {
-    errorMap: () => ({ message: 'Please select frequency' })
-  }),
+  frequency: z.enum(['One-time', 'Weekly', 'Bi-weekly', 'Monthly']),
   subscribedToOneYearPlan: z.boolean(),
   addOns: z.array(z.string()),
   preferredDate: z.string().min(1, 'Please select a preferred date'),
-  preferredTime: z.enum(['Morning', 'Afternoon', 'Flexible'], {
-    errorMap: () => ({ message: 'Please select a preferred time' })
-  }),
+  preferredTime: z.enum(['Morning', 'Afternoon', 'Flexible']),
   notes: z.string().optional(),
   fullName: z.string().min(2, 'Please enter your full name'),
   email: emailSchema,
@@ -53,9 +45,7 @@ export const commercialQuoteSchema = z.object({
   complianceNeeds: z.array(z.string()),
   painPoints: z.string().optional(),
   preferredStartDate: z.string().min(1, 'Please select a start date'),
-  contractTerm: z.enum(['Month-to-Month', '6 Months', '1 Year'], {
-    errorMap: () => ({ message: 'Please select contract term' })
-  })
+  contractTerm: z.enum(['Month-to-Month', '6 Months', '1 Year'])
 });
 
 // Airbnb Quote Schema
@@ -68,9 +58,7 @@ export const airbnbQuoteSchema = z.object({
   accessMethod: z.string().min(2, 'Please specify access method'),
   preferredTurnoverTime: z.string().min(1, 'Please specify turnaround time'),
   preferredStartDate: z.string().min(1, 'Please select a start date'),
-  cleaningFrequency: z.enum(['On Checkout', 'Weekly', 'Bi-weekly'], {
-    errorMap: () => ({ message: 'Please select cleaning frequency' })
-  }),
+  cleaningFrequency: z.enum(['On Checkout', 'Weekly', 'Bi-weekly']),
   contactName: z.string().min(2, 'Please enter contact name'),
   email: emailSchema,
   phone: phoneSchema
@@ -105,13 +93,13 @@ export const clientFeedbackSchema = z.object({
 });
 
 // Helper function to validate and get errors
-export const validateForm = <T,>(schema: z.ZodSchema<T>, data: any) => {
+export const validateForm = <T,>(schema: z.ZodSchema<T>, data: unknown) => {
   const result = schema.safeParse(data);
   if (result.success) {
     return { success: true, data: result.data, errors: null };
   }
   const errors: Record<string, string> = {};
-  result.error.errors.forEach(err => {
+  result.error.issues.forEach(err => {
     if (err.path[0]) {
       errors[err.path[0].toString()] = err.message;
     }

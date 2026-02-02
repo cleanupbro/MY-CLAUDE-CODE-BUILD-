@@ -12,8 +12,11 @@ export enum ServiceType {
 // Admin/CRM Types
 export enum SubmissionStatus {
   Pending = 'Pending',
+  Approved = 'Approved',
   Confirmed = 'Confirmed',
-  Canceled = 'Canceled',
+  Completed = 'Completed',
+  Cancelled = 'Cancelled',
+  Canceled = 'Canceled', // Alias for backwards compatibility
 }
 
 export enum PipelineStage {

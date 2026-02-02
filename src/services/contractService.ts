@@ -14,7 +14,7 @@ export interface ServiceContract {
   // Contract Basics
   contract_number: string;
   template_id?: string;
-  type: 'airbnb_long_term' | 'commercial_recurring' | 'commercial_one_time' | 'residential_recurring';
+  type: 'airbnb_long_term' | 'commercial_recurring' | 'commercial_one_time' | 'residential_recurring' | 'general_service';
   status: 'draft' | 'sent' | 'signed' | 'active' | 'completed' | 'cancelled' | 'expired';
 
   // Client Information
