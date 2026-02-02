@@ -28,6 +28,7 @@ const ClientFeedbackView = lazy(() => import('./views/ClientFeedbackView'));
 const SubmissionSuccessView = lazy(() => import('./views/SubmissionSuccessView'));
 const AdminLoginView = lazy(() => import('./views/AdminLoginView'));
 const AdminDashboardView = lazy(() => import('./views/AdminDashboardView'));
+const SimpleCRM = lazy(() => import('./views/admin/SimpleCRM'));
 const AboutView = lazy(() => import('./views/AboutView'));
 const ReviewsView = lazy(() => import('./views/ReviewsView'));
 const ContactView = lazy(() => import('./views/ContactView'));
@@ -71,10 +72,11 @@ const urlToViewMap: Record<string, ViewType> = {
   '/gift-card': 'CleanUpCard',
   '/gift-card-purchase': 'GiftCardPurchase',
   '/check-balance': 'CheckBalance',
+  '/admin': 'SimpleCRM',
   '/admin-login': 'AdminLogin',
   '/adminlogin': 'AdminLogin',
-  '/admin-dashboard': 'AdminDashboard',
-  '/admindashboard': 'AdminDashboard',
+  '/admin-dashboard': 'SimpleCRM',
+  '/admindashboard': 'SimpleCRM',
   '/admin-gift-cards': 'AdminGiftCards',
   '/airbnb-contract': 'AirbnbContract',
   '/basic-contract': 'BasicContract',
@@ -290,6 +292,10 @@ const App: React.FC = () => {
             return <AdminDashboardView onLogout={handleLogout} adminEmail={adminEmail} navigateTo={navigateTo} />;
         }
         return <AdminLoginView onLoginSuccess={handleLoginSuccess} />;
+    }
+    if (currentView === 'SimpleCRM') {
+        // SimpleCRM handles its own auth internally
+        return <SimpleCRM />;
     }
 
     switch (currentView) {
