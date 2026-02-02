@@ -1,56 +1,59 @@
 /**
- * Telegram Service
- * Sends notifications to Clean Up Bros Telegram group
+ * Telegram Service - Clean Up Bros
+ * Sends notifications via secure API (token never exposed to browser)
  *
- * Bot: @CLEANUPBROSBOT
- * Group ID: -1003155659527
+ * Updated: February 2, 2026
+ * Security: Token moved to server-side API
  */
 
-const TELEGRAM_BOT_TOKEN = '7851141818:AAE7KnPJUL5QW82OhaLN2aaE7Shpq1tQQbk';
-const TELEGRAM_CHAT_ID = '-1003155659527';
-const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+// Use API endpoint - token is hidden server-side
+const NOTIFY_API = '/api/notify';
 
 export interface TelegramResponse {
   success: boolean;
-  messageId?: number;
   error?: string;
 }
 
 /**
- * Send a text message to the Telegram group
+ * Send a notification via secure API
  */
-export const sendTelegramMessage = async (
-  text: string,
-  parseMode: 'HTML' | 'Markdown' = 'HTML'
+const sendNotification = async (
+  type: string,
+  message: string,
+  data?: Record<string, any>
 ): Promise<TelegramResponse> => {
   try {
-    const response = await fetch(`${TELEGRAM_API_URL}/sendMessage`, {
+    const response = await fetch(NOTIFY_API, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text,
-        parse_mode: parseMode,
-      }),
+      body: JSON.stringify({ type, message, data }),
     });
 
-    const data = await response.json();
-
-    if (data.ok) {
-      return { success: true, messageId: data.result?.message_id };
-    } else {
-      console.error('Telegram API error:', data);
-      return { success: false, error: data.description || 'Unknown error' };
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      return { success: false, error: error.error || 'Notification failed' };
     }
+
+    return { success: true };
   } catch (error) {
-    console.error('Telegram send error:', error);
+    console.error('Notification error:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Network error',
     };
   }
+};
+
+/**
+ * Send a text message
+ */
+export const sendTelegramMessage = async (
+  text: string,
+  parseMode: 'HTML' | 'Markdown' = 'HTML'
+): Promise<TelegramResponse> => {
+  return sendNotification('system', text);
 };
 
 /**
@@ -69,7 +72,7 @@ export const sendResidentialQuoteNotification = async (data: {
   referenceId: string;
 }): Promise<TelegramResponse> => {
   const message = `
-🏠 <b>NEW RESIDENTIAL QUOTE</b>
+<b>NEW RESIDENTIAL QUOTE</b>
 
 👤 <b>Customer:</b> ${data.fullName}
 📱 <b>Phone:</b> ${data.phone}
@@ -83,7 +86,7 @@ export const sendResidentialQuoteNotification = async (data: {
 🔗 <b>Reference:</b> <code>${data.referenceId}</code>
 `.trim();
 
-  return sendTelegramMessage(message);
+  return sendNotification('residential', message, data);
 };
 
 /**
@@ -101,7 +104,7 @@ export const sendCommercialQuoteNotification = async (data: {
   referenceId: string;
 }): Promise<TelegramResponse> => {
   const message = `
-🏢 <b>NEW COMMERCIAL QUOTE</b>
+<b>NEW COMMERCIAL QUOTE</b>
 
 🏛️ <b>Company:</b> ${data.companyName}
 👤 <b>Contact:</b> ${data.contactPerson}
@@ -115,7 +118,7 @@ export const sendCommercialQuoteNotification = async (data: {
 🔗 <b>Reference:</b> <code>${data.referenceId}</code>
 `.trim();
 
-  return sendTelegramMessage(message);
+  return sendNotification('commercial', message, data);
 };
 
 /**
@@ -134,7 +137,7 @@ export const sendAirbnbQuoteNotification = async (data: {
   referenceId: string;
 }): Promise<TelegramResponse> => {
   const message = `
-🏨 <b>NEW AIRBNB QUOTE</b>
+<b>NEW AIRBNB QUOTE</b>
 
 👤 <b>Host:</b> ${data.contactName}
 📱 <b>Phone:</b> ${data.phone}
@@ -148,7 +151,7 @@ export const sendAirbnbQuoteNotification = async (data: {
 🔗 <b>Reference:</b> <code>${data.referenceId}</code>
 `.trim();
 
-  return sendTelegramMessage(message);
+  return sendNotification('airbnb', message, data);
 };
 
 /**
@@ -164,7 +167,7 @@ export const sendJobApplicationNotification = async (data: {
   referenceId: string;
 }): Promise<TelegramResponse> => {
   const message = `
-👷 <b>NEW JOB APPLICATION</b>
+<b>NEW JOB APPLICATION</b>
 
 👤 <b>Applicant:</b> ${data.fullName}
 📱 <b>Phone:</b> ${data.phone}
@@ -176,7 +179,7 @@ export const sendJobApplicationNotification = async (data: {
 🔗 <b>Reference:</b> <code>${data.referenceId}</code>
 `.trim();
 
-  return sendTelegramMessage(message);
+  return sendNotification('job', message, data);
 };
 
 /**
@@ -190,7 +193,7 @@ export const sendContactNotification = async (data: {
   message: string;
 }): Promise<TelegramResponse> => {
   const msg = `
-📩 <b>NEW CONTACT MESSAGE</b>
+<b>NEW CONTACT MESSAGE</b>
 
 👤 <b>Name:</b> ${data.name}
 📱 <b>Phone:</b> ${data.phone}
@@ -201,7 +204,7 @@ export const sendContactNotification = async (data: {
 ${data.message}
 `.trim();
 
-  return sendTelegramMessage(msg);
+  return sendNotification('contact', msg, data);
 };
 
 /**
@@ -217,7 +220,7 @@ export const sendFeedbackNotification = async (data: {
 }): Promise<TelegramResponse> => {
   const stars = '⭐'.repeat(data.rating);
   const message = `
-📝 <b>NEW CLIENT FEEDBACK</b>
+<b>NEW CLIENT FEEDBACK</b>
 
 👤 <b>Client:</b> ${data.name}
 📧 <b>Email:</b> ${data.email}
@@ -229,24 +232,7 @@ ${data.bookingReference ? `🔗 <b>Booking:</b> ${data.bookingReference}` : ''}
 ${data.message}
 `.trim();
 
-  return sendTelegramMessage(message);
-};
-
-/**
- * Send a test message to verify integration
- */
-export const sendTestMessage = async (): Promise<TelegramResponse> => {
-  const message = `
-🧪 <b>TEST MESSAGE</b>
-
-✅ Telegram integration is working!
-📅 <b>Time:</b> ${new Date().toISOString()}
-🤖 <b>Bot:</b> @CLEANUPBROSBOT
-
-<i>This is a test from Clean Up Bros portal.</i>
-`.trim();
-
-  return sendTelegramMessage(message);
+  return sendNotification('feedback', message, data);
 };
 
 export default {
@@ -257,5 +243,4 @@ export default {
   sendJobApplicationNotification,
   sendContactNotification,
   sendFeedbackNotification,
-  sendTestMessage,
 };
